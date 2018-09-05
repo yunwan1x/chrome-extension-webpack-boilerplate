@@ -33,7 +33,6 @@ var options = {
       {
         test: /\.(css|less)$/,
         loader: "style-loader!css-loader!less-loader",
-        exclude: /node_modules/
       },
       {
         test: new RegExp('\.(' + fileExtensions.join('|') + ')$'),
