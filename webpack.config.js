@@ -35,6 +35,10 @@ var options = {
         loader: "style-loader!css-loader",
         exclude: /node_modules/
       },
+        {
+            test: /\.less$/,
+            loader: "style-loader!css-loader!less-loader",
+        },
       {
         test: new RegExp('\.(' + fileExtensions.join('|') + ')$'),
         loader: "file-loader?name=[name].[ext]",
