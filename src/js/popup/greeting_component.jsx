@@ -4,6 +4,7 @@ import { hot } from "react-hot-loader";
 import { Button } from 'antd';
 import 'ant-design-pro/dist/ant-design-pro.css';
 import 'antd/dist/antd.css'
+
 class GreetingComponent extends React.Component {
   render () {
     return (

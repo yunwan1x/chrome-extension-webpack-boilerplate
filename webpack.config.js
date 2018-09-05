@@ -31,14 +31,10 @@ var options = {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        loader: "style-loader!css-loader",
+        test: /\.(css|less)$/,
+        loader: "style-loader!css-loader!less-loader",
         exclude: /node_modules/
       },
-        {
-            test: /\.less$/,
-            loader: "style-loader!css-loader!less-loader",
-        },
       {
         test: new RegExp('\.(' + fileExtensions.join('|') + ')$'),
         loader: "file-loader?name=[name].[ext]",
