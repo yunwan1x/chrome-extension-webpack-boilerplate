@@ -1,13 +1,17 @@
 import React from "react";
 import {hot} from "react-hot-loader";
 import 'ant-design-pro/dist/ant-design-pro.css';
+import moment from 'moment';
+
+
+import styles from './index.css'
 import 'antd/dist/antd.css';
 import bookmark from '../service/chrome';
 import {Layout,Card, Tree,Row,Col,Menu,Icon,Anchor,Breadcrumb} from 'antd';
 const TreeNode = Tree.TreeNode;
 let self;
 const {Header, Footer, Sider, Content} = Layout;
-
+const dateFormat="YYYY-MM-DD HH:mm:ss";
 class GreetingComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -21,11 +25,24 @@ class GreetingComponent extends React.Component {
         self=this;
     }
 
+    getAllNode(nodes,allNodes){
+        nodes.reduce((bl,br)=>{
+            bl=br.children&&br.children.length>0&&bl.concat(br.children)
+            getAllNode(bl,allNodes)
+            return bl;
+        },allNodes);
+    }
+
     componentDidMount() {
         bookmark.getTree().then(async (r) => {
             let bookmarks=r[0].children;
             let bread= await self.getBread(bookmarks[0]);
             this.setState({bookmarks: bookmarks,urls:bookmarks[0].children,bread:bread});
+            let totalDetail=bookmarks.reduce((bl,br)=>{
+                bl=br.children&&br.children.length>0&&bl.concat(br.children)
+                return bl;
+            },[]);
+            console.log(totalDetail)
         })
     }
 
@@ -75,7 +92,9 @@ class GreetingComponent extends React.Component {
             va.push(urls.slice(i,i+colNum));
         }
         let colWidth=parseInt(100/colNum);
-         return <table cellSpacing="10px" style={{borderCollapse: "separate",width:"100%"}}> {va.map(k=><tr>{k.map(v=><td style={{width:"25%",backgroundColor:"white",padding:"1em"}}><a onClick={self.handleClick.bind(self,v)} target="_blank" href={v.url}><img src={`chrome://favicon/size/16@1x/${v.url}`} style={{marginRight:'1em'}} />{v.title}</a></td>)}</tr>)}</table>;
+         return <table cellSpacing="10px" className="card"> {va.map(k=><tr>{k.map(v=><td><a onClick={self.handleClick.bind(self,v)} target="_blank" href={v.url}><img src={`chrome://favicon/size/16@1x/${v.url}`} style={{marginRight:'1em'}} />{v.title}</a><div className="label">添加时间:{moment(v.dateAdded).format(dateFormat)}</div>{
+             v.dateGroupModified&&<div>修改时间:{moment(v.dateGroupModified).format(dateFormat)}</div>
+         }</td>)}</tr>)}</table>;
     }
 
     render() {
@@ -95,8 +114,10 @@ class GreetingComponent extends React.Component {
                             {bread.reverse().map(v=><Breadcrumb.Item style={{cursor:"pointer"}} onClick={self.handleClick.bind(this,v)}>{v.title}</Breadcrumb.Item>)}
                         </Breadcrumb>
                     </div>
-
                     {this.generateCard(urls)}
+                    <Footer style={{ textAlign: 'center' }}>
+                        Ant Design ©2016 Created by Ant UED
+                    </Footer>
                 </Content>
             </Layout>
         </Layout>
