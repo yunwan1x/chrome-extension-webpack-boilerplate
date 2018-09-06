@@ -31,8 +31,12 @@ var options = {
   module: {
     rules: [
       {
-        test: /\.(css|less)$/,
-        loader: "style-loader!css-loader!less-loader",
+        test: /\.(css)$/,
+        loader: "style-loader!css-loader",
+      },
+        {
+        test: /\.(less)$/,
+        loader: "less-loader",
       },
       {
         test: new RegExp('\.(' + fileExtensions.join('|') + ')$'),
