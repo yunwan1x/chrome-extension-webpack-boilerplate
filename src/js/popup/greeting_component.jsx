@@ -4,7 +4,6 @@ import 'ant-design-pro/dist/ant-design-pro.css';
 import 'antd/dist/antd.css';
 import bookmark from '../service/chrome';
 import {Layout,Card, Tree,Row,Col,Menu,Icon,Anchor,Breadcrumb} from 'antd';
-import menu from './menu'
 const TreeNode = Tree.TreeNode;
 let self;
 const {Header, Footer, Sider, Content} = Layout;
@@ -82,7 +81,7 @@ class GreetingComponent extends React.Component {
     render() {
         let {bookmarks,urls=[],bread} = this.state;
         return <Layout style={{overflow: 'hidden'}}>
-            <Anchor><Header style={{background: '#fff', padding: "1em"}}>{menu}
+            <Anchor><Header style={{background: '#fff', padding: "1em"}}>
             </Header></Anchor>
             <Layout style={{overflow: 'hidden'}}>
                 <Sider style={{overflow: 'auto', backgroundColor: "white",height:"calc(100vh - 68px)"}}>
