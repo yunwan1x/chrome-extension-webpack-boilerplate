@@ -33,12 +33,11 @@ var options = {
       {
         test: /\.(css)$/,
         loader: "style-loader!css-loader",
-        exclude: /node_modules/
       },
         {
-            test: /\.less$/,
-            loader: "style-loader!css-loader!less-loader",
-        },
+        test: /\.(less)$/,
+        loader: "less-loader",
+      },
       {
         test: new RegExp('\.(' + fileExtensions.join('|') + ')$'),
         loader: "file-loader?name=[name].[ext]",
@@ -98,7 +97,7 @@ var options = {
 };
 
 if (env.NODE_ENV === "development") {
-  options.devtool = "cheap-module-eval-source-map";
+  options.devtool = "inline-source-map";
 }
 
 module.exports = options;
