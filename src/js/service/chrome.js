@@ -17,4 +17,11 @@ bookmarks.get=function (id) {
             resolve(treeNode);
         })})
 }
+bookmarks.getRecent=function(){
+    return new Promise((resolve, reject) => {
+        chrome.bookmarks.getRecent(100, (b)=>resolve(b))
+    })
+
+}
+
 export default bookmarks;
