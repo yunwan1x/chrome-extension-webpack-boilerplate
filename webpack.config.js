@@ -62,6 +62,8 @@ var options = {
     plugins: [
         // clean the build folder
         // expose and write the allowed env vars on the compiled bundle
+        new CleanWebpackPlugin(["build"]),
+
         new webpack.DefinePlugin({
             "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV)
         }),
@@ -84,12 +86,14 @@ var options = {
             chunks: ["options"]
         }),
         new WriteFilePlugin(),
-        new CleanWebpackPlugin()
-    ]
+    ],
+    externals: {
+        'react': 'React'
+    }
 };
 
 if (env.NODE_ENV === "development") {
-    options.devtool = "inline-source-map";
+    // options.devtool = "inline-source-map";
 }
 
 module.exports = options;
