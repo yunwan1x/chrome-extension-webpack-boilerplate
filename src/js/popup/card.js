@@ -40,7 +40,8 @@ class ContentCard extends React.Component {
         let colWidth=parseInt(100/colNum);
         let td=(v)=><td style={{width:colWidth+"%"}}>
             <div style={{marginBottom:"1em"}}>
-                {v.url&&<Button size="small" onClick={self.props.filter.bind(this,v)}>网站</Button>}
+                {v.url&&<Button size="small" onClick={self.props.filter.bind(this,v,"site")}>网站</Button>}
+                {v.url&&<Button size="small" onClick={self.props.filter.bind(this,v,"domain")}>域名</Button>}
                 <Button size="small">删除</Button>
                 <Button size="small">编辑</Button>
             </div>

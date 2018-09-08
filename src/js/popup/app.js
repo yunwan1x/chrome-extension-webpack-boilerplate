@@ -6,8 +6,8 @@ import styles from './index.css'
 import 'antd/dist/antd.css';
 import bookmark from '../service/chrome';
 import {getBread} from './util';
-
-import {Layout, Tree,Row,Col,Icon,Anchor,Breadcrumb,Button} from 'antd';
+import markImg from '../../img/mark.svg'
+import {Layout, Tree,Row,Col,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete} from 'antd';
 import { Menu, Switch } from 'antd';
 const SubMenu = Menu.SubMenu;
 const TreeNode = Tree.TreeNode;
@@ -84,13 +84,19 @@ class GreetingComponent extends React.Component {
         }
     }
 
-    filter(node){
+    filter(node,type){
         let {flatBookmarks}=_this.state;
         let {url,title}=node;
         if(!url)return;
         var reg=/https?:\/\/([^\/]*)\/?/;
         reg.exec(url);
         let catchDomain=RegExp.$1;
+        var arr=catchDomain.split(".");
+        var length=arr.length;
+        debugger;
+        if(length>2&&type=='domain'){
+            catchDomain=arr[length-2]+"."+arr[length-1]
+        }
         console.log(catchDomain);
         let marks=flatBookmarks.filter(v=>v.url).filter(v=>v.url.indexOf(catchDomain)>0);
         _this.setState({urls:marks})
@@ -100,20 +106,38 @@ class GreetingComponent extends React.Component {
     render() {
         let {bookmarks,urls=[],bread,colNum} = this.state;
         return <Layout style={{overflow: 'hidden'}}>
-            <Anchor><Header className="header" style={{background: '#fff', padding: "1em"}}><Menu  mode="horizontal">
+            <Anchor><Header className="header" style={{background: '#fff', padding: "1em",height:"80px"}}><img src={markImg}  height="48"/>
+                <Menu  mode="horizontal" style={{display:"inline-block"}}>
                 <Menu.Item>书签</Menu.Item>
                 <Menu.Item>最近书签</Menu.Item>
                 <Menu.Item>浏览历史</Menu.Item>
                 <Menu.Item>我的搜索</Menu.Item>
             </Menu>
+                <AutoComplete
+                    className="global-search"
+                    size="large"
+                    // dataSource={dataSource.map(renderOption)}
+                    // onSelect={onSelect}
+                    // onSearch={this.handleSearch}
+                    placeholder="请输入"
+                    optionLabelProp="text"
+                >
+                    <Input
+                        suffix={(
+                            <Button className="search-btn" size="large" type="primary">
+                                <Icon type="search" />
+                            </Button>
+                        )}
+                    />
+                </AutoComplete>
             </Header></Anchor>
             <Layout style={{overflow: 'hidden'}}>
-                <Sider style={{overflow: 'auto', backgroundColor: "white",height:"calc(100vh - 68px)"}}>
+                <Sider style={{overflow: 'auto', backgroundColor: "white",height:"calc(100vh - 80px)"}}>
                     <Tree showLine onSelect={this.treeNodeHandleClick}>
                         {this.renderTreeNodes(bookmarks)}
                     </Tree>
                 </Sider>
-                <Content style={{overflow: 'auto', height:"calc(100vh - 68px)"}}>
+                <Content style={{overflow: 'auto', height:"calc(100vh - 80px)"}}>
                     <div style={{padding:"1em"}}>
                         <Breadcrumb style={{float:"left"}}>
                             {bread.reverse().map(v=><Breadcrumb.Item style={{cursor:"pointer"}} onClick={_this.nodeSelect.bind(this,v)}>{v.title}</Breadcrumb.Item>)}

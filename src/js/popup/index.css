@@ -11,3 +11,14 @@ table.card{
 .head{
   box-shadow: 0 0 30px rgba(0,0,0,0.15);
 }
+.global-search{
+  width:300px !important;
+  float: right;
+  margin-top: 1em !important;
+}
+.search-btn{
+
+}
+.ant-input-suffix{
+  right: 0px !important;
+}
