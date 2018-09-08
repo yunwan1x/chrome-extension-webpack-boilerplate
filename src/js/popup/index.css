@@ -31,3 +31,9 @@ table.card{
   margin-right: 0.1em;
   vertical-align: bottom !important;
 }
+.ant-tree-switcher-icon{
+  display: none !important;
+}
+.ant-tree-switcher{
+  width: 0px !important;
+}

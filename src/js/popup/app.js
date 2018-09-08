@@ -11,6 +11,7 @@ import {Layout, Tree,Row,Col,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete} 
 import { Menu, Switch } from 'antd';
 const SubMenu = Menu.SubMenu;
 const TreeNode = Tree.TreeNode;
+const DirectoryTree = Tree.DirectoryTree;
 var _this;
 const {Header, Footer, Sider, Content} = Layout;
 const dateFormat="YYYY-MM-DD HH:mm:ss";
@@ -73,7 +74,7 @@ class GreetingComponent extends React.Component {
         return bookmarks.map((item) => {
             if (item.children) {
                 return (
-                    <TreeNode title={item.title} key={item.id} dataRef={item}>
+                    <TreeNode icon={null} title={item.title}  dataRef={item}>
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
@@ -144,9 +145,12 @@ class GreetingComponent extends React.Component {
             </Header></Anchor>
             <Layout style={{overflow: 'hidden'}}>
                 <Sider style={{overflow: 'auto', backgroundColor: "white",height:"calc(100vh - 80px)"}}>
-                    <Tree showLine onSelect={this.treeNodeHandleClick}>
+                    <DirectoryTree
+                        multiple
+                        onSelect={this.treeNodeHandleClick}
+                    >
                         {this.renderTreeNodes(bookmarks)}
-                    </Tree>
+                    </DirectoryTree>
                 </Sider>
                 <Content style={{overflow: 'auto', height:"calc(100vh - 80px)"}}>
                     <div style={{padding:"1em"}}>
