@@ -51,9 +51,9 @@ class ContentCard extends React.Component {
             <div className="label">
                 <span>添加时间:{moment(v.dateAdded).format(dateFormat)}</span>
             </div>
-            {v.dateGroupModified&&
-            <div>修改时间:{moment(v.dateGroupModified).format(dateFormat)}</div>
-            }
+            {/*{v.dateGroupModified&&*/}
+            {/*<div>修改时间:{moment(v.dateGroupModified).format(dateFormat)}</div>*/}
+            {/*}*/}
 
         </td>;
         return <table cellSpacing="10px" className="card">
