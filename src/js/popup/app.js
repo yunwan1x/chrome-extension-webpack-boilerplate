@@ -65,7 +65,7 @@ class GreetingComponent extends React.Component {
     render() {
         let {bookmarks,urls=[],bread,colNum} = this.state;
         return <Layout style={{overflow: 'hidden'}}>
-            <Anchor><Header style={{background: '#fff', padding: "1em"}}>
+            <Anchor><Header className="header" style={{background: '#fff', padding: "1em"}}>
             </Header></Anchor>
             <Layout style={{overflow: 'hidden'}}>
                 <Sider style={{overflow: 'auto', backgroundColor: "white",height:"calc(100vh - 68px)"}}>
