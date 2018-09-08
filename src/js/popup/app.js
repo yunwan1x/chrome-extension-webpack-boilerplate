@@ -24,6 +24,7 @@ class GreetingComponent extends React.Component {
             colNum:4,
             bread:[],
             flatBookmarks:[],
+            search:""
         }
         _this=this;
     }
@@ -54,6 +55,12 @@ class GreetingComponent extends React.Component {
 
     treeNodeHandleClick(selectedKeys, {selected, selectedNodes, node, event}){
         _this.nodeSelect(node.props.dataRef);
+    }
+    async searchBookmark(str,a,b){
+        let word=str.target.value;
+        if(!word)return;
+        let children= await bookmark.search(word);
+        _this.setState({urls:children,search:word});
     }
 
 
@@ -93,7 +100,6 @@ class GreetingComponent extends React.Component {
         let catchDomain=RegExp.$1;
         var arr=catchDomain.split(".");
         var length=arr.length;
-        debugger;
         if(length>2&&type=='domain'){
             catchDomain=arr[length-2]+"."+arr[length-1]
         }
@@ -122,7 +128,7 @@ class GreetingComponent extends React.Component {
                     placeholder="请输入"
                     optionLabelProp="text"
                 >
-                    <Input
+                    <Input onPressEnter={_this.searchBookmark}
                         suffix={(
                             <Button className="search-btn" size="large" type="primary">
                                 <Icon type="search" />

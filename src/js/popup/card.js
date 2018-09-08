@@ -46,7 +46,7 @@ class ContentCard extends React.Component {
                 <Button size="small">编辑</Button>
             </div>
             <a onClick={self.handleClick.bind(self,v)} target="_blank" href={v.url}><img src={`chrome://favicon/size/16@1x/${v.url}`} style={{marginRight:'1em'}} />
-                <span>{v.title}</span>
+                <span dangerouslySetInnerHTML={{ __html: this.props.search&&v.title.split(new RegExp(this.props.search,"i")).join(`<span style="color: red">${this.props.search}</span>`)||v.title}}></span>
             </a>
             <div className="label">
                 <span>添加时间:{moment(v.dateAdded).format(dateFormat)}</span>
