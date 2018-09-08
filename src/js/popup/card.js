@@ -4,7 +4,7 @@ import moment from 'moment';
 import {array} from 'lodash';
 import {getBread} from './util'
 import bookmark from '../service/chrome';
-import {Button} from 'antd';
+import {Button,Icon} from 'antd';
 
 var self;
 const dateFormat="YYYY-MM-DD HH:mm:ss";
@@ -45,8 +45,8 @@ class ContentCard extends React.Component {
                 <Button size="small">删除</Button>
                 <Button size="small">编辑</Button>
             </div>
-            <a onClick={self.handleClick.bind(self,v)} target="_blank" href={v.url}><img src={`chrome://favicon/size/16@1x/${v.url}`} style={{marginRight:'1em'}} />
-                <span dangerouslySetInnerHTML={{ __html: this.props.search&&v.title.split(new RegExp(this.props.search,"i")).join(`<span style="color: red">${this.props.search}</span>`)||v.title}}></span>
+            <a onClick={self.handleClick.bind(self,v)} target="_blank" href={v.url}>{v.url&&<img src={`chrome://favicon/size/16@2x/${v.url}`} style={{marginRight:'1em'}} />||<Icon className="fold" type="folder" theme="outlined" />}
+                <span className="wy_title" dangerouslySetInnerHTML={{ __html: this.props.search&&v.title.split(new RegExp(this.props.search,"i")).join(`<span style="color: red">${this.props.search}</span>`)||v.title}}></span>
             </a>
             <div className="label">
                 <span>添加时间:{moment(v.dateAdded).format(dateFormat)}</span>

@@ -30,13 +30,18 @@ class GreetingComponent extends React.Component {
     }
 
 
+
+
     componentDidMount() {
         bookmark.getTree().then(async (r) => {
             let bookmarks=r[0].children;
             let recent=await bookmark.getRecent();
             let bread= await getBread(bookmarks[0]);
             _this.state.flatBookmarks =_this.flatBookmarks(bookmarks);
-            bookmarks.push({title:'最近书签',children:recent,id:-1})
+            let category=_this.state.flatBookmarks.filter(v=>v.children&&v.children.length>=0)
+
+            bookmarks.push({title:'最近书签',children:recent,id:-1});
+            bookmarks.push({title:'文件夹',children:category,id:-2});
             this.setState({bookmarks: bookmarks,urls:bookmarks[0].children,bread:bread});
 
             console.log(_this.flatBookmarks)
@@ -79,7 +84,7 @@ class GreetingComponent extends React.Component {
 
     async nodeSelect(node){
         let children=[];
-        if(node.id==-1){
+        if(node.id<0){
             children=node.children;
             _this.setState({urls:children});
         }else {

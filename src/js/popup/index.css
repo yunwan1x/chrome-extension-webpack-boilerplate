@@ -22,3 +22,12 @@ table.card{
 .ant-input-suffix{
   right: 0px !important;
 }
+.wy_title{
+  color: #000;
+  font-size: 1.1em ;
+}
+.fold{
+  font-size: 2em;
+  margin-right: 0.1em;
+  vertical-align: bottom !important;
+}
