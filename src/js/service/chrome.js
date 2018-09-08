@@ -23,5 +23,13 @@ bookmarks.getRecent=function(){
     })
 
 }
+bookmarks.search=function(str){
+    return new Promise((resolve, reject) => {
+        chrome.bookmarks.search(str, (r)=>resolve(r))
+    })
+
+}
+
+
 
 export default bookmarks;
