@@ -42,7 +42,7 @@ class GreetingComponent extends React.Component {
             history.shift();
         }
         history.push(newState);
-        _this.historyInfo.historyIndex=history.length-1;
+        _this.historyInfo.historyIndex=_this.historyInfo.historyIndex+1;
         _this.setState({...newState});
     }
     forword(){
