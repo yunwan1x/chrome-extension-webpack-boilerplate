@@ -215,8 +215,8 @@ class GreetingComponent extends React.Component {
                                  deleteItem={_this.deleteItem}
                                  filter={_this.filter}/>
                     <Footer style={{textAlign: 'center'}}>
-                        professional bookmark manager ©2018 Created by changhui.wy
-                        <div><a href="mailto:512458266@qq.com">给changhui.wy发送邮件</a></div>
+                        Professional Bookmark Manager ©2018 Created By changhui.wy
+                        <div ><a  href="mailto:512458266@qq.com" target="_blank">给changhui.wy发送邮件</a></div>
                     </Footer>
                 </Content>
             </Layout>
