@@ -7,7 +7,8 @@ import 'antd/dist/antd.css';
 import bookmark from '../service/chrome';
 import {getBread} from './util';
 import markImg from '../../img/mark.svg'
-import {Layout, Tree,Row,Col,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete} from 'antd';
+import {Layout, Modal,Tree,Row,Col,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete,Popconfirm, message} from 'antd';
+const confirm = Modal.confirm;
 import { Menu, Switch } from 'antd';
 const SubMenu = Menu.SubMenu;
 const TreeNode = Tree.TreeNode;
@@ -142,7 +143,21 @@ class GreetingComponent extends React.Component {
         let marks=flatBookmarks.filter(v=>v.url).filter(v=>v.url.indexOf(catchDomain)>0);
         _this.reduceState({urls:marks})
     }
-
+    async deleteItem(v,callback){
+        if(v.children&&v.children.length>0){
+            confirm({
+                title: '文件夹下还有书签，确定删除吗?',
+                async onOk() {
+                    let res=await bookmark.remove(v.id);Tree
+                    callback();
+                }
+            });
+        }
+        else {
+            let res=await bookmark.remove(v.id);
+            callback();
+        }
+    }
 
     render() {
         let {bookmarks,urls=[],bread,colNum,search,current} = this.state;
@@ -197,6 +212,7 @@ class GreetingComponent extends React.Component {
                     </div>
                     <ContentCard {...this.state}
                                  handleClick={({urls, bread}) => _this.reduceState({urls: urls, bread: bread})}
+                                 deleteItem={_this.deleteItem}
                                  filter={_this.filter}/>
                     <Footer style={{textAlign: 'center'}}>
                         Ant Design ©2016 Created by Ant UED

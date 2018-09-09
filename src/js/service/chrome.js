@@ -29,6 +29,24 @@ bookmarks.search=function(str){
     })
 
 }
+
+bookmarks.remove=function(id){
+    return new Promise((resolve, reject) => {
+        chrome.bookmarks.remove(id,()=>{
+            resolve()
+        })
+    })
+}
+
+bookmarks.removeTree=function(id){
+    return new Promise((resolve, reject) => {
+        chrome.bookmarks.removeTree(id,()=>{
+            resolve()
+        })
+    })
+}
+
+
 //A free-text query to the history service. Leave empty to retrieve all pages.
 history.search=function(text){
     return new Promise((resolve, reject) => {

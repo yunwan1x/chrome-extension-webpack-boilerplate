@@ -4,7 +4,7 @@ import moment from 'moment';
 import {array} from 'lodash';
 import {getBread} from './util'
 import bookmark from '../service/chrome';
-import {Button,Icon} from 'antd';
+import {Button,Icon,Popconfirm, message} from 'antd';
 
 var self;
 const dateFormat="YYYY-MM-DD HH:mm:ss";
@@ -28,7 +28,9 @@ class ContentCard extends React.Component {
 
     }
 
-
+    deleteCallback(v){
+        v.dom.parentNode.removeChild(v.dom);
+    }
     async handleClick(node){
         let children=await bookmark.getChildren(node.id);
         if(children.length>0){
@@ -51,13 +53,15 @@ class ContentCard extends React.Component {
             if(rowindex*colNum+colIndex==loadSize&&!showMore){
                 return <td onClick={()=>this.setState({showMore:true})}><span >显示更多</span></td>
             }
-
-            return (rowindex*colNum+colIndex<loadSize||showMore)&&<td style={{width:colWidth+"%"}}>
+            return (rowindex*colNum+colIndex<loadSize||showMore)&&<td ref={(dom)=>{v.dom=dom;}} style={{width:colWidth+"%"}}>
             <div>
                 <div style={{marginBottom:"1em"}}>
                     {v.url&&<Button size="small" onClick={self.props.filter.bind(this,v,"site")}>网站</Button>}
                     {v.url&&<Button size="small" onClick={self.props.filter.bind(this,v,"domain")}>域名</Button>}
-                    <Button size="small">删除</Button>
+                    <Popconfirm title="确定删除这个吗？" onConfirm={this.props.deleteItem.bind(this,v,this.deleteCallback.bind(this,v))}  okText="Yes" cancelText="No">
+                        <Button size="small" >删除</Button>
+                    </Popconfirm>
+
                     <Button size="small">编辑</Button>
                 </div>
                 <a onClick={self.handleClick.bind(self,v)} target="_blank" href={v.url}>{v.url&&<img src={`chrome://favicon/size/16@2x/${v.url}`} style={{marginRight:'1em'}} />||<Icon className="fold" type="folder" theme="outlined" />}
