@@ -210,7 +210,7 @@ class GreetingComponent extends React.Component {
                         <div style={{float: "right"}}><Button onClick={_this.back}>后退</Button><Button
                             onClick={_this.forword}>前进</Button><Button>时间正序</Button><Button>时间倒序</Button></div>
                     </div>
-                    <ContentCard {...this.state}
+                    <ContentCard {...this.state} style={{minHeight:'calc(100vh - 230px)'}}
                                  handleClick={({urls, bread}) => _this.reduceState({urls: urls, bread: bread})}
                                  deleteItem={_this.deleteItem}
                                  filter={_this.filter}/>

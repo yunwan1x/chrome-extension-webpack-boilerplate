@@ -73,9 +73,9 @@ class ContentCard extends React.Component {
             </div>
         </td>||null;
         }
-        return <table cellSpacing="10px" className="card">
+        return <div style={this.props.style}><table cellSpacing="10px" className="card">
             {va.map((row,rowindex)=><tbody><tr>{row.map((col,colindex)=>td(col,rowindex,colindex))}</tr></tbody>)}
-        </table>;
+        </table></div>;
     }
 };
 
