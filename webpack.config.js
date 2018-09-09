@@ -93,7 +93,7 @@ var options = {
 };
 
 if (env.NODE_ENV === "development") {
-    options.devtool = "inline-source-map";
+    // options.devtool = "inline-source-map";
 }
 
 module.exports = options;
