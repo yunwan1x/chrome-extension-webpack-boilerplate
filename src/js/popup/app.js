@@ -5,7 +5,7 @@ import ContentCard   from "./card"
 import styles from './index.css'
 import 'antd/dist/antd.css';
 import bookmark from '../service/chrome';
-import {getBread} from './util';
+import {getBread,getHtml} from './util';
 import markImg from '../../img/mark.svg'
 import {Layout, Modal,Tree,Row,Col,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete,Popconfirm, message} from 'antd';
 const confirm = Modal.confirm;
@@ -230,7 +230,13 @@ class GreetingComponent extends React.Component {
             {
                 current == 'search'&&
                 <Layout style={{overflow: 'hidden'}}>
-                    search
+                    <Content style={{overflow: 'auto', height: "calc(100vh - 80px)"}}>
+                        <iframe ref={(dom)=>{
+                            dom.contentDocument.write(getHtml());
+                            debugger;
+                            dom.contentDocument.close();
+                        }} style={{height:"100%",border:"none",width:"100%"}} ></iframe>
+                    </Content>
                 </Layout>
             }
         </Layout>

@@ -12,4 +12,8 @@ async function getBread(node){
     }
     return a.reverse();
 }
-export  {getBread}
+function getHtml() {
+    var a=`aaa`
+    return a;
+}
+export  {getBread,getHtml}
