@@ -231,11 +231,7 @@ class GreetingComponent extends React.Component {
                 current == 'search'&&
                 <Layout style={{overflow: 'hidden'}}>
                     <Content style={{overflow: 'auto', height: "calc(100vh - 80px)"}}>
-                        <iframe ref={(dom)=>{
-                            dom.contentDocument.write(getHtml());
-                            debugger;
-                            dom.contentDocument.close();
-                        }} style={{height:"100%",border:"none",width:"100%"}} ></iframe>
+
                     </Content>
                 </Layout>
             }
