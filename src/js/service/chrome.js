@@ -29,6 +29,31 @@ bookmarks.search=function(str){
     })
 
 }
+//A free-text query to the history service. Leave empty to retrieve all pages.
+history.search=function(text){
+    return new Promise((resolve, reject) => {
+        chrome.history.search({text:text,maxResults :1000});
+    })
+
+}
+history.search=function(text){
+    return new Promise((resolve, reject) => {
+        chrome.history.search({text:text,maxResults :1000},( HistoryItems)=>{
+            resolve(HistoryItems)
+        });
+    })
+
+}
+history.getVisits=function(url){
+    return new Promise((resolve, reject) => {
+        chrome.history.getVisits({url :url},(VisitItems)=>{
+            resolve(VisitItems)
+        })
+    })
+
+}
+
+
 
 
 

@@ -42,7 +42,7 @@ class GreetingComponent extends React.Component {
             history.shift();
         }
         history.push(newState);
-        _this.historyInfo.historyIndex=_this.historyInfo.historyIndex+1;
+        _this.historyInfo.historyIndex=history.length-1;
         _this.setState({...newState});
     }
     forword(){
@@ -150,7 +150,6 @@ class GreetingComponent extends React.Component {
             <Anchor><Header className="header" style={{background: '#fff', padding: "1em",height:"80px"}}><img src={markImg}  height="48"/>
                 <Menu  mode="horizontal" style={{display:"inline-block"}}>
                 <Menu.Item>书签</Menu.Item>
-                <Menu.Item>最近书签</Menu.Item>
                 <Menu.Item>浏览历史</Menu.Item>
                 <Menu.Item>我的搜索</Menu.Item>
             </Menu>
