@@ -13,11 +13,16 @@ class ContentCard extends React.Component {
         super(props);
         this.state = {
 
+            showMore:false,
+            loadSize:20,
         }
         self=this;
     }
 
 
+    componentWillReceiveProps(nextProps){
+        this.setState({showMore:false});
+    }
 
 
 
@@ -32,32 +37,37 @@ class ContentCard extends React.Component {
 
     render() {
         let {urls=[]} = this.props;
+        let {loadSize,showMore}=this.state;
         let {colNum}=self.props;
         var va=[];
         for(var i=0;i<urls.length;i=i+colNum){
             va.push(urls.slice(i,i+colNum));
         }
         let colWidth=parseInt(100/colNum);
-        let td=(v)=><td style={{width:colWidth+"%"}}>
-            <div style={{marginBottom:"1em"}}>
-                {v.url&&<Button size="small" onClick={self.props.filter.bind(this,v,"site")}>网站</Button>}
-                {v.url&&<Button size="small" onClick={self.props.filter.bind(this,v,"domain")}>域名</Button>}
-                <Button size="small">删除</Button>
-                <Button size="small">编辑</Button>
-            </div>
-            <a onClick={self.handleClick.bind(self,v)} target="_blank" href={v.url}>{v.url&&<img src={`chrome://favicon/size/16@2x/${v.url}`} style={{marginRight:'1em'}} />||<Icon className="fold" type="folder" theme="outlined" />}
-                <span className="wy_title" dangerouslySetInnerHTML={{ __html: this.props.search&&v.title.split(new RegExp(this.props.search,"i")).join(`<span style="color: red">${this.props.search}</span>`)||v.title}}></span>
-            </a>
-            <div className="label">
-                <span>添加时间:{moment(v.dateAdded).format(dateFormat)}</span>
-            </div>
-            {/*{v.dateGroupModified&&*/}
-            {/*<div>修改时间:{moment(v.dateGroupModified).format(dateFormat)}</div>*/}
-            {/*}*/}
+        let td=(v,rowindex,colIndex)=>{
+            if(rowindex*colNum+colIndex==loadSize&&!showMore){
+                return <td onClick={()=>this.setState({showMore:true})}><span >显示更多</span></td>
+            }
 
-        </td>;
+            return (rowindex*colNum+colIndex<loadSize||showMore)&&<td style={{width:colWidth+"%"}}>
+            <div>
+                <div style={{marginBottom:"1em"}}>
+                    {v.url&&<Button size="small" onClick={self.props.filter.bind(this,v,"site")}>网站</Button>}
+                    {v.url&&<Button size="small" onClick={self.props.filter.bind(this,v,"domain")}>域名</Button>}
+                    <Button size="small">删除</Button>
+                    <Button size="small">编辑</Button>
+                </div>
+                <a onClick={self.handleClick.bind(self,v)} target="_blank" href={v.url}>{v.url&&<img src={`chrome://favicon/size/16@2x/${v.url}`} style={{marginRight:'1em'}} />||<Icon className="fold" type="folder" theme="outlined" />}
+                    <span className="wy_title" dangerouslySetInnerHTML={{ __html: this.props.search&&v.title.split(new RegExp(this.props.search,"i")).join(`<span style="color: red">${this.props.search}</span>`)||v.title}}></span>
+                </a>
+                <div className="label">
+                    <span>添加时间:{moment(v.dateAdded).format(dateFormat)}</span>
+                </div>
+            </div>
+        </td>||null;
+        }
         return <table cellSpacing="10px" className="card">
-            {va.map(k=><tbody><tr>{k.map(v=>td(v))}</tr></tbody>)}
+            {va.map((row,rowindex)=><tbody><tr>{row.map((col,colindex)=>td(col,rowindex,colindex))}</tr></tbody>)}
         </table>;
     }
 };
