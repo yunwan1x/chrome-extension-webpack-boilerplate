@@ -10,6 +10,6 @@ async function getBread(node){
         a1=await bookmark.get(id)
         a1=a1[0];
     }
-    return a;
+    return a.reverse();
 }
 export  {getBread}

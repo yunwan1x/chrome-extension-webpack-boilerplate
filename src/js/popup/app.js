@@ -25,11 +25,39 @@ class GreetingComponent extends React.Component {
             colNum:4,
             bread:[],
             flatBookmarks:[],
-            search:""
+            search:"",
+
+        }
+        this.historyInfo={
+            history:[],
+            historyIndex:0
         }
         _this=this;
     }
 
+    reduceState(obj){
+        var newState={..._this.state,...obj};
+        let {history,historyIndex}=_this.historyInfo;
+        if(history.length>100){
+            history.shift();
+        }
+        history.push(newState);
+        _this.historyInfo.historyIndex=history.length-1;
+        _this.setState({...newState});
+    }
+    forword(){
+        let {historyIndex,history}=_this.historyInfo;
+        if(historyIndex==history.length-1)return;
+        let state=history[++_this.historyInfo.historyIndex]
+        _this.setState({...state});
+    }
+    back(){
+        console.log("back")
+        let {historyIndex,history}=_this.historyInfo;
+        if(historyIndex==0)return;
+        let state=history[--_this.historyInfo.historyIndex]
+        _this.setState({...state});
+    }
 
 
 
@@ -41,9 +69,10 @@ class GreetingComponent extends React.Component {
             _this.state.flatBookmarks =_this.flatBookmarks(bookmarks);
             let category=_this.state.flatBookmarks.filter(v=>v.children&&v.children.length>=0)
 
+
             bookmarks.push({title:'最近书签',children:recent,id:-1});
             bookmarks.push({title:'文件夹',children:category,id:-2});
-            this.setState({bookmarks: bookmarks,urls:bookmarks[0].children,bread:bread});
+            _this.reduceState({bookmarks: bookmarks,urls:bookmarks[0].children,bread:bread});
 
             console.log(_this.flatBookmarks)
         })
@@ -66,7 +95,7 @@ class GreetingComponent extends React.Component {
         let word=str.target.value;
         if(!word)return;
         let children= await bookmark.search(word);
-        _this.setState({urls:children,search:word});
+        _this.reduceState({urls:children,search:word});
     }
 
 
@@ -87,12 +116,12 @@ class GreetingComponent extends React.Component {
         let children=[];
         if(node.id<0){
             children=node.children;
-            _this.setState({urls:children});
+            _this.reduceState({urls:children});
         }else {
             children=await  bookmark.getChildren(node.id)
             if(children.length>0){
                 let bread=await getBread(node);
-                _this.setState({urls:children,bread:bread});
+                _this.reduceState({urls:children,bread:bread});
             }
         }
     }
@@ -111,12 +140,12 @@ class GreetingComponent extends React.Component {
         }
         console.log(catchDomain);
         let marks=flatBookmarks.filter(v=>v.url).filter(v=>v.url.indexOf(catchDomain)>0);
-        _this.setState({urls:marks})
+        _this.reduceState({urls:marks})
     }
 
 
     render() {
-        let {bookmarks,urls=[],bread,colNum} = this.state;
+        let {bookmarks,urls=[],bread,colNum,search} = this.state;
         return <Layout style={{overflow: 'hidden'}}>
             <Anchor><Header className="header" style={{background: '#fff', padding: "1em",height:"80px"}}><img src={markImg}  height="48"/>
                 <Menu  mode="horizontal" style={{display:"inline-block"}}>
@@ -134,9 +163,9 @@ class GreetingComponent extends React.Component {
                     placeholder="请输入"
                     optionLabelProp="text"
                 >
-                    <Input onPressEnter={_this.searchBookmark}
+                    <Input onPressEnter={_this.searchBookmark} value={search}
                         suffix={(
-                            <Button className="search-btn" size="large" type="primary">
+                            <Button  className="search-btn" size="large" type="primary">
                                 <Icon type="search" />
                             </Button>
                         )}
@@ -155,11 +184,11 @@ class GreetingComponent extends React.Component {
                 <Content style={{overflow: 'auto', height:"calc(100vh - 80px)"}}>
                     <div style={{padding:"1em"}}>
                         <Breadcrumb style={{float:"left"}}>
-                            {bread.reverse().map(v=><Breadcrumb.Item style={{cursor:"pointer"}} onClick={_this.nodeSelect.bind(this,v)}>{v.title}</Breadcrumb.Item>)}
+                            {bread.map(v=><Breadcrumb.Item style={{cursor:"pointer"}} onClick={_this.nodeSelect.bind(this,v)}>{v.title}</Breadcrumb.Item>)}
                         </Breadcrumb>
-                        <div style={{float:"right"}}><Button>前进</Button><Button>后退</Button><Button>时间正序</Button><Button>时间倒序</Button></div>
+                        <div style={{float:"right"}}><Button onClick={_this.back}>后退</Button><Button onClick={_this.forword}>前进</Button><Button>时间正序</Button><Button>时间倒序</Button></div>
                     </div>
-                    <ContentCard {...this.state} handleClick={({urls,bread})=>_this.setState({urls:urls,bread:bread})} filter={_this.filter}       />
+                    <ContentCard {...this.state} handleClick={({urls,bread})=>_this.reduceState({urls:urls,bread:bread})} filter={_this.filter}       />
                     <Footer style={{ textAlign: 'center' }}>
                         Ant Design ©2016 Created by Ant UED
                     </Footer>
