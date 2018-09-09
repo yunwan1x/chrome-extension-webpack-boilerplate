@@ -37,3 +37,19 @@ table.card{
 .ant-tree-switcher{
   width: 0px !important;
 }
+.wy_sate_label{
+  padding: 0 0.4em;
+  font-size: 1em;
+  border-top: 2px solid #0AA679;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.wy_sate_label_container{
+  padding: 1em;
+}
+.wy_state_highlight{
+
+  color: white;
+  background-color: #0AA679;
+}

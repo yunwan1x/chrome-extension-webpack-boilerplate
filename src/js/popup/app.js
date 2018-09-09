@@ -21,7 +21,7 @@ class GreetingComponent extends React.Component {
         this.state = {
             bookmarks: [],
             urls:[],
-            current:'mail',
+            current:'bookmark',
             colNum:4,
             bread:[],
             flatBookmarks:[],
@@ -146,12 +146,13 @@ class GreetingComponent extends React.Component {
 
     render() {
         let {bookmarks,urls=[],bread,colNum,search} = this.state;
+        let {history,historyIndex}=_this.historyInfo
         return <Layout style={{overflow: 'hidden'}}>
             <Anchor><Header className="header" style={{background: '#fff', padding: "1em",height:"80px"}}><img src={markImg}  height="48"/>
                 <Menu  mode="horizontal" style={{display:"inline-block"}}>
-                <Menu.Item>书签</Menu.Item>
-                <Menu.Item>浏览历史</Menu.Item>
-                <Menu.Item>我的搜索</Menu.Item>
+                <Menu.Item key="bookmark">书签</Menu.Item>
+                <Menu.Item key="history">浏览历史</Menu.Item>
+                <Menu.Item key="search">我的搜索</Menu.Item>
             </Menu>
                 <AutoComplete
                     className="global-search"
@@ -181,6 +182,7 @@ class GreetingComponent extends React.Component {
                     </DirectoryTree>
                 </Sider>
                 <Content style={{overflow: 'auto', height:"calc(100vh - 80px)"}}>
+                    <div className="wy_sate_label_container">{history.map((v,index)=><span onClick={()=>{_this.setState(history[index]),_this.historyInfo.historyIndex=index}} className={"wy_sate_label " +(index==historyIndex&&"wy_state_highlight"||"")}>{index+1}</span>)}</div>
                     <div style={{padding:"1em"}}>
                         <Breadcrumb style={{float:"left"}}>
                             {bread.map(v=><Breadcrumb.Item style={{cursor:"pointer"}} onClick={_this.nodeSelect.bind(this,v)}>{v.title}</Breadcrumb.Item>)}
