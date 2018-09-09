@@ -24,6 +24,9 @@ class ContentCard extends React.Component {
         this.setState({showMore:false});
     }
 
+    componentWillUnmount(){
+
+    }
 
 
     async handleClick(node){

@@ -145,12 +145,12 @@ class GreetingComponent extends React.Component {
 
 
     render() {
-        let {bookmarks,urls=[],bread,colNum,search} = this.state;
+        let {bookmarks,urls=[],bread,colNum,search,current} = this.state;
         let {history,historyIndex}=_this.historyInfo
         return <Layout style={{overflow: 'hidden'}}>
             <Anchor><Header className="header" style={{background: '#fff', padding: "1em",height:"80px"}}><img src={markImg}  height="48"/>
-                <Menu  mode="horizontal" style={{display:"inline-block"}}>
-                <Menu.Item key="bookmark">书签</Menu.Item>
+                <Menu  mode="horizontal" selectedKeys={[current]} style={{display:"inline-block"}} onClick={({ item, key, keyPath })=>_this.setState({current:key})}>
+                <Menu.Item key="bookmark" >书签</Menu.Item>
                 <Menu.Item key="history">浏览历史</Menu.Item>
                 <Menu.Item key="search">我的搜索</Menu.Item>
             </Menu>
@@ -172,8 +172,9 @@ class GreetingComponent extends React.Component {
                     />
                 </AutoComplete>
             </Header></Anchor>
+            {current == 'bookmark' &&
             <Layout style={{overflow: 'hidden'}}>
-                <Sider style={{overflow: 'auto', backgroundColor: "white",height:"calc(100vh - 80px)"}}>
+                <Sider style={{overflow: 'auto', backgroundColor: "white", height: "calc(100vh - 80px)"}}>
                     <DirectoryTree
                         multiple
                         onSelect={this.treeNodeHandleClick}
@@ -181,20 +182,40 @@ class GreetingComponent extends React.Component {
                         {this.renderTreeNodes(bookmarks)}
                     </DirectoryTree>
                 </Sider>
-                <Content style={{overflow: 'auto', height:"calc(100vh - 80px)"}}>
-                    <div className="wy_sate_label_container">{history.map((v,index)=><span onClick={()=>{_this.setState(history[index]),_this.historyInfo.historyIndex=index}} className={"wy_sate_label " +(index==historyIndex&&"wy_state_highlight"||"")}>{index+1}</span>)}</div>
-                    <div style={{padding:"1em"}}>
-                        <Breadcrumb style={{float:"left"}}>
-                            {bread.map(v=><Breadcrumb.Item style={{cursor:"pointer"}} onClick={_this.nodeSelect.bind(this,v)}>{v.title}</Breadcrumb.Item>)}
+                <Content style={{overflow: 'auto', height: "calc(100vh - 80px)"}}>
+                    <div className="wy_sate_label_container">{history.map((v, index) => <span onClick={() => {
+                        _this.setState(history[index]), _this.historyInfo.historyIndex = index
+                    }}
+                                                                                              className={"wy_sate_label " + (index == historyIndex && "wy_state_highlight" || "")}>{index + 1}</span>)}</div>
+                    <div style={{padding: "1em"}}>
+                        <Breadcrumb style={{float: "left"}}>
+                            {bread.map(v => <Breadcrumb.Item style={{cursor: "pointer"}}
+                                                             onClick={_this.nodeSelect.bind(this, v)}>{v.title}</Breadcrumb.Item>)}
                         </Breadcrumb>
-                        <div style={{float:"right"}}><Button onClick={_this.back}>后退</Button><Button onClick={_this.forword}>前进</Button><Button>时间正序</Button><Button>时间倒序</Button></div>
+                        <div style={{float: "right"}}><Button onClick={_this.back}>后退</Button><Button
+                            onClick={_this.forword}>前进</Button><Button>时间正序</Button><Button>时间倒序</Button></div>
                     </div>
-                    <ContentCard {...this.state} handleClick={({urls,bread})=>_this.reduceState({urls:urls,bread:bread})} filter={_this.filter}       />
-                    <Footer style={{ textAlign: 'center' }}>
+                    <ContentCard {...this.state}
+                                 handleClick={({urls, bread}) => _this.reduceState({urls: urls, bread: bread})}
+                                 filter={_this.filter}/>
+                    <Footer style={{textAlign: 'center'}}>
                         Ant Design ©2016 Created by Ant UED
                     </Footer>
                 </Content>
             </Layout>
+            }
+            {
+                current == 'history'&&
+                <Layout style={{overflow: 'hidden'}}>
+                    hello world
+                </Layout>
+            }
+            {
+                current == 'search'&&
+                <Layout style={{overflow: 'hidden'}}>
+                    search
+                </Layout>
+            }
         </Layout>
     }
 };
