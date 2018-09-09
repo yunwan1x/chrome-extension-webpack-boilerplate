@@ -215,7 +215,8 @@ class GreetingComponent extends React.Component {
                                  deleteItem={_this.deleteItem}
                                  filter={_this.filter}/>
                     <Footer style={{textAlign: 'center'}}>
-                        Ant Design ©2016 Created by Ant UED
+                        professional bookmark manager ©2018 Created by changhui.wy
+                        <div><a href="mailto:512458266@qq.com">给changhui.wy发送邮件</a></div>
                     </Footer>
                 </Content>
             </Layout>
