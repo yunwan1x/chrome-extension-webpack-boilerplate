@@ -70,7 +70,7 @@ var options = {
         new webpack.optimize.CommonsChunkPlugin({
             name: "vendor",
             minChunks: function(module){
-                return module.context && module.context.includes("node_modules");
+                return module.resource && /node_modules/.test(module.resource)
             }
         }),
         new CopyWebpackPlugin([{
@@ -84,7 +84,7 @@ var options = {
         new HtmlWebpackPlugin({
             template: path.join(__dirname, "src", "popup.html"),
             filename: "popup.html",
-            chunks: ["popup"]
+            chunks: ["vendor","popup"]
         }),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, "src", "options.html"),
