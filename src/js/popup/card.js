@@ -1,6 +1,7 @@
 import React from "react";
 import {hot} from "react-hot-loader";
 import moment from 'moment';
+import {array} from 'lodash';
 import {getBread} from './util'
 import bookmark from '../service/chrome';
 import {Button,Icon,Popconfirm, message} from 'antd';
