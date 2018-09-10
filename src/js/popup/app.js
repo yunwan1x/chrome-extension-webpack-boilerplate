@@ -1,6 +1,5 @@
 import React from "react";
 import {hot} from "react-hot-loader";
-import 'ant-design-pro/dist/ant-design-pro.css';
 import ContentCard   from "./card"
 import styles from './index.css'
 import 'antd/dist/antd.css';

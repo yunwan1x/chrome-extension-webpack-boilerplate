@@ -9,7 +9,7 @@ var webpack = require("webpack"),
 
 // load the secrets
 var alias = {};
-
+const MinifyPlugin = require("babel-minify-webpack-plugin");
 var secretsPath = path.join(__dirname, ("secrets." + env.NODE_ENV + ".js"));
 
 var fileExtensions = ["jpg", "jpeg", "png", "gif", "eot", "otf", "svg", "ttf", "woff", "woff2"];
@@ -91,6 +91,7 @@ var options = {
             filename: "options.html",
             chunks: ["options"]
         }),
+        new MinifyPlugin(null,{comments:false}),
         new WriteFilePlugin(),
     ],
     externals: {
