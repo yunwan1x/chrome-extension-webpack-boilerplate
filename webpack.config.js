@@ -67,6 +67,12 @@ var options = {
         new webpack.DefinePlugin({
             "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV)
         }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "vendor",
+            minChunks: function(module){
+                return module.context && module.context.includes("node_modules");
+            }
+        }),
         new CopyWebpackPlugin([{
             from: "src/manifest.json"
         },{
