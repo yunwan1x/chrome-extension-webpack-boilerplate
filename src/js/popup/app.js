@@ -5,7 +5,7 @@ import styles from './index.css'
 import 'antd/dist/antd.css';
 import bookmark from '../service/chrome';
 import {getBread,getHtml} from './util';
-import markImg from '../../img/mark.svg'
+import markImg from '../../img/mark.svg';
 import {Layout, Modal,Tree,Row,Col,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete,Popconfirm, message} from 'antd';
 const confirm = Modal.confirm;
 import { Menu, Switch } from 'antd';
@@ -26,6 +26,7 @@ class GreetingComponent extends React.Component {
             bread:[],
             flatBookmarks:[],
             search:"",
+            selectedNode:'',
 
         }
         this.historyInfo={
@@ -33,16 +34,26 @@ class GreetingComponent extends React.Component {
             historyIndex:0
         }
         _this=this;
+        _this.intersectionObserver = new IntersectionObserver(function(entries) {
+            if (entries[0].intersectionRatio < 0) return;
+            let child=_this.contentCard;
+            child.setState({loadSize:child.state.loadSize+20});
+        },{threshold:[0]});
     }
 
     reduceState(obj){
+        let {selectedNode}=obj;
+        if(selectedNode.id==_this.state.selectedNode.id){
+            return;
+        }
         var newState={..._this.state,...obj};
         let {history,historyIndex}=_this.historyInfo;
         if(history.length>100){
             history.shift();
         }
-        history.push(newState);
-        _this.historyInfo.historyIndex=history.length-1;
+        _this.content.scrollTop=0;
+        // history.push(newState);
+        // _this.historyInfo.historyIndex=history.length-1;
         _this.setState({...newState});
     }
     forword(){
@@ -52,7 +63,6 @@ class GreetingComponent extends React.Component {
         _this.setState({...state});
     }
     back(){
-        console.log("back")
         let {historyIndex,history}=_this.historyInfo;
         if(historyIndex==0)return;
         let state=history[--_this.historyInfo.historyIndex]
@@ -67,14 +77,10 @@ class GreetingComponent extends React.Component {
             let recent=await bookmark.getRecent();
             let bread= await getBread(bookmarks[0]);
             _this.state.flatBookmarks =_this.flatBookmarks(bookmarks);
-            let category=_this.state.flatBookmarks.filter(v=>v.children&&v.children.length>=0)
-
-
+            // let category=_this.state.flatBookmarks.filter(v=>v.children&&v.children.length>=0)
             bookmarks.push({title:'最近书签',children:recent,id:-1});
-            bookmarks.push({title:'文件夹',children:category,id:-2});
-            _this.reduceState({bookmarks: bookmarks,urls:bookmarks[0].children,bread:bread});
-
-            console.log(_this.flatBookmarks)
+            // bookmarks.push({title:'文件夹',children:category,id:-2});
+            _this.reduceState({selectedNode:bookmarks[0], bookmarks: bookmarks,urls:bookmarks[0].children,bread:bread});
         })
     }
     flatBookmarks(bk){
@@ -95,7 +101,7 @@ class GreetingComponent extends React.Component {
         let word=str.target.value;
         if(!word)return;
         let children= await bookmark.search(word);
-        _this.reduceState({urls:children,search:word});
+        _this.reduceState({selectedNode:{id:str},urls:children,search:word});
     }
 
 
@@ -116,12 +122,12 @@ class GreetingComponent extends React.Component {
         let children=[];
         if(node.id<0){
             children=node.children;
-            _this.reduceState({urls:children});
+            _this.reduceState({selectedNode:{id:node.id},urls:children});
         }else {
             children=await  bookmark.getChildren(node.id)
             if(children.length>0){
                 let bread=await getBread(node);
-                _this.reduceState({urls:children,bread:bread});
+                _this.reduceState({selectedNode:{id:node.id},urls:children,bread:bread});
             }
         }
     }
@@ -138,9 +144,8 @@ class GreetingComponent extends React.Component {
         if(length>2&&type=='domain'){
             catchDomain=arr[length-2]+"."+arr[length-1]
         }
-        console.log(catchDomain);
         let marks=flatBookmarks.filter(v=>v.url).filter(v=>v.url.indexOf(catchDomain)>0);
-        _this.reduceState({urls:marks})
+        _this.reduceState({selectedNode:{id:catchDomain},urls:marks})
     }
     async deleteItem(v,callback){
         if(v.children&&v.children.length>0){
@@ -164,9 +169,9 @@ class GreetingComponent extends React.Component {
         return <Layout style={{overflow: 'hidden'}}>
             <Anchor><Header className="header" style={{background: '#fff', padding: "1em",height:"80px"}}><img src={markImg}  height="48"/>
                 <Menu  mode="horizontal" selectedKeys={[current]} style={{display:"inline-block"}} onClick={({ item, key, keyPath })=>_this.setState({current:key})}>
-                <Menu.Item key="bookmark" >书签</Menu.Item>
-                <Menu.Item key="history">浏览历史</Menu.Item>
-                <Menu.Item key="search">我的搜索</Menu.Item>
+                <Menu.Item key="bookmark" ><Icon type="mail" />书签</Menu.Item>
+                <Menu.Item key="history"><Icon type="mail" />浏览历史</Menu.Item>
+                <Menu.Item key="search"><Icon type="mail" />我的搜索</Menu.Item>
             </Menu>
                 <AutoComplete
                     className="global-search"
@@ -196,27 +201,28 @@ class GreetingComponent extends React.Component {
                         {this.renderTreeNodes(bookmarks)}
                     </DirectoryTree>
                 </Sider>
-                <Content style={{overflow: 'auto', height: "calc(100vh - 80px)"}}>
-                    <div className="wy_sate_label_container">{history.map((v, index) => <span onClick={() => {
-                        _this.setState(history[index]), _this.historyInfo.historyIndex = index
-                    }}
-                                                                                              className={"wy_sate_label " + (index == historyIndex && "wy_state_highlight" || "")}>{index + 1}</span>)}</div>
-                    <div style={{padding: "1em"}}>
-                        <Breadcrumb style={{float: "left"}}>
-                            {bread.map(v => <Breadcrumb.Item style={{cursor: "pointer"}}
-                                                             onClick={_this.nodeSelect.bind(this, v)}>{v.title}</Breadcrumb.Item>)}
-                        </Breadcrumb>
-                        <div style={{float: "right"}}><Button onClick={_this.back}>后退</Button><Button
-                            onClick={_this.forword}>前进</Button><Button>时间正序</Button><Button>时间倒序</Button></div>
+                <Content >
+                    <div ref={(dom)=>{_this.content=dom}} style={{overflow: 'auto', height: "calc(100vh - 80px)"}}>
+                        <div style={{padding: "1em"}}>
+                            <Breadcrumb style={{float: "left"}}>
+                                {bread.map(v => <Breadcrumb.Item style={{cursor: "pointer"}}
+                                                                 onClick={_this.nodeSelect.bind(this, v)}>{v.title}</Breadcrumb.Item>)}
+                            </Breadcrumb>
+
+                        </div>
+                        <ContentCard onRef={(contentCard)=>{
+                            this.contentCard=contentCard;
+                        }}  {...this.state} style={{minHeight:'calc(100vh - 230px)'}}
+                                     handleClick={({node,urls, bread}) => _this.reduceState({selectedNode:{id:node.id},urls: urls, bread: bread})}
+                                     deleteItem={_this.deleteItem}
+                                     filter={_this.filter}/>
+                        <Footer  style={{textAlign: 'center'}}>
+                            Professional Bookmark Manager ©2018 Created By changhui.wy
+                            <div ref={(dom)=>{
+                                dom&&_this.intersectionObserver.observe(dom);
+                            }} ><a  href="mailto:512458266@qq.com" target="_blank">给changhui.wy发送邮件</a></div>
+                        </Footer>
                     </div>
-                    <ContentCard {...this.state} style={{minHeight:'calc(100vh - 230px)'}}
-                                 handleClick={({urls, bread}) => _this.reduceState({urls: urls, bread: bread})}
-                                 deleteItem={_this.deleteItem}
-                                 filter={_this.filter}/>
-                    <Footer style={{textAlign: 'center'}}>
-                        Professional Bookmark Manager ©2018 Created By changhui.wy
-                        <div ><a  href="mailto:512458266@qq.com" target="_blank">给changhui.wy发送邮件</a></div>
-                    </Footer>
                 </Content>
             </Layout>
             }
@@ -233,7 +239,7 @@ class GreetingComponent extends React.Component {
                 current == 'search'&&
                 <Layout style={{overflow: 'hidden'}}>
                     <Content style={{overflow: 'hidden', height: "calc(100vh - 80px)"}}>
-                        <iframe style={{border:"none",height:'100%',width:"100%"}} src="http://www.mafengwo.cn/"></iframe>
+                        <iframe framespacing="0" frameBorder="NO" scrolling="yes" width="100%" height="100%" noresize=""  src="https://www.google.com.hk/imghp?hl=zh-CN&tab=wi&gws_rd=cr"></iframe>
 
                     </Content>
                 </Layout>
