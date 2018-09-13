@@ -67,7 +67,7 @@ class EditableTagGroup extends React.Component {
                 {tags.map((tag, index) => {
                     const isLongTag = tag.length > 20;
                     const tagElem = (
-                        <Tag color="#108ee9" key={tag} closable={index !== 0} afterClose={() => this.handleClose(tag)}>
+                        <Tag style={{ background: '#fff', color:'#1890ff', border: '1px solid #1890ff' }} key={tag} closable={index !== 0} afterClose={() => this.handleClose(tag)}>
                             {isLongTag ? `${tag.slice(0, 20)}...` : tag}
                         </Tag>
                     );

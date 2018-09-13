@@ -7,7 +7,7 @@ import bookmark from '../service/chrome';
 import EditableTagGroup from './tag'
 import {Button,Icon,Popconfirm, message,Row,Col} from 'antd';
 var self=this;
-const dateFormat="YYYY-MM-DD HH:mm:ss";
+const dateFormat="YY/MM/DD";
 
 class Tr extends React.Component {
     constructor(props) {
@@ -52,11 +52,11 @@ class Tr extends React.Component {
                             <a size="small" >删除</a>
                         </Popconfirm>
                         <a size="small">编辑</a></div></Col>
-                    <Col ><a onClick={self.handleClick.bind(self,row)} target="_blank" href={row.url}>{row.url&&<img src={`chrome://favicon/size/16@2x/${row.url}`} className="img" />||<Icon  className="img" type="folder" theme="outlined" />}
+                    <Col ><a style={{marginRight:"2em"}} onClick={self.handleClick.bind(self,row)} target="_blank" href={row.url}>{row.url&&<img src={`chrome://favicon/size/16@1x/${row.url}`} className="img" />||<Icon  className="img" type="folder" theme="outlined" />}
                         <span className="wy_title" dangerouslySetInnerHTML={{ __html: this.props.search&&row.title.split(new RegExp(search,"i")).join(`<span style="color: red">${search}</span>`)||row.title}}></span>
-                    </a></Col>
+                    </a> <EditableTagGroup/></Col>
                 </Row>
-                <Row><Col><EditableTagGroup/></Col></Row>
+                {/*<Row><Col></Col></Row>*/}
             </td>
 
 

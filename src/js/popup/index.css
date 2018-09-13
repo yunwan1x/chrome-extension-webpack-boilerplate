@@ -1,8 +1,8 @@
 
 table td{
   vertical-align: top;
-  background-color:white;padding:1em;
-  border-bottom: 0.5em solid #f0f2f5;
+  background-color:white;padding:5px 8px;
+  border-bottom: 2px solid #f0f2f5;
 }
 table{
   width:100%;
@@ -23,11 +23,11 @@ table{
 }
 .wy_title{
   color: #000;
-  font-size: 1.2em ;
+  font-size: 1em ;
   word-break: break-all;
 }
 .img{
-  font-size: 2.5em;
+  font-size: 1.2em;
   margin-right: 5px;
   display: inline-block !important;
   vertical-align: middle !important;
@@ -58,7 +58,8 @@ table{
   cursor: pointer;
 }
 .wy_tag_container{
-  margin-top: 8px;
+  display: inline;
+  line-height: 2;
 }
 .wy_content{
   padding: 1em;
@@ -71,5 +72,6 @@ table{
   margin-right: 0.5em;
 }
 .wy_cmd{
-  margin-bottom: 5px;
+  float: right;
+  margin-left: 2em;
 }
