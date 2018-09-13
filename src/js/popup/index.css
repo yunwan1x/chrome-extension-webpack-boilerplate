@@ -25,6 +25,7 @@ table.card{
 .wy_title{
   color: #000;
   font-size: 1.1em ;
+  word-break: break-all;
 }
 .fold{
   font-size: 2em;
@@ -52,4 +53,17 @@ table.card{
 
   color: white;
   background-color: #1890ff;
+}
+.wy_container{
+  transition: opacity 1s;
+  opacity: 0;
+}
+.wy_icon_button{
+  font-size: 1.5em;
+  margin-left: 0.5em;
+  cursor: pointer;
+}
+.wy_tag_container{
+  line-height: 2;
+
 }
