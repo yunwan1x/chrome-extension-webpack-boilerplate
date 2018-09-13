@@ -22,7 +22,7 @@ class GreetingComponent extends React.Component {
             bookmarks: [],
             urls:[],
             current:'bookmark',
-            colNum:4,
+            colNum:1,
             bread:[],
             flatBookmarks:[],
             search:"",
@@ -193,7 +193,7 @@ class GreetingComponent extends React.Component {
             </Header></Anchor>
             {current == 'bookmark' &&
             <Layout style={{overflow: 'hidden'}}>
-                <Sider style={{overflow: 'auto', backgroundColor: "white", height: "calc(100vh - 80px)"}}>
+                <Sider style={{overflow: 'auto', backgroundColor: "white", height: "calc(100vh - 80px)",width:'300px'}} width={300}>
                     <DirectoryTree
                         multiple
                         onSelect={this.treeNodeHandleClick}
@@ -202,9 +202,9 @@ class GreetingComponent extends React.Component {
                     </DirectoryTree>
                 </Sider>
                 <Content >
-                    <div ref={(dom)=>{_this.content=dom}} style={{overflow: 'auto', height: "calc(100vh - 80px)"}}>
-                        <div style={{padding: "1em"}}>
-                            <Breadcrumb style={{float: "left"}}>
+                    <div className="wy_content" ref={(dom)=>{_this.content=dom}} >
+                        <div className="wy_toolbar">
+                            <Breadcrumb >
                                 {bread.map(v => <Breadcrumb.Item style={{cursor: "pointer"}}
                                                                  onClick={_this.nodeSelect.bind(this, v)}>{v.title}</Breadcrumb.Item>)}
                             </Breadcrumb>

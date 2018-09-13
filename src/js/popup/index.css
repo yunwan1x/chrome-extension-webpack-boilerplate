@@ -1,12 +1,11 @@
-.label{
-  margin-top: 1em;
-}
+
 table td{
   vertical-align: top;
-  width:25%;background-color:white;padding:1em;
+  background-color:white;padding:1em;
+  border-bottom: 0.5em solid #f0f2f5;
 }
-table.card{
-  border-collapse: separate;width:100%;
+table{
+  width:100%;
 }
 .head{
   box-shadow: 0 0 30px rgba(0,0,0,0.15);
@@ -24,13 +23,14 @@ table.card{
 }
 .wy_title{
   color: #000;
-  font-size: 1.1em ;
+  font-size: 1.2em ;
   word-break: break-all;
 }
-.fold{
-  font-size: 2em;
-  margin-right: 0.1em;
-  vertical-align: bottom !important;
+.img{
+  font-size: 2.5em;
+  margin-right: 5px;
+  display: inline-block !important;
+  vertical-align: middle !important;
 }
 .ant-tree-switcher-icon{
   display: none !important;
@@ -46,24 +46,30 @@ table.card{
   cursor: pointer;
 }
 
-.wy_sate_label_container{
-  padding: 1em;
-}
-.wy_state_highlight{
 
+.wy_state_highlight{
   color: white;
   background-color: #1890ff;
 }
-.wy_container{
-  transition: opacity 1s;
-  opacity: 0;
-}
+
 .wy_icon_button{
   font-size: 1.5em;
   margin-left: 0.5em;
   cursor: pointer;
 }
 .wy_tag_container{
-  line-height: 2;
-
+  margin-top: 8px;
+}
+.wy_content{
+  padding: 1em;
+  height: calc(100vh - 80px)
+}
+.wy_toolbar{
+  margin-bottom: 1em;
+}
+.wy_cmd a{
+  margin-right: 0.5em;
+}
+.wy_cmd{
+  margin-bottom: 5px;
 }

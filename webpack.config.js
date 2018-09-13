@@ -91,12 +91,9 @@ var options = {
             filename: "options.html",
             chunks: ["options"]
         }),
-        new MinifyPlugin(null,{comments:false}),
+        // new MinifyPlugin(null,{comments:false}),
         new WriteFilePlugin(),
-    ],
-    externals: {
-        'react': 'React'
-    }
+    ]
 };
 
 if (env.NODE_ENV === "development") {

@@ -33,13 +33,8 @@ class ContentCard extends React.Component {
     render() {
         let {urls=[]} = this.props;
         let {loadSize}=this.state;
-        let {colNum}=self.props;
-        var newData=[];
-        for(var i=0;i<urls.length;i=i+colNum){
-            newData.push(urls.slice(i,i+colNum));
-        }
-        return <table cellSpacing="10px" className="card"><tbody>
-            {newData.map((row,rowindex)=>rowindex<=loadSize/colNum&&<Tr row={row} loadSize={loadSize} {...this.props} colNum={colNum} rowIndex={rowindex} ></Tr>||null)}
+        return <table  ><tbody>
+        {urls.map((row,rowindex)=>rowindex<loadSize&& <Tr row={row} loadSize={loadSize} {...this.props} rowIndex={rowindex} ></Tr>)}
         </tbody></table>;
     }
 };
