@@ -4,7 +4,7 @@ import ContentCard   from "./card"
 import styles from './index.css'
 import 'antd/dist/antd.css';
 import bookmark from '../service/chrome';
-import {getBread,getHtml} from './util';
+import {getBread,getHtml,loadSize} from './util';
 import markImg from '../../img/mark.svg';
 import {Layout, Modal,Tree,Row,Col,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete,Popconfirm, message} from 'antd';
 const confirm = Modal.confirm;
@@ -35,9 +35,9 @@ class GreetingComponent extends React.Component {
         }
         _this=this;
         _this.intersectionObserver = new IntersectionObserver(function(entries) {
-            if (entries[0].intersectionRatio <= 0) return;
+            if (entries[0].intersectionRatio < 0) return;
             let child=_this.contentCard;
-            child.setState({loadSize:child.state.loadSize+20});
+            child.setState({loadSize:child.state.loadSize+loadSize});
         },{threshold:[0]});
     }
 
@@ -51,10 +51,10 @@ class GreetingComponent extends React.Component {
         if(history.length>100){
             history.shift();
         }
-        _this.content.scrollTop=0;
         // history.push(newState);
         // _this.historyInfo.historyIndex=history.length-1;
-        _this.setState({...newState});
+        console.log("ss");
+        _this.setState({...newState},()=>_this.content.scrollTop=0);
     }
     forword(){
         let {historyIndex,history}=_this.historyInfo;
