@@ -35,7 +35,7 @@ class GreetingComponent extends React.Component {
         }
         _this=this;
         _this.intersectionObserver = new IntersectionObserver(function(entries) {
-            if (entries[0].intersectionRatio < 0) return;
+            if (entries[0].intersectionRatio <= 0) return;
             let child=_this.contentCard;
             child.setState({loadSize:child.state.loadSize+20});
         },{threshold:[0]});

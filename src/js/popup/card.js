@@ -34,7 +34,7 @@ class ContentCard extends React.Component {
         let {urls=[]} = this.props;
         let {loadSize}=this.state;
         return <table  ><tbody>
-        {urls.map((row,rowindex)=>rowindex<loadSize&& <Tr row={row} loadSize={loadSize} {...this.props} rowIndex={rowindex} ></Tr>)}
+        {urls.map((row,rowindex)=>rowindex<loadSize&& <Tr key={row.id} row={row} loadSize={loadSize} {...this.props} rowIndex={rowindex} ></Tr>)}
         </tbody></table>;
     }
 };
