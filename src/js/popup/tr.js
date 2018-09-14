@@ -59,13 +59,14 @@ class Tr extends React.Component {
                 </Menu.Item>
             </Menu>
         );
+        let newTitle=this.props.search&&row.title.replace(new RegExp("("+search+")","ig"),"<span style='color: red'>$1</span>");
 
         return <tr>
 
             <td    ref={(dom)=>{row.dom=dom;}} >
 
                 <a style={{marginRight:"2em"}} onClick={self.handleClick.bind(self,row)} target="_blank" href={row.url}>{row.url&&<span style={{width:16,height:16,backgroundImage:`-webkit-image-set(url("chrome://favicon/size/16@1x/${row.url}") 1x, url("chrome://favicon/size/16@2x/${row.url}") 2x)`}}  className="img" ></span>||<Icon  className="img" type="folder" theme="outlined" />}
-                    <span className="wy_title" dangerouslySetInnerHTML={{ __html: this.props.search&&row.title.split(new RegExp(search,"i")).join(`<span style="color: red">${search}</span>`)||row.title}}></span>
+                    <span className="wy_title" dangerouslySetInnerHTML={{ __html: newTitle||row.title}}></span>
                 </a> <EditableTagGroup/>
             </td>
 
