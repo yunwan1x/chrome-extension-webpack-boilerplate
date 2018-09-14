@@ -61,23 +61,28 @@ class Tr extends React.Component {
         );
         let newTitle=this.props.search&&row.title.replace(new RegExp("("+search+")","ig"),"<span style='color: red'>$1</span>");
 
-        return <tr>
+        const trContent=(row)=>(
+            <tr>
 
-            <td    ref={(dom)=>{row.dom=dom;}} >
+                <td    ref={(dom)=>{row.dom=dom;}} >
 
-                <a style={{marginRight:"2em"}} onClick={self.handleClick.bind(self,row)} target="_blank" href={row.url}>{row.url&&<span style={{width:16,height:16,backgroundImage:`-webkit-image-set(url("chrome://favicon/size/16@1x/${row.url}") 1x, url("chrome://favicon/size/16@2x/${row.url}") 2x)`}}  className="img" ></span>||<Icon  className="img" type="folder" theme="outlined" />}
-                    <span className="wy_title" dangerouslySetInnerHTML={{ __html: newTitle||row.title}}></span>
-                </a> <EditableTagGroup/>
-            </td>
+                    <a style={{marginRight:"2em"}} onClick={self.handleClick.bind(self,row)} target="_blank" href={row.url}>{row.url&&<span style={{width:16,height:16,backgroundImage:`-webkit-image-set(url("chrome://favicon/size/16@1x/${row.url}") 1x, url("chrome://favicon/size/16@2x/${row.url}") 2x)`}}  className="img" ></span>||<Icon  className="img" type="folder" theme="outlined" />}
+                        <span className="wy_title" dangerouslySetInnerHTML={{ __html: newTitle||row.title}}></span>
+                    </a>
+                    <EditableTagGroup/>
+                </td>
 
-            <td  className="wy_cmd">
-                <Dropdown overlay={menu(row)} trigger={['click']}>
-                    <a className="ant-dropdown-link" href="#"><span style={{marginRight:"1em"}}>{moment(row.dateAdded).format(dateFormat)}</span> <Icon type="ellipsis" theme="outlined" /></a>
-                </Dropdown>
-            </td>
+                <td  className="wy_cmd">
+                    <Dropdown overlay={menu(row)} trigger={['click']}>
+                        <a className="ant-dropdown-link" href="#"><span style={{marginRight:"1em"}}>{moment(row.dateAdded).format(dateFormat)}</span> <Icon type="ellipsis" theme="outlined" /></a>
+                    </Dropdown>
+                </td>
 
 
-        </tr>
+            </tr>
+        )
+
+        return trContent(row)
     }
 }
 export default hot(module)(Tr);
