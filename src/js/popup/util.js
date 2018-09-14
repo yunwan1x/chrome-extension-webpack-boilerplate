@@ -16,4 +16,5 @@ function getHtml() {
     var a=`aaa`
     return a;
 }
-export  {getBread,getHtml}
+var loadSize=50;
+export  {getBread,getHtml,loadSize}
