@@ -2,26 +2,23 @@ import React from "react";
 import {hot} from "react-hot-loader";
 import moment from 'moment';
 import {array} from 'lodash';
-import {getBread} from './util'
 import bookmark from '../service/chrome';
 import {Button,Icon,Popconfirm, message} from 'antd';
 import Tr from "./tr"
-var self;
 const dateFormat="YYYY-MM-DD HH:mm:ss";
-const loadsizeNum=20;
+import {getBread,getHtml,loadSize} from './util';
+
 class ContentCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loadSize:loadsizeNum,
+            loadSize:loadSize,
         }
-        self=this;
-        window.card=this;
     }
 
 
     componentWillReceiveProps(nextProps){
-        this.setState({loadSize:loadsizeNum});
+        this.setState({loadSize:loadSize});
     }
 
 
