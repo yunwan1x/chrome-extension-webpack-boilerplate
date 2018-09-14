@@ -5,9 +5,9 @@ import {array} from 'lodash';
 import {getBread} from './util'
 import bookmark from '../service/chrome';
 import EditableTagGroup from './tag'
-import {Button,Icon,Popconfirm, message,Row,Col} from 'antd';
+import {Button,Icon,Popconfirm, message,Row,Col,Menu, Dropdown} from 'antd';
 var self=this;
-const dateFormat="YY/MM/DD";
+const dateFormat="YY/MM/DD HH:mm";
 
 class Tr extends React.Component {
     constructor(props) {
@@ -24,6 +24,7 @@ class Tr extends React.Component {
             console.log("not update");
             return false;
         }
+        console.log("should update")
         return true;
     }
 
@@ -44,25 +45,35 @@ class Tr extends React.Component {
     render(){
         let {row,rowIndex,loadSize,search}=this.props;
         let {filter,deleteItem}=this.props;
+
+        const menu =(row)=> (
+            <Menu style={{width:200}} >
+
+                {row.url&&<Menu.Item><a  onClick={filter.bind(this,row,"site")}>网站</a></Menu.Item>}
+                {row.url&&<Menu.Item><a  onClick={filter.bind(this,row,"domain")}>域名</a></Menu.Item>}
+                <Menu.Item >
+                        <a size="small" onClick={deleteItem.bind(this,row,this.deleteCallback.bind(this,row))}>删除</a>
+                </Menu.Item>
+                <Menu.Item>
+                    <a size="small">编辑</a>
+                </Menu.Item>
+            </Menu>
+        );
+
         return <tr>
 
             <td    ref={(dom)=>{row.dom=dom;}} >
 
-
-                <Row>
-                    <Col><div className="wy_cmd"><a>{moment(row.dateAdded).format(dateFormat)}</a>   {row.url&&<a  onClick={filter.bind(this,row,"site")}>网站</a>}
-                        {row.url&&<a  onClick={filter.bind(this,row,"domain")}>域名</a>}
-                        <Popconfirm title="确定删除这个吗？" onConfirm={deleteItem.bind(this,row,this.deleteCallback.bind(this,row))}  okText="Yes" cancelText="No">
-                            <a size="small" >删除</a>
-                        </Popconfirm>
-                        <a size="small">编辑</a></div></Col>
-                    <Col ><a style={{marginRight:"2em"}} onClick={self.handleClick.bind(self,row)} target="_blank" href={row.url}>{row.url&&<img src={`chrome://favicon/size/16@1x/${row.url}`} className="img" />||<Icon  className="img" type="folder" theme="outlined" />}
-                        <span className="wy_title" dangerouslySetInnerHTML={{ __html: this.props.search&&row.title.split(new RegExp(search,"i")).join(`<span style="color: red">${search}</span>`)||row.title}}></span>
-                    </a> <EditableTagGroup/></Col>
-                </Row>
-                {/*<Row><Col></Col></Row>*/}
+                <a style={{marginRight:"2em"}} onClick={self.handleClick.bind(self,row)} target="_blank" href={row.url}>{row.url&&<span style={{width:16,height:16,backgroundImage:`-webkit-image-set(url("chrome://favicon/size/16@1x/${row.url}") 1x, url("chrome://favicon/size/16@2x/${row.url}") 2x)`}}  className="img" ></span>||<Icon  className="img" type="folder" theme="outlined" />}
+                    <span className="wy_title" dangerouslySetInnerHTML={{ __html: this.props.search&&row.title.split(new RegExp(search,"i")).join(`<span style="color: red">${search}</span>`)||row.title}}></span>
+                </a> <EditableTagGroup/>
             </td>
 
+            <td  className="wy_cmd">
+                <Dropdown overlay={menu(row)} trigger={['click']}>
+                    <a className="ant-dropdown-link" href="#"><span style={{marginRight:"1em"}}>{moment(row.dateAdded).format(dateFormat)}</span> <Icon type="ellipsis" theme="outlined" /></a>
+                </Dropdown>
+            </td>
 
 
         </tr>
