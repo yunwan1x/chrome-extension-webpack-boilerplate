@@ -158,8 +158,13 @@ class GreetingComponent extends React.Component {
             });
         }
         else {
-            let res=await bookmark.remove(v.id);
-            callback();
+            confirm({
+                title: '你确定确定删除吗?',
+                async onOk() {
+                    let res=await bookmark.remove(v.id);
+                    callback();
+                }
+            });
         }
     }
 
