@@ -66,7 +66,8 @@ box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px
 }
 .wy_content{
   padding: 1em;
-  height: calc(100vh - 80px)
+  height: calc(100vh - 80px);
+  overflow: scroll;
 }
 .wy_toolbar{
   margin-bottom: 1em;
@@ -77,4 +78,7 @@ box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px
 .wy_cmd{
   width: 190px;
   text-align: right;
+}
+.ant-tag{
+  border-radius: 0px !important;
 }
