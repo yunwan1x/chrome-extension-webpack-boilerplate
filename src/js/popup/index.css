@@ -85,7 +85,21 @@ display: inline-block;
   border: none !important;
   padding: 0 !important;
 }
-
+.left_tag{
+  padding: 0.3em 0.5em;
+  display: inline-block;
+  border: 1px solid #1890ff;
+  color: #1890ff;
+  margin-right: 0.5em;
+  line-height: 1;
+  margin-bottom: 0.8em;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+.left_tag:hover,.left_tag:active{
+  color: white;
+  background-color: #1890ff;
+}
 .header{
   overflow: hidden;
   padding: 0 1em;

@@ -2,6 +2,9 @@ import IdbKvStore from 'idb-kv-store'
 var bookmarks={};
 var store = new IdbKvStore('wy_bookmark')
 bookmarks.store=store;
+
+
+
 bookmarks.getTree=function (){
     return new Promise((resolve, reject) => {
     chrome.bookmarks.getTree((treeNode)=>{

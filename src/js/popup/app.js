@@ -2,6 +2,7 @@ import React from "react";
 import {hot} from "react-hot-loader";
 import ContentCard   from "./card"
 import styles from './index.css'
+import Left from './left'
 import 'antd/dist/antd.css';
 import bookmark from '../service/chrome';
 import {getBread,getHtml,loadSize} from './util';
@@ -95,6 +96,11 @@ class GreetingComponent extends React.Component {
     treeNodeHandleClick(selectedKeys, {selected, selectedNodes, node, event}){
         _this.nodeSelect(node.props.dataRef);
     }
+
+    nodeHandleClick(node){
+        _this.nodeSelect(node);
+    }
+
     async searchBookmark(str,a,b){
         let word=str.target.value;
         if(!word)return;
@@ -121,9 +127,7 @@ class GreetingComponent extends React.Component {
         if(node.id<0){
             children=node.children;
             let bread=[];
-            if(node.id==-1){
-                bread.push(node)
-            }
+            bread.push(node)
             _this.reduceState({selectedNode:{id:node.id},urls:children,bread});
         }else {
             children=await  bookmark.getChildren(node.id)
@@ -203,14 +207,7 @@ class GreetingComponent extends React.Component {
 
 
                 <div className="flex-container">
-                    <div className="left"    >
-                        <DirectoryTree
-                            multiple
-                            onSelect={this.treeNodeHandleClick}
-                        >
-                            {this.renderTreeNodes(bookmarks)}
-                        </DirectoryTree>
-                    </div>
+                    <Left {...this.state} parent={this}  />
 
                     <div  className="right" ref={(dom)=>{_this.content=dom}} >
                         <div className="wy_toolbar">
