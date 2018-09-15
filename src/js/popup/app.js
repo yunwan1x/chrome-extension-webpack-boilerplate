@@ -6,14 +6,13 @@ import 'antd/dist/antd.css';
 import bookmark from '../service/chrome';
 import {getBread,getHtml,loadSize} from './util';
 import markImg from '../../img/mark.svg';
-import {Layout, Modal,Tree,Row,Col,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete,Popconfirm, message} from 'antd';
+import { Modal,Tree,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete} from 'antd';
 const confirm = Modal.confirm;
 import { Menu, Switch } from 'antd';
 const SubMenu = Menu.SubMenu;
 const TreeNode = Tree.TreeNode;
 const DirectoryTree = Tree.DirectoryTree;
 var _this;
-const {Header, Footer, Sider, Content} = Layout;
 const dateFormat="YYYY-MM-DD HH:mm:ss";
 class GreetingComponent extends React.Component {
     constructor(props) {
@@ -225,32 +224,21 @@ class GreetingComponent extends React.Component {
                                      handleClick={({node,urls, bread}) => _this.reduceState({selectedNode:{id:node.id},urls: urls, bread: bread})}
                                      deleteItem={_this.deleteItem}
                                      filter={_this.filter}/>
-                        <Footer  style={{textAlign: 'center'}}>
+                        <div   style={{textAlign: 'center',padding:'2em 0em'}}>
                             Professional Bookmark Manager ©2018 Created By changhui.wy
                             <div ref={(dom)=>{
                                 dom&&_this.intersectionObserver.observe(dom);
                             }} ><a  href="mailto:512458266@qq.com" target="_blank">给changhui.wy发送邮件</a></div>
-                        </Footer>
+                        </div>
                     </div>
                 </div>
             }
             {
-                current == 'history'&&
-                <Layout style={{overflow: 'hidden'}}>
-                    <Content style={{overflow: 'auto', height: "calc(100vh - 80px)"}}>
+                current == 'history'
 
-                        <img src={markImg} />
-                    </Content>
-                </Layout>
             }
             {
-                current == 'search'&&
-                <Layout style={{overflow: 'hidden'}}>
-                    <Content style={{overflow: 'hidden', height: "calc(100vh - 80px)"}}>
-                        <iframe framespacing="0" frameBorder="NO" scrolling="yes" width="100%" height="100%" noresize=""  src="https://www.google.com.hk/imghp?hl=zh-CN&tab=wi&gws_rd=cr"></iframe>
-
-                    </Content>
-                </Layout>
+                current == 'search'
             }
             </React.Fragment>
     }
