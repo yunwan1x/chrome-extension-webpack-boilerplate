@@ -122,7 +122,11 @@ class GreetingComponent extends React.Component {
         let children=[];
         if(node.id<0){
             children=node.children;
-            _this.reduceState({selectedNode:{id:node.id},urls:children});
+            let bread=[];
+            if(node.id==-1){
+                bread.push("最近书签")
+            }
+            _this.reduceState({selectedNode:{id:node.id},urls:children,bread});
         }else {
             children=await  bookmark.getChildren(node.id)
             if(children.length>0){
