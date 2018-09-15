@@ -68,6 +68,7 @@ box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px
   background: #fff;
   color:#1890ff;
 display: inline-block;
+  cursor: pointer;
   margin-right: 1em;
 }
 .wy_toolbar{
@@ -94,12 +95,9 @@ display: inline-block;
   line-height: 1;
   margin-bottom: 0.8em;
   cursor: pointer;
-  font-size: 0.8em;
+  font-size: 12px;
 }
-.left_tag:hover,.left_tag:active{
-  color: white;
-  background-color: #1890ff;
-}
+
 .header{
   overflow: hidden;
   padding: 0 1em;

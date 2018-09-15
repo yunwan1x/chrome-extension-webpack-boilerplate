@@ -3,7 +3,7 @@ import {hot} from "react-hot-loader";
 import bookmark from '../service/chrome';
 const confirm = Modal.confirm;
 import { Modal,Tree,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete} from 'antd';
-
+import {Color} from './util'
 import { Menu, Switch,Tag } from 'antd';
 const SubMenu = Menu.SubMenu;
 const TreeNode = Tree.TreeNode;
@@ -22,12 +22,9 @@ class Left extends React.Component{
         this.props.parent.nodeSelect(node)
     }
 
-    componentDidMount(){
-        let ab=async ()=>{
-            let tags=  await bookmark.store.keys(IDBKeyRange.lowerBound("A"));
-            this.setState({tags:tags})
-        }
-        ab();
+    async componentDidMount(){
+        let tags=  await bookmark.store.keys(IDBKeyRange.lowerBound("A"));
+        this.setState({tags:tags})
     }
 
     render(){
@@ -55,7 +52,12 @@ class Left extends React.Component{
                 >
                     {parent.renderTreeNodes(bookmarks)}
                 </DirectoryTree>}
-                {key=='tag'&&<div style={{padding:'1em'}}>{tags.map((v,index)=><span  className="left_tag" onClick={this.getUrls.bind(this,v,index)}>{v}</span>)}</div>}
+                {key=='tag'&&<div style={{padding:'1em'}}>{tags.map((v,index)=>{
+
+                    let color=Color({hue: v.charCodeAt()%360, saturation: 1, lightness: 0.5});
+                    let style={backgroundColor:color.toString(),color:'white',borderColor:color.toString()};
+                    return <span style={style}  className="left_tag" onClick={this.getUrls.bind(this,v,index)}>{v}</span>
+                })}</div>}
 
             </div>
         )

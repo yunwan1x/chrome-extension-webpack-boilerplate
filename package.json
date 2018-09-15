@@ -9,6 +9,7 @@
   "dependencies": {
     "ant-design-pro": "^1.4.4",
     "antd": "^3.0.3",
+    "color-js": "^1.0.4",
     "idb-kv-store": "^4.4.0",
     "less-loader": "^4.1.0",
     "lodash": "^4.17.10",

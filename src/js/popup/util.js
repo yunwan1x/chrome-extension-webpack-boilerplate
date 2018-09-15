@@ -1,5 +1,5 @@
 import bookmark from "../service/chrome";
-
+import Color from 'color-js'
 async function getBread(node){
     var a=[];
     let a1=node;
@@ -17,4 +17,4 @@ function getHtml() {
     return a;
 }
 var loadSize=50;
-export  {getBread,getHtml,loadSize}
+export  {getBread,getHtml,loadSize,Color}
