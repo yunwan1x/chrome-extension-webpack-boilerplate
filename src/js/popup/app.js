@@ -188,9 +188,9 @@ class GreetingComponent extends React.Component {
                     placeholder="请输入"
                     optionLabelProp="text"
                 >
-                    <Input onPressEnter={_this.searchBookmark} value={search}
+                    <Input onPressEnter={_this.searchBookmark} value={search} style={{borderRadius:0}}
                         suffix={(
-                            <Button  className="search-btn" size="middle" type="primary">
+                            <Button style={{borderRadius:0}}  className="search-btn" size="middle" type="primary">
                                 <Icon type="search" />
                             </Button>
                         )}

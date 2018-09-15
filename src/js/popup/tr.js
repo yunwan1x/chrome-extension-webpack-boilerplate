@@ -30,7 +30,9 @@ class Tr extends React.Component {
 
 
     deleteCallback(v){
-        v.dom.parentNode.removeChild(v.dom);
+        let tr=v.dom.parentNode;
+        let tbody=tr.parentNode;
+        tbody.removeChild(tr);
     }
 
     async handleClick(node){

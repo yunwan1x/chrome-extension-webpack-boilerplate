@@ -118,3 +118,6 @@ display: inline-block;
 .logo{
   margin-right: 1em;
 }
+.ant-input{
+  border-radius: 0 !important;
+}
