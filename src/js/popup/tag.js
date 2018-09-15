@@ -15,7 +15,7 @@ class EditableTagGroup extends React.Component {
     constructor(props,context){
         super(props,context);
         this.state = {
-            tags: Array.from({length:1}).map((v,index)=>'java技术'+index),
+            tags: [],
             inputVisible: false,
             inputValue: '',
         };
@@ -42,15 +42,40 @@ class EditableTagGroup extends React.Component {
     handleInputChange (e)  {
         this.setState({ inputValue: e.target.value });
     }
+    componentDidMount(){
+        this.props.node.id&&bookmark.store.get(this.props.node.id,(e,value)=>{
+            value&&this.setState({
+                tags:value
+            })
+        })
+        bookmark.store.values();
+    }
 
-    handleInputConfirm  ()  {
+    async handleInputConfirm  ()  {
         const state = this.state;
-        const inputValue = state.inputValue;
+        let  inputValue = state.inputValue;
         let tags = state.tags;
+        inputValue=inputValue.replace(/\s|^\d/g,"");
         if (inputValue && tags.indexOf(inputValue) === -1) {
             tags = [...tags, inputValue];
         }
-        console.log(tags);
+
+        let {node}=this.props;
+        bookmark.store.set(node.id,tags,(e)=>{console.log(e)});
+        bookmark.store.get(inputValue,(e,value)=>{
+            let newNode={id:node.id,title:node.title,dateAdded:node.dateAdded,parentId:node.parentId};
+            if(node.url)newNode.url=node.url;
+            if(node.dateGroupModified)newNode.dateGroupModified=node.dateGroupModified;
+            if(value&&!value.includes(node)){
+                value.push(newNode);
+                bookmark.store.set(inputValue,value);
+            }
+            else {
+                bookmark.store.set(inputValue,[newNode]);
+            }
+        })
+
+
         this.setState({
             tags,
             inputVisible: false,
