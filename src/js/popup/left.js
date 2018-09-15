@@ -54,7 +54,7 @@ class Left extends React.Component{
                 </DirectoryTree>}
                 {key=='tag'&&<div style={{padding:'1em'}}>{tags.map((v,index)=>{
 
-                    let color=Color({hue: v.charCodeAt()%360, saturation: 1, lightness: 0.5});
+                    let color=Color({hue: v.charCodeAt()%360, saturation: 0.5, lightness: 0.5});
                     let style={backgroundColor:color.toString(),color:'white',borderColor:color.toString()};
                     return <span style={style}  className="left_tag" onClick={this.getUrls.bind(this,v,index)}>{v}</span>
                 })}</div>}
