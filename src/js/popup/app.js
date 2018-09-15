@@ -52,7 +52,6 @@ class GreetingComponent extends React.Component {
         }
         // history.push(newState);
         // _this.historyInfo.historyIndex=history.length-1;
-        console.log("ss");
         _this.setState({...newState},()=>_this.content.scrollTop=0);
     }
     forword(){
@@ -97,7 +96,6 @@ class GreetingComponent extends React.Component {
         _this.nodeSelect(node.props.dataRef);
     }
     async searchBookmark(str,a,b){
-        console.log("ss")
         let word=str.target.value;
         if(!word)return;
         let children= await bookmark.search(word);
@@ -124,7 +122,7 @@ class GreetingComponent extends React.Component {
             children=node.children;
             let bread=[];
             if(node.id==-1){
-                bread.push("最近书签")
+                bread.push(node)
             }
             _this.reduceState({selectedNode:{id:node.id},urls:children,bread});
         }else {

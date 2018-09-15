@@ -19,7 +19,7 @@ bookmarks.get=function (id) {
 }
 bookmarks.getRecent=function(){
     return new Promise((resolve, reject) => {
-        chrome.bookmarks.getRecent(1000, (b)=>resolve(b))
+        chrome.bookmarks.getRecent(10000, (b)=>resolve(b))
     })
 
 }

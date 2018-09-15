@@ -21,10 +21,8 @@ class Tr extends React.Component {
     shouldComponentUpdate(nextProps, nextState){
         if(nextProps.row.id==this.props.row.id)
         {
-            console.log("not update");
             return false;
         }
-        console.log("should update")
         return true;
     }
 
