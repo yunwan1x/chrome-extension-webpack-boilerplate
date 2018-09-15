@@ -74,7 +74,7 @@ class Tr extends React.Component {
 
                 <td  className="wy_cmd">
                     <Dropdown overlay={menu(row)} trigger={['click']}>
-                        <a className="ant-dropdown-link" href="#"><span style={{marginRight:"1em"}}>{moment(row.dateAdded).format(dateFormat)}</span> <Icon type="ellipsis" theme="outlined" /></a>
+                        <span style={{cursor:'pointer'}} ><span style={{marginRight:"1em"}}>{moment(row.dateAdded).format(dateFormat)}</span> <Icon type="ellipsis" theme="outlined" /></span>
                     </Dropdown>
                 </td>
 

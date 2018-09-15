@@ -65,11 +65,11 @@ class EditableTagGroup extends React.Component {
         return (
             <div className="wy_tag_container">
                 {tags.map((tag, index) => {
-                    const isLongTag = tag.length > 20;
+                    const isLongTag = tag.length > 10;
                     const tagElem = (
-                        <Tag style={{ background: '#fff', color:'#1890ff', border: '1px solid #1890ff' }} key={tag} closable={index !== 0} afterClose={() => this.handleClose(tag)}>
+                        <span className="wy_tag"  key={tag} closable={index !== 0} afterClose={() => this.handleClose(tag)}>
                             {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                        </Tag>
+                        </span>
                     );
                     return isLongTag ? <Tooltip title={tag} key={tag}>{tagElem}</Tooltip> : tagElem;
                 })}

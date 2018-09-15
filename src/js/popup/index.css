@@ -64,10 +64,11 @@ box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px
   display: inline;
   line-height: 2;
 }
-.wy_content{
-  padding: 1em;
-  height: calc(100vh - 80px);
-  overflow: scroll;
+.wy_tag{
+  background: #fff;
+  color:#1890ff;
+display: inline-block;
+  margin-right: 1em;
 }
 .wy_toolbar{
   margin-bottom: 1em;
@@ -81,4 +82,39 @@ box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px
 }
 .ant-tag{
   border-radius: 0px !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.header{
+  overflow: hidden;
+  padding: 0 1em;
+  width: 100%;
+}
+.flex-container{
+  align-items: stretch;
+  padding: 1em;
+  padding-right: 0em;
+  display:flex;
+  height:calc(100vh - 50px );
+  background-color: #f0f2f5;
+}
+.right{
+  flex: auto;
+  overflow-y: auto;
+  margin-left: 1em;
+  transition: width 1s;
+ padding-right: 1em;
+
+}
+.left{
+  transition: width 1s;
+  overflow: auto;
+  background-color: white;
+  flex:none;
+  width: 250px;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.1)
+}
+.logo{
+  margin-right: 1em;
 }

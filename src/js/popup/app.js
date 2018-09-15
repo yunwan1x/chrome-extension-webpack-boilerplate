@@ -98,10 +98,11 @@ class GreetingComponent extends React.Component {
         _this.nodeSelect(node.props.dataRef);
     }
     async searchBookmark(str,a,b){
+        console.log("ss")
         let word=str.target.value;
         if(!word)return;
         let children= await bookmark.search(word);
-        _this.reduceState({selectedNode:{id:str},urls:children,search:word});
+        _this.reduceState({selectedNode:{id:word},urls:children,search:word});
     }
 
 
@@ -171,8 +172,9 @@ class GreetingComponent extends React.Component {
     render() {
         let {bookmarks,urls=[],bread,colNum,search,current} = this.state;
         let {history,historyIndex}=_this.historyInfo
-        return <Layout style={{overflow: 'hidden'}}>
-            <Anchor><Header className="header" style={{background: '#fff', padding: "1em",height:"80px"}}><img src={markImg}  height="48"/>
+        return <React.Fragment>
+
+            <Anchor style={{boxShadow:'2px 2px 10px rgba(0,0,0,0.1)'}}><div className="header" style={{background: '#fff', height:"50px"}}><img className="logo" src={markImg}  height="32"/>
                 <Menu  mode="horizontal" selectedKeys={[current]} style={{display:"inline-block"}} onClick={({ item, key, keyPath })=>_this.setState({current:key})}>
                 <Menu.Item key="bookmark" ><Icon type="mail" />书签</Menu.Item>
                 <Menu.Item key="history"><Icon type="mail" />浏览历史</Menu.Item>
@@ -180,8 +182,8 @@ class GreetingComponent extends React.Component {
             </Menu>
                 <AutoComplete
                     className="global-search"
-                    size="large"
-                    // dataSource={dataSource.map(renderOption)}
+                    size="middle"
+
                     // onSelect={onSelect}
                     // onSearch={this.handleSearch}
                     placeholder="请输入"
@@ -189,25 +191,27 @@ class GreetingComponent extends React.Component {
                 >
                     <Input onPressEnter={_this.searchBookmark} value={search}
                         suffix={(
-                            <Button  className="search-btn" size="large" type="primary">
+                            <Button  className="search-btn" size="middle" type="primary">
                                 <Icon type="search" />
                             </Button>
                         )}
                     />
                 </AutoComplete>
-            </Header></Anchor>
+            </div></Anchor>
             {current == 'bookmark' &&
-            <Layout style={{overflow: 'hidden'}}>
-                <Sider style={{overflow: 'auto', backgroundColor: "white", height: "calc(100vh - 80px)",width:'300px'}} width={300}>
-                    <DirectoryTree
-                        multiple
-                        onSelect={this.treeNodeHandleClick}
-                    >
-                        {this.renderTreeNodes(bookmarks)}
-                    </DirectoryTree>
-                </Sider>
-                <Content >
-                    <div className="wy_content" ref={(dom)=>{_this.content=dom}} >
+
+
+                <div className="flex-container">
+                    <div className="left"    >
+                        <DirectoryTree
+                            multiple
+                            onSelect={this.treeNodeHandleClick}
+                        >
+                            {this.renderTreeNodes(bookmarks)}
+                        </DirectoryTree>
+                    </div>
+
+                    <div  className="right" ref={(dom)=>{_this.content=dom}} >
                         <div className="wy_toolbar">
                             <Breadcrumb >
                                 {bread.map(v => <Breadcrumb.Item style={{cursor: "pointer"}}
@@ -228,8 +232,7 @@ class GreetingComponent extends React.Component {
                             }} ><a  href="mailto:512458266@qq.com" target="_blank">给changhui.wy发送邮件</a></div>
                         </Footer>
                     </div>
-                </Content>
-            </Layout>
+                </div>
             }
             {
                 current == 'history'&&
@@ -249,8 +252,9 @@ class GreetingComponent extends React.Component {
                     </Content>
                 </Layout>
             }
-        </Layout>
+            </React.Fragment>
     }
+
 };
 
 export default hot(module)(GreetingComponent)
