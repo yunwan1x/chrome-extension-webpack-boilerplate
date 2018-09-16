@@ -53,7 +53,7 @@ class EditableTagGroup extends React.Component {
         const state = this.state;
         let  inputValue = state.inputValue;
         let tags = state.tags;
-        inputValue=inputValue.replace(/\s|^\d/g,"");
+        inputValue=inputValue.replace(/^\s+/g,"");
         if (inputValue && tags.indexOf(inputValue) === -1) {
             tags = [...tags, inputValue];
         }
