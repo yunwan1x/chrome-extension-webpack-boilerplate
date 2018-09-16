@@ -1,42 +1,42 @@
 import IdbKvStore from 'idb-kv-store'
-var bookmarks={};
-var store = new IdbKvStore('wy_bookmark')
-bookmarks.store=store;
+var bookmark={};
+var indexDb = new IdbKvStore('wy_bookmark');
+var history={};
+var storage={};
 
 
-
-bookmarks.getTree=function (){
+bookmark.getTree=function (){
     return new Promise((resolve, reject) => {
     chrome.bookmarks.getTree((treeNode)=>{
         resolve(treeNode);
     })
 });}
-bookmarks.getChildren=function (id) {
+bookmark.getChildren=function (id) {
     return new Promise((resolve, reject) => {
         chrome.bookmarks.getChildren(id,(treeNode)=>{
             resolve(treeNode);
         })})
 }
-bookmarks.get=function (id) {
+bookmark.get=function (id) {
     return new Promise((resolve, reject) => {
         chrome.bookmarks.get(id,(treeNode)=>{
             resolve(treeNode);
         })})
 }
-bookmarks.getRecent=function(){
+bookmark.getRecent=function(){
     return new Promise((resolve, reject) => {
         chrome.bookmarks.getRecent(10000, (b)=>resolve(b))
     })
 
 }
-bookmarks.search=function(str){
+bookmark.search=function(str){
     return new Promise((resolve, reject) => {
         chrome.bookmarks.search(str, (r)=>resolve(r))
     })
 
 }
 
-bookmarks.remove=function(id){
+bookmark.remove=function(id){
     return new Promise((resolve, reject) => {
         chrome.bookmarks.remove(id,()=>{
             resolve()
@@ -44,7 +44,7 @@ bookmarks.remove=function(id){
     })
 }
 
-bookmarks.removeTree=function(id){
+bookmark.removeTree=function(id){
     return new Promise((resolve, reject) => {
         chrome.bookmarks.removeTree(id,()=>{
             resolve()
@@ -77,8 +77,53 @@ history.getVisits=function(url){
 
 }
 
+storage.saveChanges=function (key,value) {
+    let data={};
+    data[key]=value;
+    return new Promise((resolve,reject)=>{
+        chrome.storage.sync.set(data, function() {
+            resolve(true);
+            console.log("saved")
+        });
+    })
+
+}
+
+storage.getChanges=function(keys) {
+    let data={};
+    data[key]=value;
+    return new Promise((resolve,reject)=>{
+        chrome.storage.sync.get(keys, function(items) {
+            resolve(items)
+            console.log("saved")
+        });
+    })
+}
+
+storage.getBytes=function () {
+    return new Promise((resolve, reject)=>{
+        chrome.storage.sync.getBytesInUse(null, (bytes)=>{
+            resolve(bytes);
+            console.log(bytes+' bytes used')
+        })
+    })
+
+}
+
+var topSites={};
+topSites.get=function () {
+    return new Promise((resolve, reject)=>{
+        chrome.topSites.get( (items)=>{
+            resolve(items);
+            console.log(items);
+        })
+    })
+
+}
 
 
 
 
-export default bookmarks;
+
+
+export   {bookmark,indexDb,storage,history,topSites};

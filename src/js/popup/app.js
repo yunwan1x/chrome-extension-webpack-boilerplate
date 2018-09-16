@@ -4,7 +4,7 @@ import ContentCard   from "./card"
 import styles from './index.css'
 import Left from './left'
 import 'antd/dist/antd.css';
-import bookmark from '../service/chrome';
+import {bookmark,indexDb,storage,history} from '../service/chrome';
 import {getBread,getHtml,loadSize} from './util';
 import markImg from '../../img/mark.svg';
 import { Modal,Tree,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete} from 'antd';

@@ -20,11 +20,11 @@
     "unlimitedStorage",
     "chrome://favicon/",
     "*://*/*",
-    "<all_urls>",
     "tabs",
     "storage",
     "history",
-    "management"
+    "management",
+    "topSites"
   ],
   "version": "1.0",
   "manifest_version": 2,

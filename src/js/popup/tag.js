@@ -2,8 +2,8 @@ import React from "react";
 import {hot} from "react-hot-loader";
 import moment from 'moment';
 import {array} from 'lodash';
-import {getBread} from './util'
-import bookmark from '../service/chrome';
+import {ColorTag, getBread} from './util'
+import {bookmark,indexDb,storage,history} from '../service/chrome';
 import {Button,Icon,Popconfirm, message} from 'antd';
 import { Tag, Input, Tooltip } from 'antd';
 import { Collapse } from 'antd';
@@ -31,8 +31,7 @@ class EditableTagGroup extends React.Component {
 
     handleClose (removedTag)  {
         const tags = this.state.tags.filter(tag => tag !== removedTag);
-        console.log(tags);
-        self.setState({ tags });
+        this.setState({ tags });
     }
 
     showInput(){
@@ -43,12 +42,11 @@ class EditableTagGroup extends React.Component {
         this.setState({ inputValue: e.target.value });
     }
     componentDidMount(){
-        this.props.node.id&&bookmark.store.get(this.props.node.id,(e,value)=>{
+        this.props.node.id&&indexDb.get(this.props.node.id,(e,value)=>{
             value&&this.setState({
                 tags:value
             })
         })
-        bookmark.store.values();
     }
 
     async handleInputConfirm  ()  {
@@ -61,17 +59,17 @@ class EditableTagGroup extends React.Component {
         }
 
         let {node}=this.props;
-        bookmark.store.set(node.id,tags,(e)=>{console.log(e)});
-        bookmark.store.get(inputValue,(e,value)=>{
+        indexDb.set(node.id,tags,(e)=>{console.log(e)});
+        indexDb.get(inputValue,(e,value)=>{
             let newNode={id:node.id,title:node.title,dateAdded:node.dateAdded,parentId:node.parentId};
             if(node.url)newNode.url=node.url;
             if(node.dateGroupModified)newNode.dateGroupModified=node.dateGroupModified;
             if(value&&!value.includes(node)){
                 value.push(newNode);
-                bookmark.store.set(inputValue,value);
+                indexDb.set(inputValue,value);
             }
             else {
-                bookmark.store.set(inputValue,[newNode]);
+                indexDb.set(inputValue,[newNode]);
             }
         })
 
@@ -91,10 +89,12 @@ class EditableTagGroup extends React.Component {
             <div className="wy_tag_container">
                 {tags.map((tag, index) => {
                     const isLongTag = tag.length > 10;
+
                     const tagElem = (
-                        <span className="wy_tag"  key={tag} closable={index !== 0} afterClose={() => this.handleClose(tag)}>
-                            {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                        </span>
+
+                        <ColorTag close={this.handleClose.bind(this,tag)}  tag={isLongTag ? `${tag.slice(0, 10)}...` : tag} />
+
+
                     );
                     return isLongTag ? <Tooltip title={tag} key={tag}>{tagElem}</Tooltip> : tagElem;
                 })}
@@ -111,12 +111,12 @@ class EditableTagGroup extends React.Component {
                     />
                 )}
                 {!inputVisible && (
-                    <Tag
+                    <span className="left_tag"
                         onClick={this.showInput}
                         style={{ background: '#fff', borderStyle: 'dashed' }}
                     >
                         <Icon type="plus" /> New Tag
-                    </Tag>
+                    </span>
                 )}
 
             </div>
