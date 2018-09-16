@@ -211,10 +211,20 @@ class GreetingComponent extends React.Component {
 
                     <div  className="right" ref={(dom)=>{_this.content=dom}} >
                         <div className="wy_toolbar">
-                            <Breadcrumb >
+                            <span >
+                                  <Icon type="book" theme="outlined" />
+                                &nbsp;
+                                <Breadcrumb style={{display: 'inline-block'}}>
                                 {bread.map(v => <Breadcrumb.Item style={{cursor: "pointer"}}
                                                                  onClick={_this.nodeSelect.bind(this, v)}>{v.title}</Breadcrumb.Item>)}
                             </Breadcrumb>
+                            </span>
+                          <span style={{float:'right'}}>
+<Icon type="appstore" theme="outlined" />
+                              <Icon type="tags" theme="outlined" />
+                              <Icon type="save" theme="outlined" />
+                              <Icon type="calculator" theme="outlined" />
+                          </span>
 
                         </div>
                         <ContentCard onRef={(contentCard)=>{

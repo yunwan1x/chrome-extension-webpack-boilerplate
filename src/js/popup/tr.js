@@ -57,6 +57,9 @@ class Tr extends React.Component {
                 <Menu.Item>
                     <a size="small">编辑</a>
                 </Menu.Item>
+                <Menu.Item>
+                    <a size="small">查看访问历史</a>
+                </Menu.Item>
             </Menu>
         );
         let newTitle=this.props.search&&row.title.replace(new RegExp("("+search+")","ig"),"<span style='color: red'>$1</span>");

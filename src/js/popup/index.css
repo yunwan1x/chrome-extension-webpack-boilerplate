@@ -89,7 +89,9 @@ display: inline-block;
 }
 
 .wy_toolbar{
-  margin-bottom: 1em;
+  padding:1em;
+  background-color: white;
+  border-bottom: 1px solid #e8e8e8;
 }
 .wy_cmd a{
   color: rgba(0, 0, 0, 0.65) !important;
@@ -137,6 +139,8 @@ display: inline-block;
   margin-left: 1em;
   transition: width 1s;
  padding-right: 1em;
+  position: relative;
+
 
 }
 .left{
