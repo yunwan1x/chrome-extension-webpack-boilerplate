@@ -5,6 +5,12 @@ var history={};
 var storage={};
 
 
+bookmark.update=function (id,title){
+    return new Promise((resolve, reject) => {
+        chrome.bookmarks.update(id, {title:title},(treeNode)=>{
+            resolve(treeNode);
+        })
+    });}
 bookmark.getTree=function (){
     return new Promise((resolve, reject) => {
     chrome.bookmarks.getTree((treeNode)=>{
@@ -91,7 +97,7 @@ storage.saveChanges=function (key,value) {
 
 storage.getChanges=function(keys) {
     return new Promise((resolve,reject)=>{
-        chrome.storage.sync.get(keys, function(items) {
+        chrome.storage.sync.get(null, function(items) {
             resolve(items)
             console.log(items)
         });

@@ -42,38 +42,35 @@ class EditableTagGroup extends React.Component {
         this.setState({ inputValue: e.target.value });
     }
     componentDidMount(){
-        this.props.node.id&&indexDb.get(this.props.node.id,(e,value)=>{
-            value&&this.setState({
-                tags:value
-            })
-        })
+        let {title,id}=this.props.node;
+        var split="  ";
+        let tags=[];
+        let index=title.lastIndexOf(split);
+        if(index>-1){
+            tags=title.substr(index+2);
+            tags=tags.split("|")
+        }
+        this.setState({tags:tags})
     }
 
     async handleInputConfirm  ()  {
         const state = this.state;
         let  inputValue = state.inputValue;
         let tags = state.tags;
-        inputValue=inputValue.replace(/^\s+/g,"");
+        inputValue=inputValue.replace(/^\s+|,/g,"");
         if (inputValue && tags.indexOf(inputValue) === -1) {
             tags = [...tags, inputValue];
         }
 
-        let {node}=this.props;
-        indexDb.set(node.id,tags,(e)=>{console.log(e)});
-        indexDb.get(inputValue,(e,value)=>{
-            let newNode={id:node.id,title:node.title,dateAdded:node.dateAdded,parentId:node.parentId};
-            if(node.url)newNode.url=node.url;
-            if(node.dateGroupModified)newNode.dateGroupModified=node.dateGroupModified;
-            if(value&&!value.includes(node)){
-                value.push(newNode);
-                indexDb.set(inputValue,value);
-            }
-            else {
-                indexDb.set(inputValue,[newNode]);
-            }
-        })
-
-
+        let {title,id}=this.props.node;
+        var split="  ";
+        let oldTags="";
+        let index=title.lastIndexOf(split);
+        if(index>-1){
+            oldTags=title.substr(index+2);
+            title=title.substr(0,index);
+        }
+        bookmark.update(id,title+split+tags.join("|"))
         this.setState({
             tags,
             inputVisible: false,
@@ -85,7 +82,6 @@ class EditableTagGroup extends React.Component {
 
     render() {
         const { tags, inputVisible, inputValue } = this.state;
-        // const {tags,node}=this.props;
 
         return (
             <div className="wy_tag_container">

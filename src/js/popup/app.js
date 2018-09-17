@@ -27,8 +27,6 @@ class GreetingComponent extends React.Component {
             flatBookmarks: [],
             search: "",
             selectedNode: '',
-            tags: {}
-
         }
         this.historyInfo = {
             history: [],
@@ -40,13 +38,6 @@ class GreetingComponent extends React.Component {
             let child = _this.contentCard;
             child.setState({loadSize: child.state.loadSize + loadSize});
         }, {threshold: [0]});
-        storage.getChanges("tags").then(tags => {
-            _this.setState({tags: tags});
-        });
-        window.setInterval(function () {
-             console.log("save")
-            storage.saveChanges("tags", "hello world");
-        }, 1000*10 );
     }
 
 
