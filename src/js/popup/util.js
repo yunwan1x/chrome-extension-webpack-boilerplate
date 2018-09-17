@@ -1,4 +1,4 @@
-import {bookmark} from "../service/chrome";
+import {bookmark, storage} from "../service/chrome";
 import React from 'react'
 import Color from 'color-js'
 import {Icon} from 'antd'
@@ -19,6 +19,7 @@ function getHtml() {
     return a;
 }
 var loadSize=50;
+
 function ColorTag(props) {
     let color=Color({hue: props.tag.charCodeAt()%360, saturation: 0.5, lightness: 0.5});
     let style={backgroundColor:color.toString(),color:'white',borderColor:color.toString()};

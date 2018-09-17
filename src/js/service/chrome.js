@@ -83,19 +83,17 @@ storage.saveChanges=function (key,value) {
     return new Promise((resolve,reject)=>{
         chrome.storage.sync.set(data, function() {
             resolve(true);
-            console.log("saved")
+            console.log(chrome.runtime.lastError)
         });
     })
 
 }
 
 storage.getChanges=function(keys) {
-    let data={};
-    data[key]=value;
     return new Promise((resolve,reject)=>{
         chrome.storage.sync.get(keys, function(items) {
             resolve(items)
-            console.log("saved")
+            console.log(items)
         });
     })
 }

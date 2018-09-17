@@ -85,6 +85,8 @@ class EditableTagGroup extends React.Component {
 
     render() {
         const { tags, inputVisible, inputValue } = this.state;
+        // const {tags,node}=this.props;
+
         return (
             <div className="wy_tag_container">
                 {tags.map((tag, index) => {

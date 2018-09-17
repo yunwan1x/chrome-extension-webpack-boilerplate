@@ -20,26 +20,35 @@ class GreetingComponent extends React.Component {
         super(props);
         this.state = {
             bookmarks: [],
-            urls:[],
-            current:'bookmark',
-            colNum:1,
-            bread:[],
-            flatBookmarks:[],
-            search:"",
-            selectedNode:'',
+            urls: [],
+            current: 'bookmark',
+            colNum: 1,
+            bread: [],
+            flatBookmarks: [],
+            search: "",
+            selectedNode: '',
+            tags: {}
 
         }
-        this.historyInfo={
-            history:[],
-            historyIndex:0
+        this.historyInfo = {
+            history: [],
+            historyIndex: 0
         }
-        _this=this;
-        _this.intersectionObserver = new IntersectionObserver(function(entries) {
+        _this = this;
+        _this.intersectionObserver = new IntersectionObserver(function (entries) {
             if (entries[0].intersectionRatio < 0) return;
-            let child=_this.contentCard;
-            child.setState({loadSize:child.state.loadSize+loadSize});
-        },{threshold:[0]});
+            let child = _this.contentCard;
+            child.setState({loadSize: child.state.loadSize + loadSize});
+        }, {threshold: [0]});
+        storage.getChanges("tags").then(tags => {
+            _this.setState({tags: tags});
+        });
+        window.setInterval(function () {
+             console.log("save")
+            storage.saveChanges("tags", "hello world");
+        }, 1000*10 );
     }
+
 
     reduceState(obj){
         let {selectedNode}=obj;
@@ -210,7 +219,10 @@ class GreetingComponent extends React.Component {
                     <Left {...this.state} parent={this}  />
 
                     <div  className="right" ref={(dom)=>{_this.content=dom}} >
-                        <div className="wy_toolbar">
+                        <div className="wy_toolbar" ref={(dom)=>{
+
+                        }
+                        }>
                             <span >
                                   <Icon type="book" theme="outlined" />
                                 &nbsp;
@@ -220,10 +232,10 @@ class GreetingComponent extends React.Component {
                             </Breadcrumb>
                             </span>
                           <span style={{float:'right'}}>
-<Icon type="appstore" theme="outlined" />
-                              <Icon type="tags" theme="outlined" />
-                              <Icon type="save" theme="outlined" />
-                              <Icon type="calculator" theme="outlined" />
+
+
+
+
                           </span>
 
                         </div>
