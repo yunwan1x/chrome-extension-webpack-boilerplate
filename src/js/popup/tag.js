@@ -49,6 +49,7 @@ class EditableTagGroup extends React.Component {
         if(index>-1){
             tags=title.substr(index+2);
             tags=tags.split("|")
+            console.log(tags);
         }
         this.setState({tags:tags})
     }
@@ -61,6 +62,13 @@ class EditableTagGroup extends React.Component {
         if (inputValue && tags.indexOf(inputValue) === -1) {
             tags = [...tags, inputValue];
         }
+        else {
+            this.setState({
+                inputVisible: false,
+                inputValue: '',
+            });
+            return;
+        }
 
         let {title,id}=this.props.node;
         var split="  ";
@@ -69,8 +77,8 @@ class EditableTagGroup extends React.Component {
         if(index>-1){
             oldTags=title.substr(index+2);
             title=title.substr(0,index);
+            bookmark.update(id,title+split+tags.join("|"))
         }
-        bookmark.update(id,title+split+tags.join("|"))
         this.setState({
             tags,
             inputVisible: false,
