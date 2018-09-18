@@ -1,7 +1,6 @@
 import React from "react";
 import {hot} from "react-hot-loader";
 import moment from 'moment';
-import {array} from 'lodash';
 import {ColorTag, getBread,splitTitle} from './util'
 import {bookmark,indexDb,storage,history} from '../service/chrome';
 import {Button,Icon,Popconfirm, message} from 'antd';
