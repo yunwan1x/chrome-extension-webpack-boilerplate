@@ -2,7 +2,7 @@ import React from "react";
 import {hot} from "react-hot-loader";
 import moment from 'moment';
 import {array} from 'lodash';
-import {ColorTag, getBread} from './util'
+import {ColorTag, getBread,splitTitle} from './util'
 import {bookmark,indexDb,storage,history} from '../service/chrome';
 import {Button,Icon,Popconfirm, message} from 'antd';
 import { Tag, Input, Tooltip } from 'antd';
@@ -30,8 +30,16 @@ class EditableTagGroup extends React.Component {
 
 
     handleClose (removedTag)  {
+        let {id,title}=this.props.node;
+        let {node,dealTag}=this.props;
+        let obj=splitTitle(title);
         const tags = this.state.tags.filter(tag => tag !== removedTag);
-        this.setState({ tags });
+        this.setState({ tags },async()=>{
+            let newTitle=obj.title+obj.split+tags.join("|");
+            await bookmark.update(id,newTitle);
+            node.title=newTitle;
+            dealTag(removedTag,node,"del");
+        });
     }
 
     showInput(){
@@ -43,16 +51,16 @@ class EditableTagGroup extends React.Component {
     }
     componentDidMount(){
         let {title,id}=this.props.node;
-        var split="  ";
-        let tags=[];
-        let index=title.lastIndexOf(split);
-        if(index>-1){
-            tags=title.substr(index+2);
-            tags=tags.split("|")
-            console.log(tags);
-        }
-        this.setState({tags:tags})
+        this.setState({tags:splitTitle(title).tags})
     }
+
+    tagClick(tagName){
+        let {tagMaps}=this.props;
+        let tagChildren=tagMaps[tagName];
+        let node={title:'标签-'+tagName,children:tagChildren,id:tagName,category:"tag"};
+        this.props.parent.nodeSelect(node)
+    }
+
 
     async handleInputConfirm  ()  {
         const state = this.state;
@@ -62,27 +70,21 @@ class EditableTagGroup extends React.Component {
         if (inputValue && tags.indexOf(inputValue) === -1) {
             tags = [...tags, inputValue];
         }
-        else {
-            this.setState({
-                inputVisible: false,
-                inputValue: '',
-            });
-            return;
-        }
-
         let {title,id}=this.props.node;
-        var split="  ";
-        let oldTags="";
-        let index=title.lastIndexOf(split);
-        if(index>-1){
-            oldTags=title.substr(index+2);
-            title=title.substr(0,index);
-            bookmark.update(id,title+split+tags.join("|"))
-        }
+        let {node,dealTag}=this.props;
+        let titleObj=splitTitle(title);
         this.setState({
             tags,
             inputVisible: false,
             inputValue: '',
+        },async()=>
+        {
+            if(inputValue){
+                let newTitle=titleObj.title+titleObj.split+tags.join("|");
+                await bookmark.update(id,newTitle);
+                node.title=newTitle;
+                dealTag(inputValue,node,"add");
+            }
         });
     }
 
@@ -98,7 +100,7 @@ class EditableTagGroup extends React.Component {
 
                     const tagElem = (
 
-                        <ColorTag close={this.handleClose.bind(this,tag)}  tag={isLongTag ? `${tag.slice(0, 10)}...` : tag} />
+                        <ColorTag onClick={this.tagClick.bind(this,tag)} close={this.handleClose.bind(this,tag)}  tag={isLongTag ? `${tag.slice(0, 10)}...` : tag} />
 
 
                     );
