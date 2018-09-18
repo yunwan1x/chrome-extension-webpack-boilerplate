@@ -5,7 +5,7 @@ import styles from './index.css'
 import Left from './left'
 import 'antd/dist/antd.css';
 import {bookmark,indexDb,storage,history} from '../service/chrome';
-import {getBread,getHtml,loadSize} from './util';
+import {getBread,getHtml,loadSize,splitTitle} from './util';
 import markImg from '../../img/mark.svg';
 import { Modal,Tree,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete} from 'antd';
 const confirm = Modal.confirm;
@@ -27,6 +27,8 @@ class GreetingComponent extends React.Component {
             flatBookmarks: [],
             search: "",
             selectedNode: '',
+            tagMaps:{},
+            parent:this
         }
         this.historyInfo = {
             history: [],
@@ -40,10 +42,24 @@ class GreetingComponent extends React.Component {
         }, {threshold: [0]});
     }
 
+    dealTag(tagName,node,optype){
+        let {tagMaps}=_this.state;
+        let tagChildren=tagMaps[tagName]||[];
+        if(optype=='add'){
+            tagChildren.push(node);
+            tagMaps[tagName]=tagChildren;
+        }
+        if(optype=='del'){
+            tagChildren.splice(tagChildren.indexOf(node),1);
+        }
+        if(tagChildren.length==0)delete tagMaps[tagName];
+        _this.setState({tagMaps:tagMaps});
+    }
+
 
     reduceState(obj){
         let {selectedNode}=obj;
-        if(selectedNode.id==_this.state.selectedNode.id){
+        if((selectedNode.id==_this.state.selectedNode.id)){
             return;
         }
         var newState={..._this.state,...obj};
@@ -76,12 +92,21 @@ class GreetingComponent extends React.Component {
             let recent=await bookmark.getRecent();
             let bread= await getBread(bookmarks[0]);
             _this.state.flatBookmarks =_this.flatBookmarks(bookmarks);
-            // let category=_this.state.flatBookmarks.filter(v=>v.children&&v.children.length>=0)
-            bookmarks.push({title:'最近书签',children:recent,id:-1});
-            // bookmarks.push({title:'文件夹',children:category,id:-2});
-            _this.reduceState({selectedNode:bookmarks[0], bookmarks: bookmarks,urls:bookmarks[0].children,bread:bread});
+            let tagMaps=_this.state.flatBookmarks.reduce((map,node)=>{
+                let {title,tags}=splitTitle(node.title);
+                tags.forEach(tag=>{
+                    let container=map[tag]||[];
+                    container.push(node)
+                    map[tag]=container;
+                })
+                return map;
+            },{});
+            bookmarks.push({title:'最近书签',children:recent,id:-1,category:'recent'});
+            _this.reduceState({tagMaps:tagMaps,selectedNode:bookmarks[0], bookmarks: bookmarks,urls:bookmarks[0].children,bread:bread});
         })
     }
+
+
     flatBookmarks(bk){
         var a=[];
         a=a.concat(bk);
@@ -113,7 +138,7 @@ class GreetingComponent extends React.Component {
         return bookmarks.map((item) => {
             if (item.children) {
                 return (
-                    <TreeNode icon={null} title={item.title}  dataRef={item}>
+                    <TreeNode icon={null} title={splitTitle(item.title).title}  dataRef={item}>
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
@@ -124,12 +149,13 @@ class GreetingComponent extends React.Component {
 
     async nodeSelect(node){
         let children=[];
-        if(node.id<0){
+        if(node.category){
             children=node.children;
             let bread=[];
             bread.push(node)
             _this.reduceState({selectedNode:{id:node.id},urls:children,bread});
-        }else {
+        }
+        else {
             children=await  bookmark.getChildren(node.id)
             if(children.length>0){
                 let bread=await getBread(node);
@@ -207,7 +233,7 @@ class GreetingComponent extends React.Component {
 
 
                 <div className="flex-container">
-                    <Left {...this.state} parent={this}  />
+                    <Left {...this.state}   />
 
                     <div  className="right" ref={(dom)=>{_this.content=dom}} >
                         <div className="wy_toolbar" ref={(dom)=>{
@@ -234,6 +260,7 @@ class GreetingComponent extends React.Component {
                             this.contentCard=contentCard;
                         }}  {...this.state} style={{minHeight:'calc(100vh - 230px)'}}
                                      handleClick={({node,urls, bread}) => _this.reduceState({selectedNode:{id:node.id},urls: urls, bread: bread})}
+                                     dealTag={_this.dealTag}
                                      deleteItem={_this.deleteItem}
                                      filter={_this.filter}/>
                         <div   style={{textAlign: 'center',padding:'2em 0em'}}>
