@@ -115,7 +115,7 @@ class GreetingComponent extends React.Component {
             return map;
         },{});
         let stateObj=await storage.getChanges("state");
-        let {selectedId="",search="",current="bookmark",category}=stateObj.state;
+        let {selectedId="",search="",current="bookmark",category}=stateObj.state||{};
         if(category=='tag'){
             selectedNode={id:selectedId,category:category}
             urls=tagMaps[selectedId]||[];
