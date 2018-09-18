@@ -1,6 +1,4 @@
-import IdbKvStore from 'idb-kv-store'
 var bookmark={};
-var indexDb = new IdbKvStore('wy_bookmark');
 var history={};
 var storage={};
 
@@ -89,7 +87,6 @@ storage.saveChanges=function (key,value) {
     return new Promise((resolve,reject)=>{
         chrome.storage.sync.set(data, function() {
             resolve(true);
-            console.log(chrome.runtime.lastError)
         });
     })
 
@@ -99,7 +96,6 @@ storage.getChanges=function(keys) {
     return new Promise((resolve,reject)=>{
         chrome.storage.sync.get(null, function(items) {
             resolve(items)
-            console.log(items)
         });
     })
 }
@@ -108,7 +104,6 @@ storage.getBytes=function () {
     return new Promise((resolve, reject)=>{
         chrome.storage.sync.getBytesInUse(null, (bytes)=>{
             resolve(bytes);
-            console.log(bytes+' bytes used')
         })
     })
 
@@ -119,7 +114,6 @@ topSites.get=function () {
     return new Promise((resolve, reject)=>{
         chrome.topSites.get( (items)=>{
             resolve(items);
-            console.log(items);
         })
     })
 
@@ -130,4 +124,4 @@ topSites.get=function () {
 
 
 
-export   {bookmark,indexDb,storage,history,topSites};
+export   {bookmark,storage,history,topSites};
