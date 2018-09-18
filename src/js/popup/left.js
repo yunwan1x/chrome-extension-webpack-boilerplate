@@ -3,7 +3,7 @@ import {hot} from "react-hot-loader";
 import {bookmark,indexDb,storage,history} from '../service/chrome';
 const confirm = Modal.confirm;
 import { Modal,Tree,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete} from 'antd';
-import {ColorTag} from './util'
+import {ColorTag, splitTitle} from './util'
 import { Menu, Switch,Tag } from 'antd';
 const SubMenu = Menu.SubMenu;
 const TreeNode = Tree.TreeNode;
@@ -16,20 +16,15 @@ class Left extends React.Component{
             tags:[]
         }
     }
-    async getUrls(tag,index){
-        let children = await indexDb.get(tag);
-        let node={title:'标签-'+tag,children:children,id:-1-index};
+    async getUrls(tagName,tagChildren,index){
+        let node={title:'标签-'+tagName,children:tagChildren,id:tagName,category:"tag"};
         this.props.parent.nodeSelect(node)
     }
 
-    async componentDidMount(){
-        let tags=  await indexDb.keys(IDBKeyRange.lowerBound("A"));
-        this.setState({tags:tags})
-    }
 
     render(){
-        let {key,tags}=this.state;
-        let {parent,bookmarks}=this.props;
+        let {key}=this.state;
+        let {parent,bookmarks,tagMaps}=this.props;
         return(
             <div className="left"    >
                 <Menu
@@ -52,9 +47,10 @@ class Left extends React.Component{
                 >
                     {parent.renderTreeNodes(bookmarks)}
                 </DirectoryTree>}
-                {key=='tag'&&<div style={{padding:'1em',lineHeight:2}}>{tags.map((tag,index)=>{
-                    return <ColorTag tag={tag} onClick={this.getUrls.bind(this,tag,index)}  />
-
+                {key=='tag'&&<div style={{padding:'1em',lineHeight:2}}>{Object.entries(tagMaps).map((tag,index)=>{
+                    let tagName=tag[0];
+                    let tagChildren=tag[1];
+                    return <ColorTag tag={tagName} onClick={this.getUrls.bind(this,tagName,tagChildren,index)}  />
                 })}</div>}
 
             </div>
