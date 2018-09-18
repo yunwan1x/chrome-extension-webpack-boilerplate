@@ -18,11 +18,24 @@ function getHtml() {
     var a=`aaa`
     return a;
 }
-var loadSize=50;
+var loadSize=20;
 
 function ColorTag(props) {
-    let color=Color({hue: props.tag.charCodeAt()%360, saturation: 0.5, lightness: 0.5});
+    let color=Color({hue: (props.tag.charCodeAt()%26)*(360/26), saturation: 0.5, lightness: 0.5});
     let style={backgroundColor:color.toString(),color:'white',borderColor:color.toString()};
     return <span  onClick={props.onClick} className="left_tag" style={style}>{props.tag}{ props.close&&<Icon type="close" theme="outlined" style={{cursor:'pointer'}}  className="close" onClick={props.close}/>}</span>
 }
-export  {getBread,getHtml,loadSize,ColorTag,Color}
+
+function splitTitle(title) {
+    let split="\u00a0\u00a0";
+    let tags=[];
+    let sTitle=title;
+    let index=title.lastIndexOf(split);
+    if(index>-1){
+        sTitle=title.substr(0,index);
+        let tagStr=title.substr(index+split.length);
+        tagStr&&(tags=tagStr.split("|"));
+    }
+    return {title:sTitle,tags:tags,split:split}
+}
+export  {getBread,getHtml,loadSize,ColorTag,Color,splitTitle}
