@@ -252,13 +252,13 @@ class GreetingComponent extends React.Component {
                 <AutoComplete
                     className="global-search"
                     size="middle"
-
-                    value={search}
                     placeholder="请输入"
+                    value={search}
+                    onSearch={(e)=>this.setState({search:e})}
                 >
-                    <Input value={search}   style={{borderRadius:0}}
+                    <Input    style={{borderRadius:0}}
                            onPressEnter={_this.searchBookmark.bind(this)}
-
+                              value={search}
                            suffix={(
                             <Button style={{borderRadius:0}}
                                     onClick={_this.searchBookmark.bind(this)}
