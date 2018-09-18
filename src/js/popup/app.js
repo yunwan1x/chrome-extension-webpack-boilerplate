@@ -3,6 +3,7 @@ import {hot} from "react-hot-loader";
 import ContentCard   from "./card"
 import styles from './index.css'
 import Left from './left'
+import {debounce} from "lodash"
 import 'antd/dist/antd.css';
 import {bookmark,indexDb,storage,history} from '../service/chrome';
 import {getBread,getHtml,loadSize,splitTitle} from './util';
@@ -56,6 +57,11 @@ class GreetingComponent extends React.Component {
         _this.setState({tagMaps:tagMaps});
     }
 
+    saveState(node){
+        let {search,current,selectedNode}=this.state;
+        let state={selectedId:selectedNode.id,search:search,current:current,category:node.category}
+        storage.saveChanges("state",state);
+    }
 
     reduceState(obj){
         let {selectedNode}=obj;
@@ -69,7 +75,12 @@ class GreetingComponent extends React.Component {
         }
         // history.push(newState);
         // _this.historyInfo.historyIndex=history.length-1;
-        _this.setState({...newState},()=>_this.content.scrollTop=0);
+
+        _this.setState({...newState},()=>{
+            _this.content.scrollTop=0;
+            _this.saveState(obj);
+        });
+
     }
     forword(){
         let {historyIndex,history}=_this.historyInfo;
@@ -86,24 +97,51 @@ class GreetingComponent extends React.Component {
 
 
 
-    componentDidMount() {
-        bookmark.getTree().then(async (r) => {
-            let bookmarks=r[0].children;
-            let recent=await bookmark.getRecent();
-            let bread= await getBread(bookmarks[0]);
-            _this.state.flatBookmarks =_this.flatBookmarks(bookmarks);
-            let tagMaps=_this.state.flatBookmarks.reduce((map,node)=>{
-                let {title,tags}=splitTitle(node.title);
-                tags.forEach(tag=>{
-                    let container=map[tag]||[];
-                    container.push(node)
-                    map[tag]=container;
-                })
-                return map;
-            },{});
-            bookmarks.push({title:'最近书签',children:recent,id:-1,category:'recent'});
-            _this.reduceState({tagMaps:tagMaps,selectedNode:bookmarks[0], bookmarks: bookmarks,urls:bookmarks[0].children,bread:bread});
-        })
+    async componentDidMount() {
+        let r=await bookmark.getTree();
+        let bookmarks=r[0].children;
+        let selectedNode=bookmarks[0];
+        let urls=selectedNode.children;
+        let recent=await bookmark.getRecent();
+        let bread= await getBread(selectedNode);
+        _this.state.flatBookmarks =_this.flatBookmarks(bookmarks);
+        let tagMaps=_this.state.flatBookmarks.reduce((map,node)=>{
+            let {title,tags}=splitTitle(node.title);
+            tags.forEach(tag=>{
+                let container=map[tag]||[];
+                container.push(node)
+                map[tag]=container;
+            })
+            return map;
+        },{});
+        let stateObj=await storage.getChanges("state");
+        let {selectedId="",search="",current="bookmark",category}=stateObj.state;
+        if(category=='tag'){
+            selectedNode={id:selectedId,category:category}
+            urls=tagMaps[selectedId]||[];
+            bread=[selectedNode]
+        }
+        else if(category=='search'){
+            selectedNode={id:selectedId,category:category}
+            urls= await bookmark.search(search);
+            bread=[selectedNode]
+        }
+        else if(category=='recent'){
+            urls=recent;
+            selectedNode={title:'最近书签',children:recent,id:-1,category:'recent'};
+            bread=[selectedNode];
+        }
+        else {
+            let node=selectedId&&await bookmark.get(selectedId);
+            if(node&&node.length>0){
+                node=node[0];
+                selectedNode=node;
+                urls=await bookmark.getChildren(node.id);
+                bread=await getBread(selectedNode);
+            }
+        }
+        bookmarks.push({title:'最近书签',children:recent,id:-1,category:'recent'});
+        _this.reduceState({current:current,tagMaps:tagMaps,selectedNode:selectedNode, bookmarks: bookmarks,urls:urls,bread:bread,search:search,category:category});
     }
 
 
@@ -126,11 +164,11 @@ class GreetingComponent extends React.Component {
         _this.nodeSelect(node);
     }
 
-    async searchBookmark(str,a,b){
-        let word=str.target.value;
-        if(!word)return;
-        let children= await bookmark.search(word);
-        _this.reduceState({selectedNode:{id:word},urls:children,search:word});
+    async searchBookmark(){
+        let {search}=this.state;
+        if(!search)return;
+        let children= await bookmark.search(search);
+        _this.reduceState({selectedNode:{id:search},category:"search",urls:children,search:search});
     }
 
 
@@ -153,13 +191,13 @@ class GreetingComponent extends React.Component {
             children=node.children;
             let bread=[];
             bread.push(node)
-            _this.reduceState({selectedNode:{id:node.id},urls:children,bread});
+            _this.reduceState({selectedNode:node,urls:children,bread,category:node.category});
         }
         else {
             children=await  bookmark.getChildren(node.id)
             if(children.length>0){
                 let bread=await getBread(node);
-                _this.reduceState({selectedNode:{id:node.id},urls:children,bread:bread});
+                _this.reduceState({selectedNode:node,urls:children,bread:bread});
             }
         }
     }
@@ -177,7 +215,7 @@ class GreetingComponent extends React.Component {
             catchDomain=arr[length-2]+"."+arr[length-1]
         }
         let marks=flatBookmarks.filter(v=>v.url).filter(v=>v.url.indexOf(catchDomain)>0);
-        _this.reduceState({selectedNode:{id:catchDomain},urls:marks})
+        _this.setState({selectedNode:{id:catchDomain},category:'search',urls:marks})
     }
     async deleteItem(v,callback){
         if(v.children&&v.children.length>0){
@@ -201,8 +239,8 @@ class GreetingComponent extends React.Component {
     }
 
     render() {
-        let {bookmarks,urls=[],bread,colNum,search,current} = this.state;
-        let {history,historyIndex}=_this.historyInfo
+        let {bookmarks,urls=[],bread,search,current} = this.state;
+        let {history,historyIndex}=_this.historyInfo;
         return <React.Fragment>
 
             <Anchor style={{boxShadow:'2px 2px 10px rgba(0,0,0,0.1)'}}><div className="header" style={{background: '#fff', height:"50px"}}><img className="logo" src={markImg}  height="32"/>
@@ -215,14 +253,17 @@ class GreetingComponent extends React.Component {
                     className="global-search"
                     size="middle"
 
-                    // onSelect={onSelect}
-                    // onSearch={this.handleSearch}
+                    value={search}
                     placeholder="请输入"
-                    optionLabelProp="text"
                 >
-                    <Input onPressEnter={_this.searchBookmark} value={search} style={{borderRadius:0}}
-                        suffix={(
-                            <Button style={{borderRadius:0}}  className="search-btn" size="middle" type="primary">
+                    <Input value={search}   style={{borderRadius:0}}
+                           onPressEnter={_this.searchBookmark.bind(this)}
+
+                           suffix={(
+                            <Button style={{borderRadius:0}}
+                                    onClick={_this.searchBookmark.bind(this)}
+
+                                    className="search-btn" size="middle" type="primary">
                                 <Icon type="search" />
                             </Button>
                         )}
