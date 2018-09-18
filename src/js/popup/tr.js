@@ -2,7 +2,7 @@ import React from "react";
 import {hot} from "react-hot-loader";
 import moment from 'moment';
 import {array} from 'lodash';
-import {getBread,getTag} from './util'
+import {getBread, getTag, splitTitle} from './util'
 import {bookmark,indexDb,storage,history} from '../service/chrome';
 import EditableTagGroup from './tag'
 import {Button,Icon,Popconfirm, message,Row,Col,Menu, Dropdown} from 'antd';
@@ -43,9 +43,8 @@ class Tr extends React.Component {
 
 
     render(){
-        let {row,rowIndex,loadSize,search}=this.props;
+        let {row,search}=this.props;
         let {filter,deleteItem}=this.props;
-
         const menu =(row)=> (
             <Menu style={{width:200}} >
 
@@ -62,26 +61,21 @@ class Tr extends React.Component {
                 </Menu.Item>
             </Menu>
         );
-        let newTitle=this.props.search&&row.title.replace(new RegExp("("+search+")","ig"),"<span style='color: red'>$1</span>");
+        let newTitle=this.props.search&&splitTitle(row.title).title.replace(new RegExp("("+search+")","ig"),"<span style='color: red'>$1</span>");
 
         const trContent=(row)=>(
             <tr>
-
                 <td    ref={(dom)=>{row.dom=dom;}} >
-
                     <a style={{marginRight:"2em"}} onClick={self.handleClick.bind(self,row)} target="_blank" href={row.url}>{row.url&&<span style={{width:16,height:16,backgroundImage:`-webkit-image-set(url("chrome://favicon/size/16@1x/${row.url}") 1x, url("chrome://favicon/size/16@2x/${row.url}") 2x)`}}  className="img" ></span>||<Icon  className="img" type="folder" theme="outlined" />}
-                        <span className="wy_title" dangerouslySetInnerHTML={{ __html: newTitle||row.title}}></span>
+                        <span className="wy_title" dangerouslySetInnerHTML={{ __html: newTitle||splitTitle(row.title).title}}></span>
                     </a>
                     <EditableTagGroup {...this.props} node={row}/>
                 </td>
-
                 <td  className="wy_cmd">
                     <Dropdown overlay={menu(row)} trigger={['click']}>
                         <span style={{cursor:'pointer'}} ><span style={{marginRight:"1em"}}>{moment(row.dateAdded).format(dateFormat)}</span> <Icon type="ellipsis" theme="outlined" /></span>
                     </Dropdown>
                 </td>
-
-
             </tr>
         )
 
