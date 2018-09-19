@@ -246,9 +246,9 @@ class GreetingComponent extends React.Component {
 
             <Anchor style={{boxShadow:'2px 2px 10px rgba(0,0,0,0.1)'}}><div className="header" style={{background: '#fff', height:"50px"}}><img className="logo" src={markImg}  height="32"/>
                 <Menu  mode="horizontal" selectedKeys={[current]} style={{display:"inline-block"}} onClick={({ item, key, keyPath })=>_this.setState({current:key})}>
-                <Menu.Item key="bookmark" ><Icon type="mail" />书签</Menu.Item>
-                <Menu.Item key="history"><Icon type="mail" />浏览历史</Menu.Item>
-                <Menu.Item key="search"><Icon type="mail" />我的搜索</Menu.Item>
+                <Menu.Item key="bookmark" ><Icon type="profile" theme="outlined"  style={{fontSize:'1.2em',verticalAlign:'middle'}}/>书签</Menu.Item>
+                <Menu.Item key="history"><Icon type="table" style={{fontSize:'1.2em',verticalAlign:'middle'}} />浏览历史</Menu.Item>
+                <Menu.Item key="search"><Icon style={{fontSize:'1.2em',verticalAlign:'middle'}} type="idcard" theme="outlined" />我的搜索</Menu.Item>
             </Menu>
                 <AutoComplete
                     className="global-search"
