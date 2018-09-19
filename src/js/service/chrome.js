@@ -58,12 +58,7 @@ bookmark.removeTree=function(id){
 
 
 //A free-text query to the history service. Leave empty to retrieve all pages.
-history.search=function(text){
-    return new Promise((resolve, reject) => {
-        chrome.history.search({text:text,maxResults :1000});
-    })
 
-}
 history.search=function(text){
     return new Promise((resolve, reject) => {
         chrome.history.search({text:text,maxResults :1000},( HistoryItems)=>{

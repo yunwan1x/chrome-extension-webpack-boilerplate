@@ -1,6 +1,7 @@
 import React from "react";
 import {hot} from "react-hot-loader";
-import ContentCard   from "./card"
+import ContentCard   from "./card";
+import History from "js/popup/history/index";
 import styles from './index.css'
 import Left from './left'
 import {debounce} from "lodash"
@@ -314,7 +315,7 @@ class GreetingComponent extends React.Component {
                 </div>
             }
             {
-                current == 'history'
+                current == 'history'&& <History/>
 
             }
             {
