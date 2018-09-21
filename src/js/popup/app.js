@@ -1,9 +1,9 @@
 import React from "react";
 import {hot} from "react-hot-loader";
-import ContentCard   from "./card";
+import ContentCard   from "./bookmark/card";
 import History from "js/popup/history/index";
 import styles from './index.css'
-import Left from './left'
+import Left from './bookmark/left'
 import {debounce} from "lodash"
 import 'antd/dist/antd.css';
 import {bookmark,indexDb,storage,history} from '../service/chrome';

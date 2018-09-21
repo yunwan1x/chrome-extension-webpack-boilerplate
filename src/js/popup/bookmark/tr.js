@@ -1,8 +1,8 @@
 import React from "react";
 import {hot} from "react-hot-loader";
 import moment from 'moment';
-import {getBread, getTag, splitTitle} from './util'
-import {bookmark,indexDb,storage,history} from '../service/chrome';
+import {getBread, getTag, splitTitle} from '../util'
+import {bookmark,indexDb,storage,history} from '../../service/chrome';
 import EditableTagGroup from './tag'
 import {Button,Icon,Popconfirm, message,Row,Col,Menu, Dropdown} from 'antd';
 var self=this;

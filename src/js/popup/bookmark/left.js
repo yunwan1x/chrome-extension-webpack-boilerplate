@@ -1,9 +1,9 @@
 import React from "react";
 import {hot} from "react-hot-loader";
-import {bookmark,indexDb,storage,history} from '../service/chrome';
+import {bookmark,indexDb,storage,history} from '../../service/chrome';
 const confirm = Modal.confirm;
 import { Modal,Tree,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete} from 'antd';
-import {ColorTag, splitTitle} from './util'
+import {ColorTag, splitTitle} from '../util'
 import { Menu, Switch,Tag } from 'antd';
 const SubMenu = Menu.SubMenu;
 const TreeNode = Tree.TreeNode;

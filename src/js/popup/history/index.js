@@ -5,7 +5,8 @@ const dateFormat="YYYY-MM-DD HH:mm:ss";
 import {getBread,getHtml,loadSize} from 'js/popup/util';
 import {bookmark,indexDb,storage,history} from 'js/service/chrome';
 import style from "./index.less"
-debugger;
+import { DatePicker } from 'antd';
+const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 
 class Hitory extends React.Component {
     constructor(props) {
@@ -35,7 +36,8 @@ class Hitory extends React.Component {
 
     render() {
         let {loadSize,items}=this.state;
-        return <div style={{background:"#f0f2f5",padding:'1em'}}><div className={style.header}>标题人</div><table  ><tbody>
+        return <div style={{background:"#f0f2f5",padding:'1em'}}><div className={style.header}>标题人
+        <RangePicker></RangePicker></div><table  ><tbody>
         {items.map((row,rowindex)=>rowindex<loadSize&& <Tr key={row.id} row={row} loadSize={loadSize} {...this.props} rowIndex={rowindex} ></Tr>)}
         </tbody></table>
 

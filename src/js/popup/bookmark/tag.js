@@ -1,8 +1,8 @@
 import React from "react";
 import {hot} from "react-hot-loader";
 import moment from 'moment';
-import {ColorTag, getBread,splitTitle} from './util'
-import {bookmark,indexDb,storage,history} from '../service/chrome';
+import {ColorTag, getBread,splitTitle} from '../util'
+import {bookmark,indexDb,storage,history} from '../../service/chrome';
 import {Button,Icon,Popconfirm, message} from 'antd';
 import { Tag, Input, Tooltip } from 'antd';
 import { Collapse } from 'antd';

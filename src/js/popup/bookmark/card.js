@@ -2,7 +2,7 @@ import React from "react";
 import {hot} from "react-hot-loader";
 import Tr from "./tr"
 const dateFormat="YYYY-MM-DD HH:mm:ss";
-import {getBread,getHtml,loadSize} from './util';
+import {getBread,getHtml,loadSize} from '../util';
 
 class ContentCard extends React.Component {
     constructor(props) {
