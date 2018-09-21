@@ -4,7 +4,8 @@ import Tr from "js/popup/history/tr"
 const dateFormat="YYYY-MM-DD HH:mm:ss";
 import {getBread,getHtml,loadSize} from 'js/popup/util';
 import {bookmark,indexDb,storage,history} from 'js/service/chrome';
-
+import style from "./index.less"
+debugger;
 
 class Hitory extends React.Component {
     constructor(props) {
@@ -34,8 +35,7 @@ class Hitory extends React.Component {
 
     render() {
         let {loadSize,items}=this.state;
-        return <div style={{background:"#f0f2f5",padding:'1em'}}><table  ><tbody>
-        <tr><td>访问记录</td><td>访问次数</td><td>最后访问时间</td></tr>
+        return <div style={{background:"#f0f2f5",padding:'1em'}}><div className={style.header}>标题人</div><table  ><tbody>
         {items.map((row,rowindex)=>rowindex<loadSize&& <Tr key={row.id} row={row} loadSize={loadSize} {...this.props} rowIndex={rowindex} ></Tr>)}
         </tbody></table>
 

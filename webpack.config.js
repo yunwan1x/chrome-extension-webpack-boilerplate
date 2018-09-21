@@ -20,7 +20,11 @@ var fileExtensions = ["jpg", "jpeg", "png", "gif", "eot", "otf", "svg", "ttf", "
 if (fileSystem.existsSync(secretsPath)) {
     alias["secrets"] = secretsPath;
 }
-
+let cssmodule = {
+    importLoaders: 3,
+    modules: true,
+    localIdentName: '[name]_[local]_[hash:base64:5]'
+};
 var options = {
     entry: {
         popup: path.join(__dirname, "src", "js", "popup.js"),
@@ -39,7 +43,12 @@ var options = {
             },
             {
                 test: /\.(less)$/,
-                loader: "less-loader",
+                use: [
+                    'style-loader',
+                    { loader: 'css-loader', options: cssmodule },
+                    'less-loader'
+                ]
+
             },
             {
                 test: new RegExp('\.(' + fileExtensions.join('|') + ')$'),
