@@ -38,4 +38,11 @@ function splitTitle(title) {
     }
     return {title:sTitle,tags:tags,split:split}
 }
-export  {getBread,getHtml,loadSize,ColorTag,Color,splitTitle}
+
+function colorText(text) {
+    let color=["#4285F4","#EA4335","#FBBC05","#34A853"]
+   return text.split("").map((v,index)=>{
+       return <span style={{color:color[index%4]}}>{index==0&&(v.codePointAt()>96&&v.codePointAt()<123)?v.toUpperCase():v}</span>
+    })
+}
+export  {getBread,getHtml,loadSize,ColorTag,Color,splitTitle,colorText}

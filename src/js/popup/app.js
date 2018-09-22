@@ -4,13 +4,12 @@ import ContentCard   from "./bookmark/card";
 import History from "js/popup/history/index";
 import Navigation from "js/popup/navigation/index";
 
-import styles from './index.css'
+import styles from './index.less'
 import Left from './bookmark/left'
 import {debounce} from "lodash"
 import 'antd/dist/antd.css';
 import {bookmark,indexDb,storage,history} from '../service/chrome';
-import {getBread,getHtml,loadSize,splitTitle} from './util';
-import markImg from '../../img/mark.svg';
+import {getBread,getHtml,loadSize,splitTitle,colorText} from './util';
 import { Modal,Tree,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete} from 'antd';
 const confirm = Modal.confirm;
 import { Menu, Switch } from 'antd';
@@ -246,8 +245,8 @@ class GreetingComponent extends React.Component {
         let {history,historyIndex}=_this.historyInfo;
         return <React.Fragment>
 
-            <Anchor style={{boxShadow:'2px 2px 10px rgba(0,0,0,0.1)'}}><div className="header" style={{background: '#fff', height:"50px"}}><img className="logo" src={markImg}  height="32"/>
-                <Menu  mode="horizontal" selectedKeys={[current]} style={{display:"inline-block"}} onClick={({ item, key, keyPath })=>_this.setState({current:key})}>
+            <Anchor style={{boxShadow:'2px 2px 10px rgba(0,0,0,0.1)'}}><div className="header" style={{background: '#fff', height:"50px"}}><span className={styles.logo}>{colorText("babel")}</span>
+                <Menu  mode="horizontal" selectedKeys={[current]} style={{display:"inline-block",verticalAlign: 'top'}} onClick={({ item, key, keyPath })=>_this.setState({current:key})}>
                 <Menu.Item key="bookmark" ><Icon type="profile" theme="outlined"  style={{fontSize:'1.2em',verticalAlign:'middle'}}/>书签</Menu.Item>
                 <Menu.Item key="history"><Icon type="table" style={{fontSize:'1.2em',verticalAlign:'middle'}} />浏览历史</Menu.Item>
                 <Menu.Item key="search"><Icon style={{fontSize:'1.2em',verticalAlign:'middle'}} type="idcard" theme="outlined" />我的搜索</Menu.Item>
