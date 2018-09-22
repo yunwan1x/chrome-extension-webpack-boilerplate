@@ -7,6 +7,7 @@ import {bookmark,indexDb,storage,history} from 'js/service/chrome';
 import style from "./index.less"
 import { DatePicker ,Icon} from 'antd';
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
+import Color from 'color-js'
 
 class Hitory extends React.Component {
     constructor(props) {
@@ -33,14 +34,34 @@ class Hitory extends React.Component {
         this.setState({items:items})
     }
 
+    getDomain(url){
+        var reg=/https?:\/\/([^\/]*)\/?/;
+        reg.exec(url);
+        let catchDomain=RegExp.$1;
+        if(!catchDomain)return ""
+        var arr=catchDomain.split(".");
+        var length=arr.length;
+        if(length>=2){
+            return arr[length-2];
+        }
+        else {
+            return arr[length-1];
+        }
+
+    }
 
     render() {
         let {loadSize,items}=this.state;
-        return <div className="container" style={{background:"#f0f2f5",padding:'1em'}}><div className={style.header}><span><Icon type="project" theme="outlined" />&nbsp;历史记录</span>
-        <RangePicker></RangePicker></div><table  ><tbody>
-        {items.map((row,rowindex)=>rowindex<loadSize&& <Tr key={row.id} row={row} loadSize={loadSize} {...this.props} rowIndex={rowindex} ></Tr>)}
-        </tbody></table>
 
+        let gfont=(v)=>v.split("").map((v,index)=>{
+            return <span style={{color:`hsl(${v.charCodeAt()%7*60},50%,50%)`}}>{index==0?v.toUpperCase():v}</span>
+        })
+        return (
+            <div className="container">
+            <div className={style.header}><span><Icon type="project" theme="outlined" />&nbsp;历史记录</span>
+        <RangePicker></RangePicker>
+            </div>
+                <div> {items.slice(0,55).map(v=><span className={style.label}>{gfont(this.getDomain(v.url))}</span>)}</div>
             <div   style={{textAlign: 'center',padding:'2em 0em'}}>
                 Professional Bookmark Manager ©2018 Created By changhui.wy
                 <div ref={(dom)=>{
@@ -48,7 +69,7 @@ class Hitory extends React.Component {
                 }} ><a  href="mailto:512458266@qq.com" target="_blank">给changhui.wy发送邮件</a></div>
             </div>
 
-        </div>;
+        </div>)
     }
 };
 

@@ -2,6 +2,8 @@ import React from "react";
 import {hot} from "react-hot-loader";
 import ContentCard   from "./bookmark/card";
 import History from "js/popup/history/index";
+import Navigation from "js/popup/navigation/index";
+
 import styles from './index.css'
 import Left from './bookmark/left'
 import {debounce} from "lodash"
@@ -319,7 +321,7 @@ class GreetingComponent extends React.Component {
 
             }
             {
-                current == 'search'
+                current == 'search'&&<Navigation></Navigation>
             }
             </React.Fragment>
     }
