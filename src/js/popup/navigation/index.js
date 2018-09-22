@@ -38,7 +38,7 @@ class Hitory extends React.Component {
         var reg=/https?:\/\/([^\/]*)\/?/;
         reg.exec(url);
         let catchDomain=RegExp.$1;
-        if(!catchDomain)return ""
+        if(!catchDomain)return url
         var arr=catchDomain.split(".");
         var length=arr.length;
         if(length>=2){
@@ -51,17 +51,20 @@ class Hitory extends React.Component {
     }
 
     render() {
+        let color=["#4285F4","#EA4335","#FBBC05","#34A853"]
         let {loadSize,items}=this.state;
+        console.log(items)
 
         let gfont=(v)=>v.split("").map((v,index)=>{
-            return <span style={{color:`hsl(${v.charCodeAt()%7*60},50%,50%)`}}>{index==0?v.toUpperCase():v}</span>
+            // return <span style={{color:`hsl(${v.charCodeAt()%7*60},50%,50%)`}}>{index==0?v.toUpperCase():v}</span>
+            return <span style={{color:color[index%4]}}>{index==0?v.toUpperCase():v}</span>
         })
         return (
             <div className="container">
             <div className={style.header}><span><Icon type="project" theme="outlined" />&nbsp;历史记录</span>
         <RangePicker></RangePicker>
             </div>
-                <div> {items.slice(0,55).map(v=><span className={style.label}>{gfont(this.getDomain(v.url))}</span>)}</div>
+                <div> {items.slice(0,4).map(v=><span className={style.label}>{gfont(this.getDomain(v.title))}</span>)}</div>
             <div   style={{textAlign: 'center',padding:'2em 0em'}}>
                 Professional Bookmark Manager ©2018 Created By changhui.wy
                 <div ref={(dom)=>{
