@@ -73,6 +73,7 @@ class Tr extends React.Component {
                 </Menu.Item>}
             </Menu>
         );
+        console.log(this.props.search);
         let newTitle=this.props.search&&splitTitle(row.title).title.replace(new RegExp("("+search+")","ig"),"<span style='color: red'>$1</span>");
 
         const trContent=(row)=>(

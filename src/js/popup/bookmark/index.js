@@ -47,7 +47,7 @@ class BookMark extends React.Component{
     }
 
     saveState(node){
-        let {search,current,selectedNode}=this.state;
+        let {current,selectedNode}=this.state;
         let state={selectedId:selectedNode.id,current:current,category:node.category}
         storage.saveChanges("state",state);
     }
@@ -92,15 +92,10 @@ class BookMark extends React.Component{
             return map;
         },{});
         let stateObj=await storage.getChanges("state");
-        let {selectedId="",search="",current="bookmark",category}=stateObj.state||{};
+        let {selectedId="",current="bookmark",category}=stateObj.state||{};
         if(category=='tag'){
             selectedNode={id:selectedId,category:category}
             urls=tagMaps[selectedId]||[];
-            bread=[selectedNode]
-        }
-        else if(category=='search'){
-            selectedNode={id:selectedId,category:category}
-            urls= await bookmark.search(search);
             bread=[selectedNode]
         }
         else if(category=='recent'){
@@ -118,7 +113,7 @@ class BookMark extends React.Component{
             }
         }
         bookmarks.push({title:'最近书签',children:recent,id:-1,category:'recent'});
-        _this.reduceState({current:current,tagMaps:tagMaps,selectedNode:selectedNode, bookmarks: bookmarks,urls:urls,bread:bread,search:search,category:category});
+        _this.reduceState({current:current,tagMaps:tagMaps,selectedNode:selectedNode, bookmarks: bookmarks,urls:urls,bread:bread,category:category});
     }
 
 
@@ -238,7 +233,7 @@ class BookMark extends React.Component{
                 </div>
                 <ContentCard onRef={(contentCard)=>{
                     this.contentCard=contentCard;
-                }} {...this.props} {...this.state} style={{minHeight:'calc(100vh - 230px)'}}
+                }} {...this.state} {...this.props}   style={{minHeight:'calc(100vh - 230px)'}}
                              handleClick={({node,urls, bread}) => _this.reduceState({selectedNode:{id:node.id},urls: urls, bread: bread})}
                              dealTag={_this.dealTag}
                              deleteItem={_this.deleteItem}
