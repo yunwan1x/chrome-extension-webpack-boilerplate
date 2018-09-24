@@ -1,5 +1,8 @@
 chrome.browserAction.onClicked.addListener(function () {
     chrome.management.getSelf(function (res) {
-        chrome.tabs.create({ url: 'chrome-extension://' + res.id + '/popup.html#normal' });
+        let url='chrome-extension://' + res.id + '/popup.html';
+        window.url=url;
+        chrome.tabs.create({ url: url});
+
     });
 });

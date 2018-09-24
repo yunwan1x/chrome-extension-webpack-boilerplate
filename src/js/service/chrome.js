@@ -64,7 +64,8 @@ history.search=function(text,startTime,endTime){
         var microsecondsPerWeek = 1000 * 60 * 60 * 24 * 7;
         var oneWeekAgo = (new Date).getTime() - microsecondsPerWeek;
         chrome.history.search({text:"",maxResults  :10000,startTime :oneWeekAgo||startTime,endTime:endTime||(new Date()).getTime()},( HistoryItems)=>{
-            resolve(HistoryItems)
+            resolve(HistoryItems.filter(v=> !v.url.startsWith("chrome-extension://")
+            ))
         });
     })
 
