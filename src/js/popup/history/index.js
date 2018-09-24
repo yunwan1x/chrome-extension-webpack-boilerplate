@@ -14,40 +14,30 @@ class Hitory extends React.Component {
         this.state = {
             loadSize:loadSize,items:[]
         }
-        let self=this;
-        this.intersectionObserver = new IntersectionObserver(function (entries) {
-            if (entries[0].intersectionRatio < 0) return;
-            self.setState({loadSize: self.state.loadSize + loadSize});
-        }, {threshold: [0]});
     }
 
 
-    componentWillReceiveProps(nextProps){
-        this.setState({loadSize:loadSize});
+
+    showMore(){
+        let self=this;
+        self.setState({loadSize: self.state.loadSize + loadSize});
     }
 
 
     async componentDidMount() {
         let items=await history.search("");
-        console.log(items);
         this.setState({items:items})
     }
+
 
 
     render() {
         let {loadSize,items}=this.state;
         return <div className="container" style={{background:"#f0f2f5",padding:'1em'}}><div className={style.header}><span><Icon type="project" theme="outlined" />&nbsp;历史记录</span>
         <RangePicker></RangePicker></div><table  ><tbody>
-        {items.map((row,rowindex)=>rowindex<loadSize&& <Tr key={row.id} row={row} loadSize={loadSize} {...this.props} rowIndex={rowindex} ></Tr>)}
+        {items.map((row,rowindex)=>rowindex<loadSize&& <Tr key={row.id} row={row}  {...this.props} rowIndex={rowindex} ></Tr>)}
         </tbody></table>
-
-            <div   style={{textAlign: 'center',padding:'2em 0em'}}>
-                Professional Bookmark Manager ©2018 Created By changhui.wy
-                <div ref={(dom)=>{
-                    dom&&this.intersectionObserver.observe(dom);
-                }} ><a  href="mailto:512458266@qq.com" target="_blank">给changhui.wy发送邮件</a></div>
-            </div>
-
+            {this.props.footer}
         </div>;
     }
 };
