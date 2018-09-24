@@ -43,7 +43,7 @@ class Tr extends React.Component {
                 </td>
                 <td>{row.visitCount}</td>
                 <td  className="wy_cmd">
-                    <span style={{cursor:'pointer'}} ><span style={{marginRight:"1em"}}>{moment(row.lastVisitTime).format(dateFormat)}</span> <Icon type="ellipsis" theme="outlined" /></span>
+                    <span>{moment(row.lastVisitTime).format(dateFormat)}</span>
                 </td>
             </tr>
         )
