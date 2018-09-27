@@ -36,10 +36,10 @@ class Left extends React.Component{
                 >
 
                     <Menu.Item key="tree" >
-                        <Icon type="bars" theme="outlined" />树形
+                        <Icon type="bars" theme="outlined" />tree
                     </Menu.Item>
                     <Menu.Item key="tag">
-                        <Icon type="tag" theme="outlined" />标签
+                        <Icon type="tag" theme="outlined" />tags
                     </Menu.Item>
                 </Menu>
                 {key=='tree'&&<DirectoryTree
