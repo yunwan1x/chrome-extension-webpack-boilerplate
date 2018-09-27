@@ -48,7 +48,7 @@ class GreetingComponent extends React.Component {
             Professional Bookmark Manager ©2018 Created By changhui.wy
             <div ref={(dom)=>{
                 dom&&_this.intersectionObserver.observe(dom);
-            }} ><a  href="mailto:512458266@qq.com" target="_blank">给changhui.wy发送邮件</a></div>
+            }} ><a  href="mailto:512458266@qq.com" target="_blank">send email to changhui.wy</a></div>
             </div>);
         return <React.Fragment>
 
