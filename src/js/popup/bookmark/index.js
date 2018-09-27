@@ -100,7 +100,7 @@ class BookMark extends React.Component{
         }
         else if(category=='recent'){
             urls=recent;
-            selectedNode={title:'最近书签',children:recent,id:-1,category:'recent'};
+            selectedNode={title:'recent',children:recent,id:-1,category:'recent'};
             bread=[selectedNode];
         }
         else {
@@ -112,7 +112,7 @@ class BookMark extends React.Component{
                 bread=await getBread(selectedNode);
             }
         }
-        bookmarks.push({title:'最近书签',children:recent,id:-1,category:'recent'});
+        bookmarks.push({title:'recent',children:recent,id:-1,category:'recent'});
         _this.reduceState({current:current,tagMaps:tagMaps,selectedNode:selectedNode, bookmarks: bookmarks,urls:urls,bread:bread,category:category});
     }
 
@@ -187,7 +187,7 @@ class BookMark extends React.Component{
     async deleteItem(v,callback){
         if(v.children&&v.children.length>0){
             confirm({
-                title: '文件夹下还有书签，确定删除吗?',
+                title: 'it has not empty child directory,are you sure to delete it?',
                 async onOk() {
                     let res=await bookmark.remove(v.id);Tree
                     callback();
@@ -196,7 +196,7 @@ class BookMark extends React.Component{
         }
         else {
             confirm({
-                title: '你确定确定删除吗?',
+                title: 'are you sure to delete it?',
                 async onOk() {
                     let res=await bookmark.remove(v.id);
                     callback();

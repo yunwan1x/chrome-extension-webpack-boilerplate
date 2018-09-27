@@ -57,19 +57,19 @@ class Tr extends React.Component {
         const menu =(row)=> (
             <Menu style={{width:200}} >
 
-                {row.url&&<Menu.Item><a  onClick={filter.bind(this,row,"site")}>网站</a></Menu.Item>}
-                {row.url&&<Menu.Item><a  onClick={filter.bind(this,row,"domain")}>域名</a></Menu.Item>}
+                {row.url&&<Menu.Item><a  onClick={filter.bind(this,row,"site")}>site</a></Menu.Item>}
+                {row.url&&<Menu.Item><a  onClick={filter.bind(this,row,"domain")}>domain</a></Menu.Item>}
                 <Menu.Item >
-                        <a size="small" onClick={deleteItem.bind(this,row,this.deleteCallback.bind(this,row))}>删除</a>
+                        <a size="small" onClick={deleteItem.bind(this,row,this.deleteCallback.bind(this,row))}>delete</a>
                 </Menu.Item>
                 <Menu.Item>
                     <a size="small" onClick={()=>_this.setState({update:true},()=>this.setState({edit:true},()=>{
                         let dom=ReactDom.findDOMNode(this.refs.input);
                         dom.focus();
-                    }))}>编辑</a>
+                    }))}>edit</a>
                 </Menu.Item>
                 {row.url&&<Menu.Item>
-                    <a size="small">查看访问历史</a>
+                    <a size="small">view history</a>
                 </Menu.Item>}
             </Menu>
         );

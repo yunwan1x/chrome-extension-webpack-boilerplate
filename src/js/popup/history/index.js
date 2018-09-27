@@ -33,7 +33,7 @@ class Hitory extends React.Component {
 
     render() {
         let {loadSize,items}=this.state;
-        return <div className="container" style={{background:"#f0f2f5",padding:'1em'}}><div className={style.header}><span><Icon type="project" theme="outlined" />&nbsp;历史记录</span>
+        return <div className="container" style={{background:"#f0f2f5",padding:'1em'}}><div className={style.header}><span><Icon type="project" theme="outlined" />&nbsp;hitory</span>
         <RangePicker></RangePicker></div><table  ><tbody>
         {items.map((row,rowindex)=>rowindex<loadSize&& <Tr key={row.id} row={row}  {...this.props} rowIndex={rowindex} ></Tr>)}
         </tbody></table>

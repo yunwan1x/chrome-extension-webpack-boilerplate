@@ -17,7 +17,7 @@ class Left extends React.Component{
         }
     }
     async getUrls(tagName,tagChildren,index){
-        let node={title:'标签-'+tagName,children:tagChildren,id:tagName,category:"tag"};
+        let node={title:'tag-'+tagName,children:tagChildren,id:tagName,category:"tag"};
         this.props.parent.nodeSelect(node)
     }
 

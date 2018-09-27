@@ -54,13 +54,13 @@ class GreetingComponent extends React.Component {
 
             <Anchor style={{boxShadow:'2px 2px 10px rgba(0,0,0,0.1)'}}><div className="header" style={{background: '#fff', height:"50px"}}><span className={styles.logo}>{colorText("babel")}</span>
                 <Menu  mode="horizontal" selectedKeys={[current]} style={{display:"inline-block",verticalAlign: 'top'}} onClick={({ item, key, keyPath })=>this.setState({current:key})}>
-                <Menu.Item key="bookmark" ><Icon type="profile" theme="outlined"  style={{fontSize:'1.2em',verticalAlign:'middle'}}/>书签</Menu.Item>
-                <Menu.Item key="history"><Icon type="table" style={{fontSize:'1.2em',verticalAlign:'middle'}} />浏览历史</Menu.Item>
+                <Menu.Item key="bookmark" ><Icon type="profile" theme="outlined"  style={{fontSize:'1.2em',verticalAlign:'middle'}}/>bookmark</Menu.Item>
+                <Menu.Item key="history"><Icon type="table" style={{fontSize:'1.2em',verticalAlign:'middle'}} />histroy</Menu.Item>
             </Menu>
                 <AutoComplete
                     className="global-search"
                     size="middle"
-                    placeholder="请输入"
+                    placeholder="please input search"
                     value={search}
                     onSearch={(e)=>this.setState({search:e})}
                 >
