@@ -1,6 +1,5 @@
 {
   "name": "another bookmark manager",
-  "options_page": "options.html",
   "background": {
     "persistent": false,
     "scripts": ["background.js"]
@@ -19,14 +18,12 @@
     "bookmarks",
     "unlimitedStorage",
     "chrome://favicon/",
-    "*://*/*",
     "tabs",
     "storage",
     "history",
-    "management",
-    "topSites"
+    "management"
   ],
   "version": "1.0",
   "manifest_version": 2,
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "content_security_policy": "script-src 'self' ; object-src 'self'"
 }
