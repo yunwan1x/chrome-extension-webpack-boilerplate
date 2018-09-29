@@ -83,7 +83,7 @@ storage.saveChanges=function (key,value) {
     let data={};
     data[key]=value;
     return new Promise((resolve,reject)=>{
-        chrome.storage.sync.set(data, function() {
+        chrome.storage.local.set(data, function() {
             resolve(true);
         });
     })
@@ -92,7 +92,7 @@ storage.saveChanges=function (key,value) {
 
 storage.getChanges=function(keys) {
     return new Promise((resolve,reject)=>{
-        chrome.storage.sync.get(null, function(items) {
+        chrome.storage.local.get(null, function(items) {
             resolve(items)
         });
     })
@@ -100,7 +100,7 @@ storage.getChanges=function(keys) {
 
 storage.getBytes=function () {
     return new Promise((resolve, reject)=>{
-        chrome.storage.sync.getBytesInUse(null, (bytes)=>{
+        chrome.storage.local.getBytesInUse(null, (bytes)=>{
             resolve(bytes);
         })
     })
