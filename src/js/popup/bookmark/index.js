@@ -162,7 +162,7 @@ class BookMark extends React.Component{
         }
         else {
             children=await  bookmark.getChildren(node.id)
-            if(children.length>0){
+            if(children.length>=0){
                 let bread=await getBread(node);
                 _this.reduceState({selectedNode:node,urls:children,bread:bread});
             }
