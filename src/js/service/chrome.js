@@ -42,16 +42,16 @@ bookmark.search=function(str){
 
 bookmark.remove=function(id){
     return new Promise((resolve, reject) => {
-        chrome.bookmarks.remove(id,()=>{
-            resolve()
+        chrome.bookmarks.remove(id,(e)=>{
+            resolve(e)
         })
     })
 }
 
 bookmark.removeTree=function(id){
     return new Promise((resolve, reject) => {
-        chrome.bookmarks.removeTree(id,()=>{
-            resolve()
+        chrome.bookmarks.removeTree(id,(e)=>{
+            resolve(e)
         })
     })
 }
