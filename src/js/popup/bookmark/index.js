@@ -185,11 +185,12 @@ class BookMark extends React.Component{
         _this.setState({selectedNode:{id:catchDomain},category:'search',urls:marks})
     }
     async deleteItem(v,callback){
+        v.children=await v.getChildren(v.id);
         if(v.children&&v.children.length>0){
             confirm({
                 title: 'it has not empty child directory,are you sure to delete it?',
                 async onOk() {
-                    let res=await bookmark.remove(v.id);Tree
+                    let res=await bookmark.remove(v.id);
                     callback();
                 }
             });
