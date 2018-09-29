@@ -45,7 +45,7 @@ class Tr extends React.Component {
 
     cancleEdit(row,e){
         let value=e.target.value;
-        this.setState({edit:false},()=>value&&bookmark.update(row.id,value))
+        value&&this.setState({edit:false,title:value},()=>value&&bookmark.update(row.id,value))
     }
 
 
@@ -73,14 +73,13 @@ class Tr extends React.Component {
                 </Menu.Item>}
             </Menu>
         );
-        console.log(this.props.search);
-        let newTitle=this.props.search&&splitTitle(row.title).title.replace(new RegExp("("+search+")","ig"),"<span style='color: red'>$1</span>");
+        let newTitle=this.props.search&&splitTitle(title).title.replace(new RegExp("("+search+")","ig"),"<span style='color: red'>$1</span>");
 
         const trContent=(row)=>(
             <tr>
                 <td    ref={(dom)=>{row.dom=dom;}} >
                     {!edit&&<a style={{marginRight:"2em"}}  target="_blank" href={row.url} onClick={this.handleClick.bind(self,row)}>{row.url&&<span style={{width:16,height:16,backgroundImage:`-webkit-image-set(url("chrome://favicon/size/16@1x/${row.url}") 1x, url("chrome://favicon/size/16@2x/${row.url}") 2x)`}}  className="img" ></span>||<Icon  className="img" type="folder" theme="outlined" />}
-                        {<span className="wy_title" dangerouslySetInnerHTML={{ __html: newTitle||splitTitle(row.title).title}}></span>}
+                        {<span className="wy_title" dangerouslySetInnerHTML={{ __html: newTitle||splitTitle(title).title}}></span>}
                     </a>||<div style={{marginRight:"2em"}}>
                         <Input ref="input" style={{lineHeight:2,padding:'0.3em'}} size="small" value={title} onChange={(e)=>this.setState({title:e.target.value})}  onPressEnter={this.cancleEdit.bind(this,row)} onBlur={this.cancleEdit.bind(this,row)}/>
                     </div>}

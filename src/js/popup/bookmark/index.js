@@ -185,13 +185,14 @@ class BookMark extends React.Component{
         _this.setState({selectedNode:{id:catchDomain},category:'search',urls:marks})
     }
     async deleteItem(v,callback){
-        v.children=await v.getChildren(v.id);
+        v.children=await bookmark.getChildren(v.id);
         if(v.children&&v.children.length>0){
             confirm({
                 title: 'it has not empty child directory,are you sure to delete it?',
                 async onOk() {
                     let res=await bookmark.remove(v.id);
-                    callback();
+                    let {urls}=_this.state;
+                    _this.setState({urls:urls.filter(k=>v.id!=k.id)})
                 }
             });
         }
@@ -200,14 +201,16 @@ class BookMark extends React.Component{
                 title: 'are you sure to delete it?',
                 async onOk() {
                     let res=await bookmark.remove(v.id);
-                    callback();
+                    let {urls}=_this.state;
+                    _this.setState({urls:urls.filter(k=>v.id!=k.id)})
+
                 }
             });
         }
     }
 
     render(){
-        let {urls,bookmarks,bread}=this.state;
+        let {bread}=this.state;
         return <div className="flex-container">
             <Left {...this.state}   />
 
