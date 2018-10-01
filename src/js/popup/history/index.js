@@ -5,7 +5,7 @@ const dateFormat="YYYY-MM-DD HH:mm:ss";
 import {getBread, getHtml, loadSize, splitTitle} from 'js/popup/util';
 import {bookmark,indexDb,storage,history} from 'js/service/chrome';
 import style from "./index.less"
-import { DatePicker ,Tree,Icon,Modal,Row,Col,Input,Select} from 'antd';
+import { DatePicker ,Tree,Icon,Modal,Row,Col,Radio,Button,Input,Select,AutoComplete} from 'antd';
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const TreeNode = Tree.TreeNode;
 const DirectoryTree = Tree.DirectoryTree;
@@ -13,7 +13,8 @@ class Hitory extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loadSize:loadSize,items:[],addBookmarkVisible:false,bookmarks:[]
+            loadSize:loadSize,items:[],addBookmarkVisible:false,bookmarks:[],
+            addTitle:"",addParentId:'',addUrl:''
         }
     }
 
@@ -26,8 +27,9 @@ class Hitory extends React.Component {
         let self=this;
         self.setState({loadSize: self.state.loadSize + loadSize});
     }
-    showModal(){
-        this.setState({addBookmarkVisible:true});
+    showModal(row){
+        let {title,url}=row;
+        this.setState({addBookmarkVisible:true,addTitle:title,addUrl:url});
     }
 
     async componentDidMount() {
@@ -62,6 +64,7 @@ class Hitory extends React.Component {
 
     render() {
         let {loadSize,items,addBookmarkVisible,bookmarks}=this.state;
+        let {addTitle,addParentId,addUrl}=this.state;
         return <div className="container" style={{background:"#f0f2f5",padding:'1em'}}>
             <Modal className={style.modal}
                 title="Add bookmark"
@@ -69,12 +72,23 @@ class Hitory extends React.Component {
                 onOk={()=>{}}
                 onCancel={()=>this.setState({addBookmarkVisible:false})}
             >
-                <Row className={style.row}>
-                    <Col span={2}>Title</Col>
-                    <Col span={22}><Input size="small" /></Col>
+                <Row >
+                    <Col span={24}>
+                    <Radio.Group size="small" className={style.selectNode}>
+                        <Radio.Button size="small"  value="large">常用</Radio.Button>
+                        <Radio.Button size="small" value="default">搜索</Radio.Button>
+                    </Radio.Group>
+                </Col>
                 </Row>
                 <Row className={style.row}>
-
+                    <Col span={3}>Title</Col>
+                    <Col span={21}><Input size="small" value={addTitle} onChange={(e)=>this.setState({addTitle:e.target.value})} /></Col>
+                </Row>
+                <Row className={style.row}>
+                    <Col span={3}>Search</Col>
+                    <Col span={21}><Input size="small" placeholder="please input search" /></Col>
+                </Row>
+                <Row className={style.row}>
                     <div className={style.tree}>
                         <DirectoryTree>
                             {this.renderTreeNodes(bookmarks)}
@@ -83,12 +97,15 @@ class Hitory extends React.Component {
 
                 </Row>
                 <Row className={style.row}>
-                    <Col span={24}>children</Col>
+                    <Col span={24}>   <Button type="primary" size="small">
+
+                        新建文件夹
+                    </Button></Col>
                 </Row>
             </Modal>
             <div className={style.header}><span><Icon type="project" theme="outlined" />&nbsp;hitory</span>
         </div><table className="table"  ><tbody>
-        {items.map((row,rowindex)=>rowindex<loadSize&& <Tr key={row.id} showModal={this.showModal.bind(this)} row={row}  {...this.props} rowIndex={rowindex} ></Tr>)}
+        {items.map((row,rowindex)=>rowindex<loadSize&& <Tr key={row.id} showModal={this.showModal.bind(this,row)} row={row}  {...this.props} rowIndex={rowindex} ></Tr>)}
         </tbody></table>
             {this.props.footer}
         </div>;
