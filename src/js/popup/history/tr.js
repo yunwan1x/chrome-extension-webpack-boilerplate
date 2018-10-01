@@ -41,7 +41,6 @@ class Tr extends React.Component {
                         <span className="wy_title" dangerouslySetInnerHTML={{ __html: newTitle||splitTitle(row.title).title}}></span>
                     </a>
                 </td>
-                <td>{row.visitCount}</td>
                 <td  className="wy_cmd">
                     <span>{moment(row.lastVisitTime).format(dateFormat)}</span>
                 </td>

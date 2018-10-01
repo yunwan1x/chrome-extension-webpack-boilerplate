@@ -34,10 +34,16 @@ class GreetingComponent extends React.Component {
         }, {threshold: [0]});
     }
 
+    searchChange(word) {
+        this.refs.bookmark.searchChange(word)
+    }
+
     async search(){
         let {search,current}=this.state;
         if(!search)return;
-        this.setState({action:'search',search:search},()=>this.refs.bookmark.search(search))
+        this.setState({action:'search',search:search},()=>{
+            this.refs.bookmark.search(search)
+        })
     }
 
 
@@ -62,6 +68,7 @@ class GreetingComponent extends React.Component {
                     size="middle"
                     placeholder="please input search"
                     value={search}
+                    onChange={this.searchChange.bind(this)}
                     onSearch={(e)=>this.setState({search:e})}
                 >
                     <Input    style={{borderRadius:0}}
@@ -83,7 +90,7 @@ class GreetingComponent extends React.Component {
 
             }
             {
-                current == 'history'&& <History ref="bookmark" footer={footer}/>
+                current == 'history'&& <History ref="bookmark" {...this.state} footer={footer}/>
 
             }
             {

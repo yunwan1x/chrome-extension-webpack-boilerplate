@@ -53,16 +53,18 @@ class BookMark extends React.Component{
     }
 
     reduceState(obj){
-        let {selectedNode}=obj;
+        let {selectedNode,urls}=obj;
         if((selectedNode.id==_this.state.selectedNode.id)){
-            return;
+           return;
         }
+        if(urls.length>0)storage.saveChanges("lastUrls",obj);
         var newState={..._this.state,...obj};
         _this.setState({...newState,loadSize:loadSize},()=>{
             _this.content.scrollTop=0;
             _this.saveState(obj);
         });
     }
+
 
     showMore(){
         this.setState({loadSize: this.state.loadSize + loadSize});
@@ -71,6 +73,15 @@ class BookMark extends React.Component{
     async search(word){
         let children= await bookmark.search(word);
         this.reduceState({selectedNode:{id:word},category:"search",urls:children});
+    }
+
+    async searchChange(word){
+        let {urls}=this.state;
+        if(!word){
+            console.log(":")
+            let lastState=await storage.getChanges("lastUrls");
+            _this.reduceState(lastState);
+        }
     }
 
 
@@ -92,7 +103,7 @@ class BookMark extends React.Component{
             return map;
         },{});
         let stateObj=await storage.getChanges("state");
-        let {selectedId="",current="bookmark",category}=stateObj.state||{};
+        let {selectedId="",current="bookmark",category}=stateObj||{};
         if(category=='tag'){
             selectedNode={id:selectedId,category:category}
             urls=tagMaps[selectedId]||[];

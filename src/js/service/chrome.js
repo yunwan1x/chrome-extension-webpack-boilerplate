@@ -63,7 +63,11 @@ history.search=function(text,startTime,endTime){
     return new Promise((resolve, reject) => {
         var microsecondsPerWeek = 1000 * 60 * 60 * 24 * 7;
         var oneWeekAgo = (new Date).getTime() - microsecondsPerWeek;
-        chrome.history.search({text:"",maxResults  :10000,startTime :oneWeekAgo||startTime,endTime:endTime||(new Date()).getTime()},( HistoryItems)=>{
+        let query={text:text,maxResults  :10000};
+        startTime&&(query.startTime=startTime);
+        endTime&&(query.endTime=endTime);
+
+        chrome.history.search(query,( HistoryItems)=>{
             resolve(HistoryItems.filter(v=> !v.url.startsWith("chrome-extension://")
             ))
         });
@@ -92,8 +96,13 @@ storage.saveChanges=function (key,value) {
 
 storage.getChanges=function(keys) {
     return new Promise((resolve,reject)=>{
-        chrome.storage.local.get(null, function(items) {
-            resolve(items)
+        chrome.storage.local.get(keys, function(items) {
+            if(items){
+                resolve(items[keys])
+            }
+            else {
+                resolve(null);
+            }
         });
     })
 }

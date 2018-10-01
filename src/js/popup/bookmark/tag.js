@@ -118,7 +118,7 @@ class EditableTagGroup extends React.Component {
                     />
                 )}
                 {!inputVisible && (
-                    <span className="left_tag"
+                    <span className="left_tag input-hidden"
                         onClick={this.showInput}
                         style={{ background: '#fff', borderStyle: 'dashed' }}
                     >

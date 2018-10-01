@@ -26,7 +26,17 @@ class Tr extends React.Component {
         return true;
     }
 
-
+    viewHistory(url){
+        let {parent}=this.props;
+        parent.setState({
+            current:'history'
+        },()=>{
+            var reg=/https?:\/\/([^\/]*)\/?/;
+            reg.exec(url);
+            let catchDomain=RegExp.$1;
+            parent.refs.bookmark.search(catchDomain);
+        })
+    }
 
 
     deleteCallback(v){
@@ -69,7 +79,7 @@ class Tr extends React.Component {
                     }))}>edit</a>
                 </Menu.Item>
                 {row.url&&<Menu.Item>
-                    <a size="small">view history</a>
+                    <a size="small" onClick={this.viewHistory.bind(this,row.url)}>view history</a>
                 </Menu.Item>}
             </Menu>
         );
