@@ -14,7 +14,7 @@ class Hitory extends React.Component {
         super(props);
         this.state = {
             loadSize:loadSize,items:[],addBookmarkVisible:false,bookmarks:[],
-            addTitle:"",addParentId:'',addUrl:''
+            addTitle:"",addParentId:'',addUrl:'',modalMode:'common'
         }
     }
 
@@ -63,7 +63,7 @@ class Hitory extends React.Component {
     }
 
     render() {
-        let {loadSize,items,addBookmarkVisible,bookmarks}=this.state;
+        let {loadSize,items,addBookmarkVisible,bookmarks,modalMode}=this.state;
         let {addTitle,addParentId,addUrl}=this.state;
         return <div className="container" style={{background:"#f0f2f5",padding:'1em'}}>
             <Modal className={style.modal}
@@ -74,9 +74,9 @@ class Hitory extends React.Component {
             >
                 <Row >
                     <Col span={24}>
-                    <Radio.Group size="small" className={style.selectNode}>
-                        <Radio.Button size="small"  value="large">常用</Radio.Button>
-                        <Radio.Button size="small" value="default">搜索</Radio.Button>
+                    <Radio.Group size="small" value={modalMode} onChange={(e)=>this.setState({modalMode:e.target.value})} className={style.selectNode}>
+                        <Radio.Button size="small"  value="common">常用</Radio.Button>
+                        <Radio.Button size="small" value="search">搜索</Radio.Button>
                     </Radio.Group>
                 </Col>
                 </Row>
@@ -84,10 +84,10 @@ class Hitory extends React.Component {
                     <Col span={3}>Title</Col>
                     <Col span={21}><Input size="small" value={addTitle} onChange={(e)=>this.setState({addTitle:e.target.value})} /></Col>
                 </Row>
-                <Row className={style.row}>
+                {modalMode=='common'&&<Row className={style.row}>
                     <Col span={3}>Search</Col>
                     <Col span={21}><Input size="small" placeholder="please input search" /></Col>
-                </Row>
+                </Row>}
                 <Row className={style.row}>
                     <div className={style.tree}>
                         <DirectoryTree>
