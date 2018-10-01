@@ -2,7 +2,7 @@ import React from "react";
 import {hot} from "react-hot-loader";
 import {bookmark,indexDb,storage,history} from '../../service/chrome';
 const confirm = Modal.confirm;
-import { Modal,Tree,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete} from 'antd';
+import { Modal,Tree,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete,Tooltip} from 'antd';
 import {ColorTag, splitTitle} from '../util'
 import { Menu, Switch,Tag } from 'antd';
 const SubMenu = Menu.SubMenu;
@@ -25,6 +25,10 @@ class Left extends React.Component{
     render(){
         let {key}=this.state;
         let {parent,bookmarks,tagMaps}=this.props;
+        let tagEntries=Object.entries(tagMaps);
+        tagEntries.sort((a,b)=>{
+            return b[1].length-a[1].length;
+        });
         return(
             <div className="left"    >
                 <Menu
@@ -47,7 +51,7 @@ class Left extends React.Component{
                 >
                     {parent.renderTreeNodes(bookmarks)}
                 </DirectoryTree>}
-                {key=='tag'&&<div style={{padding:'1em',lineHeight:2}}>{Object.entries(tagMaps).map((tag,index)=>{
+                {key=='tag'&&<div style={{padding:'1em',lineHeight:2}}>{tagEntries.map((tag,index)=>{
                     let tagName=tag[0];
                     let tagChildren=tag[1];
                     return <ColorTag tag={tagName} onClick={this.getUrls.bind(this,tagName,tagChildren,index)}  />

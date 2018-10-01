@@ -1,7 +1,7 @@
 import {bookmark, storage} from "../service/chrome";
 import React from 'react'
 import Color from 'color-js'
-import {Icon} from 'antd'
+import {Icon,Tooltip} from 'antd'
 async function getBread(node){
     var a=[];
     let a1=node;

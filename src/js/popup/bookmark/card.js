@@ -11,7 +11,12 @@ class ContentCard extends React.Component {
 
 
     render() {
-        let {urls=[],loadSize} = this.props;
+        let {urls=[],loadSize,flatBookmarks} = this.props;
+        urls.forEach((v,index)=>{
+            if(!v.url&&index<loadSize){
+                v.children=flatBookmarks.find(k=>k.id==v.id).children;
+            }
+        })
         return <table className="table"  ><tbody>
         {urls.map((row,rowindex)=>rowindex<loadSize&& <Tr key={row.id} row={row}  {...this.props} rowIndex={rowindex} ></Tr>)}
         </tbody></table>;

@@ -30,8 +30,18 @@ class Tr extends React.Component {
 
 
     render(){
-        let {row,search}=this.props;
+        let {row,search,showModal}=this.props;
+        const menu =(row)=> (
+            <Menu style={{width:200}} >
 
+
+                <Menu.Item >
+                    <a size="small" onClick={showModal}>add bookmark</a>
+                </Menu.Item>
+
+
+            </Menu>
+        );
         let newTitle=this.props.search&&splitTitle(row.title).title.replace(new RegExp("("+search+")","ig"),"<span style='color: red'>$1</span>");
 
         const trContent=(row)=>(
@@ -41,8 +51,11 @@ class Tr extends React.Component {
                         <span className="wy_title" dangerouslySetInnerHTML={{ __html: newTitle||splitTitle(row.title).title}}></span>
                     </a>
                 </td>
+
                 <td  className="wy_cmd">
-                    <span>{moment(row.lastVisitTime).format(dateFormat)}</span>
+                    <Dropdown overlay={menu(row)} trigger={['click']}>
+                        <span style={{cursor:'pointer'}} ><span style={{marginRight:"1em"}}>{moment(row.lastVisitTime).format(dateFormat)}</span> <Icon type="ellipsis" theme="outlined" /></span>
+                    </Dropdown>
                 </td>
             </tr>
         )
