@@ -14,13 +14,22 @@ class Hitory extends React.Component {
         super(props);
         this.state = {
             loadSize:loadSize,items:[],addBookmarkVisible:false,bookmarks:[],
-            addTitle:"",addParentId:'',addUrl:'',modalMode:'common'
+            addTitle:"",addParentId:'',addUrl:'',modalMode:'common',
+            treeNode:[],flatBookmarks:[],
         }
     }
 
     async search(word){
         let items=await history.search(word);
         this.setState({items:items})
+    }
+
+    searchDir(e){
+        let{bookmarks}=this.state;
+        let dir=e.target.value;
+        debugger;
+        let treeNodes=this.searchTreeNodes(dir);
+        this.setState({treeNode:treeNodes});
     }
 
     showMore(){
@@ -32,15 +41,45 @@ class Hitory extends React.Component {
         this.setState({addBookmarkVisible:true,addTitle:title,addUrl:url});
     }
 
+    flatBookmarks(bk){
+        var a=[];
+        let _this=this;
+        a=a.concat(bk);
+        bk.forEach(item=>{
+            if(item.children&&item.children.length>0){
+                a=a.concat(_this.flatBookmarks(item.children))
+            }
+        });
+        return a;
+    }
+
     async componentDidMount() {
         let items=await history.search("");
         storage.saveChanges("history",items)
         let r=await bookmark.getTree();
         let bookmarks=r[0].children;
-        this.setState({items:items,bookmarks:bookmarks})
+        let treeNodes=this.renderTreeNodes(bookmarks);
+        let flatBookmarks=this.flatBookmarks(bookmarks);
+        this.setState({items:items,bookmarks:bookmarks,treeNode:treeNodes,flatBookmarks:flatBookmarks});
 
     }
+    searchOnChange(e){
+        let {bookmarks}=this.state;
+       if(e.target.value==''){
+           let treeNode=this.renderTreeNodes(bookmarks);
+           this.setState({treeNode:treeNode});
+       }
+    }
 
+    searchTreeNodes(searchDir) {
+        let {flatBookmarks}=this.state;
+        return flatBookmarks.filter(v=>v.children&&v.title.indexOf(searchDir)>=0).map((item) => {
+            return (
+                <TreeNode  icon={null} title={splitTitle(item.title).title}  dataRef={item}>
+                </TreeNode>
+            );
+        });
+    }
 
     renderTreeNodes(bookmarks) {
         return bookmarks.map((item) => {
@@ -64,7 +103,7 @@ class Hitory extends React.Component {
 
     render() {
         let {loadSize,items,addBookmarkVisible,bookmarks,modalMode}=this.state;
-        let {addTitle,addParentId,addUrl}=this.state;
+        let {addTitle,addParentId,addUrl,treeNode}=this.state;
         return <div className="container" style={{background:"#f0f2f5",padding:'1em'}}>
             <Modal className={style.modal}
                 title="Add bookmark"
@@ -86,12 +125,13 @@ class Hitory extends React.Component {
                 </Row>
                 {modalMode=='common'&&<Row className={style.row}>
                     <Col span={3}>Search</Col>
-                    <Col span={21}><Input size="small" placeholder="please input search" /></Col>
+                    <Col span={21}>
+                        <Input size="small" onChange={this.searchOnChange.bind(this)} onPressEnter={this.searchDir.bind(this)} placeholder="please input search" /></Col>
                 </Row>}
                 <Row className={style.row}>
                     <div className={style.tree}>
                         <DirectoryTree>
-                            {this.renderTreeNodes(bookmarks)}
+                            {treeNode}
                         </DirectoryTree>
                     </div>
 
