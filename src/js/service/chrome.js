@@ -61,13 +61,12 @@ bookmark.removeTree=function(id){
 
 history.search=function(text,startTime,endTime){
     return new Promise((resolve, reject) => {
-        var microsecondsPerWeek = 1000 * 60 * 60 * 24 * 7;
+        var microsecondsPerWeek = 1000 * 60 * 60 * 24 * 30;
         var oneWeekAgo = (new Date).getTime() - microsecondsPerWeek;
         let query={text:text,maxResults  :10000};
         startTime&&(query.startTime=startTime);
         endTime&&(query.endTime=endTime);
-
-        chrome.history.search(query,( HistoryItems)=>{
+        chrome.history.search({text:'',startTime:oneWeekAgo,maxResults:10000},( HistoryItems)=>{
             resolve(HistoryItems.filter(v=> !v.url.startsWith("chrome-extension://")
             ))
         });

@@ -15,9 +15,9 @@
   "permissions":
   [
     "bookmarks",
-    "unlimitedStorage",
     "chrome://favicon/",
     "tabs",
+    "sessions",
     "storage",
     "history",
     "management"
