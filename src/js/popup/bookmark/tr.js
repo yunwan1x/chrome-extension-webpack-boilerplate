@@ -44,6 +44,14 @@ class Tr extends React.Component {
         let tbody=tr.parentNode;
         tbody.removeChild(tr);
     }
+    noTraceView(url){
+        chrome.windows.create({
+            "url": url,
+            "incognito": true,
+            "focused": true,
+            "state": "maximized"
+        });
+    }
 
     async handleClick(node){
         let children=await bookmark.getChildren(node.id);
@@ -80,6 +88,9 @@ class Tr extends React.Component {
                 </Menu.Item>
                 {row.url&&<Menu.Item>
                     <a size="small" onClick={this.viewHistory.bind(this,row.url)}>view history</a>
+                </Menu.Item>}
+                {row.url&&<Menu.Item>
+                    <a onClick={this.noTraceView.bind(this,row.url)}>无痕浏览</a>
                 </Menu.Item>}
             </Menu>
         );

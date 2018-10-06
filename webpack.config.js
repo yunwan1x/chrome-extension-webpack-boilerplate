@@ -28,7 +28,6 @@ let cssmodule = {
 var options = {
     entry: {
         popup: path.join(__dirname, "src", "js", "popup.js"),
-        options: path.join(__dirname, "src", "js", "options.js"),
 
     },
     output: {
@@ -97,11 +96,6 @@ var options = {
             template: path.join(__dirname, "src", "popup.html"),
             filename: "popup.html",
             chunks: ["vendor","popup"]
-        }),
-        new HtmlWebpackPlugin({
-            template: path.join(__dirname, "src", "options.html"),
-            filename: "options.html",
-            chunks: ["options"]
         }),
         // new MinifyPlugin(null,{comments:false}),
         new WriteFilePlugin(),
