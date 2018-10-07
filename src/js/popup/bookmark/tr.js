@@ -5,7 +5,7 @@ import moment from 'moment';
 import {getBread, getTag, splitTitle} from '../util'
 import {bookmark,indexDb,storage,history} from '../../service/chrome';
 import EditableTagGroup from './tag'
-import {Button,Icon,Popconfirm, message,Row,Col,Menu, Dropdown,Input} from 'antd';
+import {Button,Icon,Popconfirm, message,Row,Col,Menu, Dropdown,Input,Divider} from 'antd';
 var self=this;
 const dateFormat="YY/MM/DD HH:mm";
 
@@ -74,9 +74,15 @@ class Tr extends React.Component {
         let _this=this;
         const menu =(row)=> (
             <Menu style={{width:200}} >
-
                 {row.url&&<Menu.Item><a  onClick={filter.bind(this,row,"site")}>site</a></Menu.Item>}
                 {row.url&&<Menu.Item><a  onClick={filter.bind(this,row,"domain")}>domain</a></Menu.Item>}
+                {row.url&&<Menu.Item>
+                    <a size="small" onClick={this.viewHistory.bind(this,row.url)}>view history</a>
+                </Menu.Item>}
+                {row.url&&<Menu.Item>
+                    <a onClick={this.noTraceView.bind(this,row.url)}>无痕浏览</a>
+                </Menu.Item>}
+                <Divider></Divider>
                 <Menu.Item >
                         <a size="small" onClick={deleteItem.bind(this,row,this.deleteCallback.bind(this,row))}>delete</a>
                 </Menu.Item>
@@ -86,12 +92,8 @@ class Tr extends React.Component {
                         dom.focus();
                     }))}>edit</a>
                 </Menu.Item>
-                {row.url&&<Menu.Item>
-                    <a size="small" onClick={this.viewHistory.bind(this,row.url)}>view history</a>
-                </Menu.Item>}
-                {row.url&&<Menu.Item>
-                    <a onClick={this.noTraceView.bind(this,row.url)}>无痕浏览</a>
-                </Menu.Item>}
+
+
             </Menu>
         );
         let newTitle=this.props.search&&splitTitle(title).title.replace(new RegExp("("+search+")","ig"),"<span style='color: red'>$1</span>");
