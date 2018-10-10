@@ -74,7 +74,6 @@ class Hitory extends React.Component {
         let ret=[];
         let filterMarks= flatBookmarks.filter(v=>v.children&&v.title.indexOf(searchDir)>=0);
         for(let item of filterMarks){
-            debugger;
             let bread=await getBread(item);
             let titleTip=bread.map(d=>d.title).join(" / ");
             ret.push (
