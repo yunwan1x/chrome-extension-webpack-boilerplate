@@ -39,6 +39,12 @@ bookmark.search=function(str){
     })
 
 }
+bookmark.create=function(parentId,title,url){
+    return new Promise((resolve, reject) => {
+        chrome.bookmarks.create({parentId,title,url},(item)=>resolve(item))
+    })
+}
+
 
 bookmark.remove=function(id){
     return new Promise((resolve, reject) => {

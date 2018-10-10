@@ -5,7 +5,7 @@ const dateFormat="YYYY-MM-DD HH:mm:ss";
 import {getBread, getHtml, loadSize, splitTitle} from 'js/popup/util';
 import {bookmark,indexDb,storage,history} from 'js/service/chrome';
 import style from "./index.less"
-import { DatePicker ,Tree,Icon,Modal,Row,Col,Radio,Button,Input,Select,AutoComplete} from 'antd';
+import { DatePicker ,Tree,Icon,Modal,Row,Col,Radio,Button,Input,Select,AutoComplete,message,Tooltip} from 'antd';
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const TreeNode = Tree.TreeNode;
 const DirectoryTree = Tree.DirectoryTree;
@@ -27,9 +27,7 @@ class Hitory extends React.Component {
     searchDir(e){
         let{bookmarks}=this.state;
         let dir=e.target.value;
-        debugger;
         let treeNodes=this.searchTreeNodes(dir);
-        this.setState({treeNode:treeNodes});
     }
 
     showMore(){
@@ -71,27 +69,47 @@ class Hitory extends React.Component {
        }
     }
 
-    searchTreeNodes(searchDir) {
+     async searchTreeNodes(searchDir) {
         let {flatBookmarks}=this.state;
-        return flatBookmarks.filter(v=>v.children&&v.title.indexOf(searchDir)>=0).map((item) => {
-            return (
-                <TreeNode  icon={null} title={splitTitle(item.title).title}  dataRef={item}>
+        let ret=[];
+        let filterMarks= flatBookmarks.filter(v=>v.children&&v.title.indexOf(searchDir)>=0);
+        for(let item of filterMarks){
+            debugger;
+            let bread=await getBread(item);
+            let titleTip=bread.map(d=>d.title).join(" / ");
+            ret.push (
+                <TreeNode  icon={null} title={<Tooltip placement="right" title={titleTip}>{splitTitle(item.title).title}</Tooltip>}  dataRef={item}>
                 </TreeNode>
             );
-        });
+        }
+         this.setState({treeNode:ret});
+
+
+
     }
 
     renderTreeNodes(bookmarks) {
+        let _this=this;
         return bookmarks.map((item) => {
             if (item.children) {
                 return (
-                    <TreeNode icon={null} title={splitTitle(item.title).title}  dataRef={item}>
+                    <TreeNode  icon={null} title={splitTitle(item.title).title}  dataRef={item}>
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
             }
             return null;
         });
+    }
+
+    async addBookMark(){
+        let {addParentId,addUrl,addTitle}=this.state;
+        if(addParentId){
+            let  item=await bookmark.create(addParentId,addTitle,addUrl);
+            if(item)this.setState({addBookmarkVisible:false})
+        }else {
+            message.error('please select a directory');
+        }
     }
 
     async searchChange(word){
@@ -108,7 +126,7 @@ class Hitory extends React.Component {
             <Modal className={style.modal}
                 title="Add bookmark"
                 visible={addBookmarkVisible}
-                onOk={()=>{}}
+                onOk={this.addBookMark.bind(this)}
                 onCancel={()=>this.setState({addBookmarkVisible:false})}
             >
                 <Row >
@@ -130,7 +148,10 @@ class Hitory extends React.Component {
                 </Row>}
                 <Row className={style.row}>
                     <div className={style.tree}>
-                        <DirectoryTree>
+                        <DirectoryTree onSelect={(selectedKeys, {selected, selectedNodes, node, event})=>{
+                            let {dataRef:{id}}=node.props;
+                            this.setState({addParentId:id});
+                        }}>
                             {treeNode}
                         </DirectoryTree>
                     </div>
