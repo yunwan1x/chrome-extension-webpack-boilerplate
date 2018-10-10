@@ -141,7 +141,7 @@ class Hitory extends React.Component {
                     <Col span={3}>Title</Col>
                     <Col span={21}><Input size="small" value={addTitle} onChange={(e)=>this.setState({addTitle:e.target.value})} /></Col>
                 </Row>
-                {modalMode=='common'&&<Row className={style.row}>
+                {modalMode=='search'&&<Row className={style.row}>
                     <Col span={3}>Search</Col>
                     <Col span={21}>
                         <Input size="small" onChange={this.searchOnChange.bind(this)} onPressEnter={this.searchDir.bind(this)} placeholder="please input search" /></Col>
@@ -157,12 +157,12 @@ class Hitory extends React.Component {
                     </div>
 
                 </Row>
-                <Row className={style.row}>
+                {modalMode=='search'&&<Row className={style.row}>
                     <Col span={24}>   <Button type="primary" size="small">
 
                         新建文件夹
                     </Button></Col>
-                </Row>
+                </Row>}
             </Modal>
             <div className={style.header}><span><Icon type="project" theme="outlined" />&nbsp;hitory</span>
         </div><table className="table"  ><tbody>
