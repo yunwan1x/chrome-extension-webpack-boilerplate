@@ -52,13 +52,29 @@ class Hitory extends React.Component {
     }
 
     async componentDidMount() {
+        let {modalMode}=this.state;
         let items=await history.search("");
         storage.saveChanges("history",items)
         let r=await bookmark.getTree();
         let bookmarks=r[0].children;
-        let treeNodes=this.renderTreeNodes(bookmarks);
+
+        let treeNode= await storage.getChanges("bookmarks")||[];
+        let newTreeNode=[];
+        for(let item of treeNode){
+            let bread=await getBread(item);
+            let titleTip=bread.map(d=>d.title).join(" / ");
+            debugger;
+            let title=splitTitle(item.title).title;
+            newTreeNode.push (
+                <TreeNode  icon={null} title={<Tooltip placement="right" title={titleTip}>{title}</Tooltip>}  dataRef={item}>
+                </TreeNode>
+            );
+        }
+        treeNode=newTreeNode;
+
+        if(modalMode!='common')treeNode=this.renderTreeNodes(bookmarks);
         let flatBookmarks=this.flatBookmarks(bookmarks);
-        this.setState({items:items,bookmarks:bookmarks,treeNode:treeNodes,flatBookmarks:flatBookmarks});
+        this.setState({items:items,bookmarks:bookmarks,treeNode:treeNode,flatBookmarks:flatBookmarks});
 
     }
     searchOnChange(e){
@@ -68,6 +84,8 @@ class Hitory extends React.Component {
            this.setState({treeNode:treeNode});
        }
     }
+
+
 
      async searchTreeNodes(searchDir) {
         let {flatBookmarks}=this.state;
@@ -106,9 +124,37 @@ class Hitory extends React.Component {
         if(addParentId){
             let  item=await bookmark.create(addParentId,addTitle,addUrl);
             if(item)this.setState({addBookmarkVisible:false})
+            let commonBooks=await storage.getChanges("bookmarks")||[]
+            if(commonBooks.length>20)commonBooks.shift();
+            let  addedBookmark=await bookmark.get(addParentId);
+            addedBookmark.length>0&&commonBooks.push( addedBookmark[0]);
+            await storage.saveChanges("bookmarks",commonBooks)
         }else {
             message.error('please select a directory');
         }
+    }
+    async getTreeNode(){
+
+        return treeNode;
+    }
+
+    async changeModal(e){
+        let modal=e.target.value;
+        let {bookmarks}=this.state;
+        let treeNode= await storage.getChanges("bookmarks")||[];
+        let newTreeNode=[];
+        for(let item of treeNode){
+            let bread=await getBread(item);
+            let titleTip=bread.map(d=>d.title).join(" / ");
+            let title=splitTitle(item.title).title;
+            newTreeNode.push (
+                <TreeNode  icon={null} title={<Tooltip placement="right" title={titleTip}>{title}</Tooltip>}  dataRef={item}>
+                </TreeNode>
+            );
+        }
+        treeNode=newTreeNode;
+        if(modal!='common')treeNode=this.renderTreeNodes(bookmarks);
+        this.setState({modalMode:modal,treeNode: treeNode });
     }
 
     async searchChange(word){
@@ -130,7 +176,7 @@ class Hitory extends React.Component {
             >
                 <Row >
                     <Col span={24}>
-                    <Radio.Group size="small" value={modalMode} onChange={(e)=>this.setState({modalMode:e.target.value})} className={style.selectNode}>
+                    <Radio.Group size="small" value={modalMode} onChange={ this.changeModal.bind(this)} className={style.selectNode}>
                         <Radio.Button size="small"  value="common">常用</Radio.Button>
                         <Radio.Button size="small" value="search">搜索</Radio.Button>
                     </Radio.Group>
@@ -147,12 +193,12 @@ class Hitory extends React.Component {
                 </Row>}
                 <Row className={style.row}>
                     <div className={style.tree}>
-                        <DirectoryTree onSelect={(selectedKeys, {selected, selectedNodes, node, event})=>{
+                        {treeNode.length>0&&<DirectoryTree onSelect={(selectedKeys, {selected, selectedNodes, node, event})=>{
                             let {dataRef:{id}}=node.props;
                             this.setState({addParentId:id});
                         }}>
                             {treeNode}
-                        </DirectoryTree>
+                        </DirectoryTree>||<div className={style.nodata}>请增加一个书签</div>}
                     </div>
 
                 </Row>
