@@ -63,7 +63,6 @@ class Hitory extends React.Component {
         for(let item of treeNode){
             let bread=await getBread(item);
             let titleTip=bread.map(d=>d.title).join(" / ");
-            debugger;
             let title=splitTitle(item.title).title;
             newTreeNode.push (
                 <TreeNode  icon={null} title={<Tooltip placement="right" title={titleTip}>{title}</Tooltip>}  dataRef={item}>
