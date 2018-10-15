@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.6.5/svg.js"></script>
+    <style>
+        html,body{
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<div style="position: absolute;top:100px" id="drawing"></div>
+<script>
+    var draw = SVG('drawing').size(300,300)
+
+    // draw transformed rect
+    var rect = draw.rect(175,175).move(575,575).attr("id",'my').fill('red')
+
+    // draw bbox
+    var b = rect.bbox();
+    var doo=document.querySelector("#my");
+    var tfmList=doo.transform.baseVal;
+    var svgroot=doo.parentNode;
+    var translate = svgroot.createSVGTransform();
+    translate.setTranslate(-500,-500);
+    tfmList.appendItem(translate)
+    var a=rect.rbox();
+    console.log("")
+</script>
+</body>
+</html>
