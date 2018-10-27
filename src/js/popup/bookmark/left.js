@@ -46,7 +46,9 @@ class Left extends React.Component{
                         <Icon type="tag" theme="outlined" />tags
                     </Menu.Item>
                 </Menu>
-                {key=='tree'&&<DirectoryTree
+                {key=='tree'&&<DirectoryTree draggable={true} onDrop={({event, node, dragNode, dragNodesKeys})=>{
+                    debugger;
+                }} onRightClick={(e)=>{debugger;}}
                     onSelect={parent.treeNodeHandleClick}
                 >
                     {parent.renderTreeNodes(bookmarks)}

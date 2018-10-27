@@ -101,14 +101,22 @@ class Tr extends React.Component {
         const trContent=(row)=>(
             <tr>
                 <td    ref={(dom)=>{row.dom=dom;}} >
-                    {!edit&&<a style={{marginRight:"2em"}}  target="_blank" href={row.url} onClick={this.handleClick.bind(self,row)}>{row.url&&<span style={{width:16,height:16,backgroundImage:`-webkit-image-set(url("chrome://favicon/size/16@1x/${row.url}") 1x, url("chrome://favicon/size/16@2x/${row.url}") 2x)`}}  className="img" ></span>||<Icon  className="img" type="folder" theme="outlined" />}
-                        <span className="wy_title" dangerouslySetInnerHTML={{ __html: newTitle||splitTitle(title).title}}></span>
-                        {!row.url&&<span>&nbsp;({row.children.length})</span>}
-                    </a>||<div style={{marginRight:"2em"}}>
-                        <Input ref="input" style={{lineHeight:2,padding:'0.3em'}} size="small" value={title} onChange={(e)=>this.setState({title:e.target.value})}  onPressEnter={this.cancleEdit.bind(this,row)} onBlur={this.cancleEdit.bind(this,row)}/>
-                    </div>}
+                    <div draggable="true" ref={dom=>{
+                        if(!dom)return;
+                        dom.oncontextmenu=function(e){
+                            e.preventDefault();
+                        }
+                    }}>
+                        {!edit&&<a style={{marginRight:"2em"}}  target="_blank" href={row.url} onClick={this.handleClick.bind(self,row)}>{row.url&&<span style={{width:16,height:16,backgroundImage:`-webkit-image-set(url("chrome://favicon/size/16@1x/${row.url}") 1x, url("chrome://favicon/size/16@2x/${row.url}") 2x)`}}  className="img" ></span>||<Icon  className="img" type="folder" theme="outlined" />}
+                            <span className="wy_title" dangerouslySetInnerHTML={{ __html: newTitle||splitTitle(title).title}}></span>
+                            {!row.url&&<span>&nbsp;({row.children.length})</span>}
+                        </a>||<div style={{marginRight:"2em"}}>
+                            <Input ref="input" style={{lineHeight:2,padding:'0.3em'}} size="small" value={title} onChange={(e)=>this.setState({title:e.target.value})}  onPressEnter={this.cancleEdit.bind(this,row)} onBlur={this.cancleEdit.bind(this,row)}/>
+                        </div>}
 
-                    {!edit&&<EditableTagGroup {...this.props} node={row}/>}
+                        {!edit&&<EditableTagGroup {...this.props} node={row}/>}
+                    </div>
+
                 </td>
                 <td  className="wy_cmd">
                     <Dropdown overlay={menu(row)} trigger={['click']}>
