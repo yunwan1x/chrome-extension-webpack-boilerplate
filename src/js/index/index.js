@@ -10,6 +10,6 @@ render(
             chrome.tabs.create({ url: url});
 
         });
-    }} style={{width:500}}>hello world</div>,
+    }} style={{width:'inherit'}}>hello world</div>,
     window.document.getElementById("app")
 );
