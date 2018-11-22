@@ -1,15 +1,9 @@
-import "./index.css";
 import React from "react";
 import { render } from "react-dom";
+import BookMark from './bookmark'
+import 'antd/dist/antd.css';
 
 render(
-    <div onClick={()=>{
-        chrome.management.getSelf(function (res) {
-            let url='chrome-extension://' + res.id + '/popup.html';
-            window.url=url;
-            chrome.tabs.create({ url: url});
-
-        });
-    }} style={{width:'inherit'}}>hello world</div>,
+    <BookMark></BookMark>,
     window.document.getElementById("app")
 );

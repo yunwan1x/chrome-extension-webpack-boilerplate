@@ -102,7 +102,7 @@ var options = {
         new HtmlWebpackPlugin({
             template: path.join(__dirname, "src", "index.html"),
             filename: "index.html",
-            chunks: ["vendor","index"]
+            chunks: ["index","vendor"]
         }),
         // new MinifyPlugin(null,{comments:false}),
         new WriteFilePlugin(),
