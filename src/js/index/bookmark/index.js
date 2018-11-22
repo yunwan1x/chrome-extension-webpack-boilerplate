@@ -179,7 +179,7 @@ class Hitory extends React.Component {
                 </Button> }<div style={{float:'right'}}><Button type="primary" size="small" style={{marginRight:'1em'
                 }}>
                     保存
-                </Button><Button  size="small">
+                </Button><Button  size="small" onClick={()=>window.close()}>
                     取消
                 </Button></div></Col>
             </Row>
