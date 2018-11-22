@@ -136,13 +136,21 @@ class Hitory extends React.Component {
     render() {
         let {loadSize,items,addBookmarkVisible,bookmarks,modalMode}=this.state;
         let {addTitle,addParentId,addUrl,treeNode}=this.state;
-        return <div className="container" style={{background:"#f0f2f5",padding:'1em',height:600}}>
+        return <div className="container" style={{padding:'1em'}}>
             <Row >
                 <Col span={24}>
                     <Radio.Group size="small" value={modalMode} onChange={ this.changeModal.bind(this)} className={style.selectNode}>
                         <Radio.Button size="small"  value="common">常用</Radio.Button>
                         <Radio.Button size="small" value="search">搜索</Radio.Button>
                     </Radio.Group>
+                    <a style={{float:'right'}} href="#" onClick={()=>{
+                        chrome.management.getSelf(function (res) {
+                            let url='chrome-extension://' + res.id + '/popup.html';
+                            window.url=url;
+                            chrome.tabs.create({ url: url});
+                        });
+                    }
+                    }>书签管理器</a>
                 </Col>
             </Row>
             <Row className={style.row}>
@@ -165,23 +173,15 @@ class Hitory extends React.Component {
                 </div>
 
             </Row>
-            {modalMode=='search'&&<Row className={style.row}>
-                <Col span={24}>   <Button type="primary" size="small">
+            <Row className={style.row}>
+                <Col span={24}>   {modalMode=='search'&&<Button type="primary" size="small">
                     新建文件夹
-                </Button></Col>
-            </Row>}
-
-            <Row>
-                <Col>
-                    <a href="#" onClick={()=>{
-                        chrome.management.getSelf(function (res) {
-                            let url='chrome-extension://' + res.id + '/popup.html';
-                            window.url=url;
-                            chrome.tabs.create({ url: url});
-                        });
-                    }
-                    }>书签管理器</a>
-                </Col>
+                </Button> }<div style={{float:'right'}}><Button type="primary" size="small" style={{marginRight:'1em'
+                }}>
+                    保存
+                </Button><Button  size="small">
+                    取消
+                </Button></div></Col>
             </Row>
         </div>;
     }
