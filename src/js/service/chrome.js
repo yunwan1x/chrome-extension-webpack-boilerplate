@@ -2,7 +2,13 @@ var bookmark={};
 var history={};
 var storage={};
 
-
+bookmark.getCurrentTab=function(){
+    return new Promise((resolve, reject) => {
+        chrome.tabs.query({active:true}, (tabs)=>{
+            resolve(tabs.length>0?tabs[0]:null);
+        })
+    })
+}
 bookmark.update=function (id,title){
     return new Promise((resolve, reject) => {
         chrome.bookmarks.update(id, {title:title},(treeNode)=>{

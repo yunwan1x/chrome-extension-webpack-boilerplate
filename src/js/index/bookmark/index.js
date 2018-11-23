@@ -49,6 +49,8 @@ class Hitory extends React.Component {
         let r=await bookmark.getTree();
         let bookmarks=r[0].children;
 
+        let tab=await bookmark.getCurrentTab();
+        let {title="",url=""}=tab;
         let treeNode= await storage.getChanges("bookmarks")||[];
         let newTreeNode=[];
         for(let item of treeNode){
@@ -64,7 +66,7 @@ class Hitory extends React.Component {
 
         if(modalMode!='common')treeNode=this.renderTreeNodes(bookmarks);
         let flatBookmarks=this.flatBookmarks(bookmarks);
-        this.setState({items:items,bookmarks:bookmarks,treeNode:treeNode,flatBookmarks:flatBookmarks});
+        this.setState({addTitle:title,addUrl:url,items:items,bookmarks:bookmarks,treeNode:treeNode,flatBookmarks:flatBookmarks});
 
     }
     searchOnChange(e){
@@ -136,7 +138,10 @@ class Hitory extends React.Component {
     render() {
         let {loadSize,items,addBookmarkVisible,bookmarks,modalMode}=this.state;
         let {addTitle,addParentId,addUrl,treeNode}=this.state;
-        return <div className="container" style={{padding:'1em'}}>
+        return <div className="container" style={{padding:'1em',paddingTop:'0.5em'}}>
+            <div style={{textAlign:'right',marginBottom:'0.3em'}}><span onClick={()=>{
+                window.close()
+            }}  style={{cursor:'pointer'}}><Icon  type="close" /></span></div>
             <Row >
                 <Col span={24}>
                     <Radio.Group size="small" value={modalMode} onChange={ this.changeModal.bind(this)} className={style.selectNode}>
