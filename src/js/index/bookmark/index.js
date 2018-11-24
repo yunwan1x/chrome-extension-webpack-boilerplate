@@ -5,7 +5,7 @@ const dateFormat="YYYY-MM-DD HH:mm:ss";
 import {getBread, getHtml, loadSize, splitTitle} from 'js/popup/util';
 import {bookmark,indexDb,storage,history,tabs} from 'js/service/chrome';
 import style from "./index.less"
-import { DatePicker ,Tree,Icon,Modal,Row,Col,Radio,Button,Input,Select,AutoComplete,message,Tooltip} from 'antd';
+import { DatePicker ,Tree,Icon,Modal,Row,Col,Radio,Button,Input,AutoComplete,message,Tooltip,Select} from 'antd';
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const TreeNode = Tree.TreeNode;
 const DirectoryTree = Tree.DirectoryTree;
@@ -15,7 +15,7 @@ class Hitory extends React.Component {
         this.state = {
             loadSize:loadSize,items:[],addBookmarkVisible:false,bookmarks:[],
             addTitle:"",addParentId:'',addUrl:'',modalMode:'common',
-            treeNode:[],flatBookmarks:[]
+            treeNode:[],flatBookmarks:[],tags:[],selectedTags:[]
         }
     }
 
@@ -56,6 +56,13 @@ class Hitory extends React.Component {
 
         let tab=await bookmark.getCurrentTab();
         let {title="",url=""}=tab;
+        let oldBm=await bookmark.search(url);
+        let selectedTags=[];
+        if(oldBm&&oldBm.length>0){
+            oldBm=oldBm[0];
+            title=oldBm.title;
+            selectedTags=splitTitle(title).tags
+        }
         let treeNode= await storage.getChanges("bookmarks")||[];
         let newTreeNode=[];
         for(let item of treeNode){
@@ -71,7 +78,16 @@ class Hitory extends React.Component {
 
         if(modalMode!='common')treeNode=this.renderTreeNodes(bookmarks);
         let flatBookmarks=this.flatBookmarks(bookmarks);
-        this.setState({addTitle:title,addUrl:url,items:items,bookmarks:bookmarks,treeNode:treeNode,flatBookmarks:flatBookmarks});
+        let tagMaps=flatBookmarks.reduce((map,node)=>{
+            let {title,tags}=splitTitle(node.title);
+            tags.forEach(tag=>{
+                let container=map[tag]||[];
+                container.push(node)
+                map[tag]=container;
+            })
+            return map;
+        },{});
+        this.setState({addTitle:title,addUrl:url,items:items,bookmarks:bookmarks,treeNode:treeNode,flatBookmarks:flatBookmarks,tags:Object.keys(tagMaps),selectedTags:selectedTags});
 
     }
     searchOnChange(e){
@@ -117,15 +133,19 @@ class Hitory extends React.Component {
     }
 
     async addBookMark(callback){
-        let {addParentId,addUrl,addTitle}=this.state;
+        let {addParentId,addUrl,addTitle,selectedTags}=this.state;
+        let oldBm=await bookmark.search(addUrl);
         if(addParentId){
-            let oldBm=await bookmark.search(addUrl);
             if(oldBm&&oldBm.length>0){
                 oldBm=oldBm[0];
-                await bookmark.move(oldBm.id,addParentId);
+                let {split,title,tags}=splitTitle(oldBm.title);
+                let newTitle=title+split+selectedTags.join("|");
+                await bookmark.update(oldBm.id,newTitle);
+                addParentId&&await bookmark.move(oldBm.id,addParentId);
             }else {
-                let  item=await bookmark.create(addParentId,addTitle,addUrl);
-                if(item)this.setState({addBookmarkVisible:false})
+                let {split,title,tags}=splitTitle(addTitle);
+                let newTitle=title+split+selectedTags.join("|");
+                addParentId&&await bookmark.create(addParentId,newTitle,addUrl);
             }
             let commonBooks=await storage.getChanges("bookmarks")||[]
             if(commonBooks.length>20)commonBooks.shift();
@@ -134,7 +154,15 @@ class Hitory extends React.Component {
             await storage.saveChanges("bookmarks",commonBooks)
             callback();
         }else {
-            message.error('please select a directory');
+            if(oldBm&&oldBm.length>0){
+                oldBm=oldBm[0];
+                let {split,title,tags}=splitTitle(oldBm.title);
+                let newTitle=title+split+selectedTags.join("|");
+                await bookmark.update(oldBm.id,newTitle);
+                callback();
+            }else {
+                message.error('please select a directory');
+            }
         }
     }
 
@@ -161,7 +189,7 @@ class Hitory extends React.Component {
 
 
     render() {
-        let {loadSize,items,addBookmarkVisible,bookmarks,modalMode}=this.state;
+        let {loadSize,items,addBookmarkVisible,bookmarks,modalMode,tags,selectedTags}=this.state;
         let {addTitle,addParentId,addUrl,treeNode}=this.state;
         return <div className="container" style={{padding:'1em',paddingTop:'0.5em'}}>
             <div style={{textAlign:'right',marginBottom:'0.3em'}}><span onClick={()=>{
@@ -191,13 +219,29 @@ class Hitory extends React.Component {
             </Row>
             <Row className={style.row}>
                 <Col span={3}>Title</Col>
-                <Col span={21}><Input size="small" value={addTitle} onChange={(e)=>this.setState({addTitle:e.target.value})} /></Col>
+                <Col span={21}><Input value={addTitle} onChange={(e)=>this.setState({addTitle:e.target.value})} /></Col>
             </Row>
             {modalMode=='search'&&<Row className={style.row}>
                 <Col span={3}>Search</Col>
                 <Col span={21}>
-                    <Input size="small" onChange={this.searchOnChange.bind(this)} onPressEnter={this.searchDir.bind(this)} placeholder="please input search" /></Col>
+                    <Input  onChange={this.searchOnChange.bind(this)} onPressEnter={this.searchDir.bind(this)} placeholder="please input search" /></Col>
             </Row>}
+            <Row className={style.row}>
+                <Col span={3}>tags</Col>
+                <Col span={21}>
+                    <Select
+                        mode="tags"
+                        maxTagCount={50}
+                        style={{ width: '100%' }}
+                        value={selectedTags}
+                        onChange={(value)=>{
+                            this.setState({selectedTags:value});
+                        }}
+                        placeholder="input tags">
+                        {tags.map(v=><Select.Option value={v}>{v}</Select.Option>)}
+                    </Select>
+                </Col>
+            </Row>
             <Row className={style.row}>
                 <div className={style.tree}>
                     {treeNode.length>0&&<DirectoryTree onSelect={(selectedKeys, {selected, selectedNodes, node, event})=>{
