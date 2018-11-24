@@ -9,12 +9,20 @@ const SubMenu = Menu.SubMenu;
 const TreeNode = Tree.TreeNode;
 const DirectoryTree = Tree.DirectoryTree;
 class Left extends React.Component{
-    constructor(props){
+     constructor(props){
         super(props);
+
         this.state={
             key:'tree',
-            tags:[]
+            tags:[],
+            expandedKeys:[]
         }
+    }
+    async componentDidMount(){
+        let {expandedKeys=[]}=await storage.getChanges("leftTree")||{};
+
+        debugger;
+        this.setState({expandedKeys:expandedKeys});
     }
     async getUrls(tagName,tagChildren,index){
         let node={title:'tag-'+tagName,children:tagChildren,id:tagName,category:"tag"};
@@ -22,8 +30,17 @@ class Left extends React.Component{
     }
 
 
+    onExpandedKey(expandedKeys, {expanded: bool, node}){
+         this.setState({
+             expandedKeys:expandedKeys
+         },async()=>{
+             await storage.saveChanges("leftTree",{expandedKeys:expandedKeys});
+         });
+
+    }
+
     render(){
-        let {key}=this.state;
+        let {key,expandedKeys}=this.state;
         let {parent,bookmarks,tagMaps}=this.props;
         let tagEntries=Object.entries(tagMaps);
         tagEntries.sort((a,b)=>{
@@ -46,7 +63,7 @@ class Left extends React.Component{
                         <Icon type="tag" theme="outlined" />tags
                     </Menu.Item>
                 </Menu>
-                {key=='tree'&&<DirectoryTree draggable={true} onDrop={({event, node, dragNode, dragNodesKeys})=>{
+                {key=='tree'&&<DirectoryTree onExpand={this.onExpandedKey.bind(this)} expandedKeys={expandedKeys} draggable={true} onDrop={({event, node, dragNode, dragNodesKeys})=>{
                     debugger;
                 }} onRightClick={(e)=>{debugger;}}
                     onSelect={parent.treeNodeHandleClick}
