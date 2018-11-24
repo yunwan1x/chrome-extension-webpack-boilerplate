@@ -1,6 +1,22 @@
 var bookmark={};
 var history={};
 var storage={};
+var tabs={};
+
+tabs.query=function(url){
+    return new Promise((resolve, reject) => {
+        chrome.tabs.query({url:url}, (tab)=>{
+            resolve(tab);
+        })
+    })
+}
+
+tabs.update=function(tabId){
+    return new Promise((resolve, reject) => {
+        chrome.tabs.update(tabId, {active:true}, (r)=>{resolve(r)})
+    })
+}
+
 
 bookmark.getCurrentTab=function(){
     return new Promise((resolve, reject) => {
@@ -9,6 +25,16 @@ bookmark.getCurrentTab=function(){
         })
     })
 }
+
+bookmark.move=function(id,parentId){
+    return new Promise((resolve, reject) => {
+        chrome.bookmarks.move(id, {parentId:parentId}, (node)=>{
+            resolve(node)
+        })
+    })
+}
+
+
 bookmark.update=function (id,title){
     return new Promise((resolve, reject) => {
         chrome.bookmarks.update(id, {title:title},(treeNode)=>{
@@ -142,4 +168,4 @@ topSites.get=function () {
 
 
 
-export   {bookmark,storage,history,topSites};
+export   {bookmark,storage,history,topSites,tabs};

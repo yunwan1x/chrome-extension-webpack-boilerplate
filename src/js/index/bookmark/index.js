@@ -3,7 +3,7 @@ import {hot} from "react-hot-loader";
 import Tr from "js/popup/history/tr"
 const dateFormat="YYYY-MM-DD HH:mm:ss";
 import {getBread, getHtml, loadSize, splitTitle} from 'js/popup/util';
-import {bookmark,indexDb,storage,history} from 'js/service/chrome';
+import {bookmark,indexDb,storage,history,tabs} from 'js/service/chrome';
 import style from "./index.less"
 import { DatePicker ,Tree,Icon,Modal,Row,Col,Radio,Button,Input,Select,AutoComplete,message,Tooltip} from 'antd';
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
@@ -15,7 +15,7 @@ class Hitory extends React.Component {
         this.state = {
             loadSize:loadSize,items:[],addBookmarkVisible:false,bookmarks:[],
             addTitle:"",addParentId:'',addUrl:'',modalMode:'common',
-            treeNode:[],flatBookmarks:[],
+            treeNode:[],flatBookmarks:[]
         }
     }
 
@@ -42,6 +42,11 @@ class Hitory extends React.Component {
         return a;
     }
 
+    selectParent(selectedKeys, {selected, selectedNodes, node, event}){
+
+        debugger;
+    }
+
     async componentDidMount() {
         let {modalMode}=this.state;
         let items=await history.search("");
@@ -58,7 +63,7 @@ class Hitory extends React.Component {
             let titleTip=bread.map(d=>d.title).join(" / ");
             let title=splitTitle(item.title).title;
             newTreeNode.push (
-                <TreeNode  icon={null} title={<Tooltip placement="right" title={titleTip}>{title}</Tooltip>}  dataRef={item}>
+                <TreeNode   icon={null} title={<Tooltip placement="right" title={titleTip}>{title}</Tooltip>}  dataRef={item}>
                 </TreeNode>
             );
         }
@@ -87,7 +92,7 @@ class Hitory extends React.Component {
             let bread=await getBread(item);
             let titleTip=bread.map(d=>d.title).join(" / ");
             ret.push (
-                <TreeNode  icon={null} title={<Tooltip placement="right" title={titleTip}>{splitTitle(item.title).title}</Tooltip>}  dataRef={item}>
+                <TreeNode   icon={null} title={<Tooltip placement="right" title={titleTip}>{splitTitle(item.title).title}</Tooltip>}  dataRef={item}>
                 </TreeNode>
             );
         }
@@ -102,7 +107,7 @@ class Hitory extends React.Component {
         return bookmarks.map((item) => {
             if (item.children) {
                 return (
-                    <TreeNode  icon={null} title={splitTitle(item.title).title}  dataRef={item}>
+                    <TreeNode   icon={null} title={splitTitle(item.title).title}  dataRef={item}>
                         {this.renderTreeNodes(item.children)}
                     </TreeNode>
                 );
@@ -111,7 +116,27 @@ class Hitory extends React.Component {
         });
     }
 
-
+    async addBookMark(callback){
+        let {addParentId,addUrl,addTitle}=this.state;
+        if(addParentId){
+            let oldBm=await bookmark.search(addUrl);
+            if(oldBm&&oldBm.length>0){
+                oldBm=oldBm[0];
+                await bookmark.move(oldBm.id,addParentId);
+            }else {
+                let  item=await bookmark.create(addParentId,addTitle,addUrl);
+                if(item)this.setState({addBookmarkVisible:false})
+            }
+            let commonBooks=await storage.getChanges("bookmarks")||[]
+            if(commonBooks.length>20)commonBooks.shift();
+            let  addedBookmark=await bookmark.get(addParentId);
+            addedBookmark.length>0&&(!commonBooks.find(b=>b.id==addParentId))&&commonBooks.push( addedBookmark[0]);
+            await storage.saveChanges("bookmarks",commonBooks)
+            callback();
+        }else {
+            message.error('please select a directory');
+        }
+    }
 
 
     async changeModal(e){
@@ -148,11 +173,17 @@ class Hitory extends React.Component {
                         <Radio.Button size="small"  value="common">常用</Radio.Button>
                         <Radio.Button size="small" value="search">搜索</Radio.Button>
                     </Radio.Group>
-                    <a style={{float:'right'}} href="#" onClick={()=>{
-                        chrome.management.getSelf(function (res) {
+                    <a style={{float:'right'}} href="#" onClick={  ()=>{
+                        chrome.management.getSelf(async (res)=>{
                             let url='chrome-extension://' + res.id + '/popup.html';
-                            window.url=url;
-                            chrome.tabs.create({ url: url});
+                            let exsitTab=await tabs.query(url);
+                            if(exsitTab&&exsitTab.length>0){
+                                exsitTab=exsitTab[0];
+                                await tabs.update(exsitTab.id)
+                                window.close();
+                            }else {
+                                chrome.tabs.create({ url: url});
+                            }
                         });
                     }
                     }>书签管理器</a>
@@ -181,7 +212,9 @@ class Hitory extends React.Component {
             <Row className={style.row}>
                 <Col span={24}>   {modalMode=='search'&&<Button type="primary" size="small">
                     新建文件夹
-                </Button> }<div style={{float:'right'}}><Button type="primary" size="small" style={{marginRight:'1em'
+                </Button> }<div style={{float:'right'}}><Button onClick={()=>{
+                    this.addBookMark(()=>{window.close()})
+                }} type="primary" size="small" style={{marginRight:'1em'
                 }}>
                     保存
                 </Button><Button  size="small" onClick={()=>window.close()}>
