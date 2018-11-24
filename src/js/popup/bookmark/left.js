@@ -20,8 +20,6 @@ class Left extends React.Component{
     }
     async componentDidMount(){
         let {expandedKeys=[]}=await storage.getChanges("leftTree")||{};
-
-        debugger;
         this.setState({expandedKeys:expandedKeys});
     }
     async getUrls(tagName,tagChildren,index){
@@ -64,8 +62,7 @@ class Left extends React.Component{
                     </Menu.Item>
                 </Menu>
                 {key=='tree'&&<DirectoryTree onExpand={this.onExpandedKey.bind(this)} expandedKeys={expandedKeys} draggable={true} onDrop={({event, node, dragNode, dragNodesKeys})=>{
-                    debugger;
-                }} onRightClick={(e)=>{debugger;}}
+                }} onRightClick={(e)=>{}}
                     onSelect={parent.treeNodeHandleClick}
                 >
                     {parent.renderTreeNodes(bookmarks)}
