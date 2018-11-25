@@ -73,7 +73,9 @@ bookmark.search=function(str){
 }
 bookmark.create=function(parentId,title,url){
     return new Promise((resolve, reject) => {
-        chrome.bookmarks.create({parentId,title,url},(item)=>resolve(item))
+        let obj={parentId,title};
+        if(url)obj.url=url;
+        chrome.bookmarks.create(obj,(item)=>resolve(item))
     })
 }
 

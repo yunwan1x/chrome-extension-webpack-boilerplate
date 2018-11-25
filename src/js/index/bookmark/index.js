@@ -15,7 +15,7 @@ class Hitory extends React.Component {
         this.state = {
             loadSize:loadSize,items:[],addBookmarkVisible:false,bookmarks:[],
             addTitle:"",addParentId:'',addUrl:'',modalMode:'common',
-            treeNode:[],flatBookmarks:[],tags:[],selectedTags:[]
+            treeNode:[],flatBookmarks:[],tags:[],selectedTags:[],expandedKeys:[],selectedKeys:[],addedId:''
         }
     }
 
@@ -44,7 +44,7 @@ class Hitory extends React.Component {
 
     selectParent(selectedKeys, {selected, selectedNodes, node, event}){
 
-        debugger;
+
     }
 
     async componentDidMount() {
@@ -118,13 +118,20 @@ class Hitory extends React.Component {
 
     }
 
-    renderTreeNodes(bookmarks) {
-        let _this=this;
+    renderTreeNodes(bookmarks,addedId) {
         return bookmarks.map((item) => {
-            if (item.children) {
+            let title=splitTitle(item.title).title;
+            if (!item.url) {
                 return (
-                    <TreeNode   icon={null} title={splitTitle(item.title).title}  dataRef={item}>
-                        {this.renderTreeNodes(item.children)}
+                    <TreeNode    icon={null} title={addedId==item.id?<Input defaultValue={title} onPressEnter={async (e)=>{
+                        let value=e.target.value;
+                        await bookmark.update(item.id,value);
+                        let r=await bookmark.getTree();
+                        let bookmarkRef=r[0].children;
+                        let treeNode=this.renderTreeNodes(bookmarkRef,"");
+                        this.setState({treeNode:treeNode})
+                    }} size="small" />:title}  dataRef={item}>
+                        {this.renderTreeNodes(item.children,addedId)}
                     </TreeNode>
                 );
             }
@@ -169,7 +176,7 @@ class Hitory extends React.Component {
 
     async changeModal(e){
         let modal=e.target.value;
-        let {bookmarks}=this.state;
+        let {bookmarks,addedId}=this.state;
         let treeNode= await storage.getChanges("bookmarks")||[];
         let newTreeNode=[];
         for(let item of treeNode){
@@ -189,8 +196,9 @@ class Hitory extends React.Component {
 
 
     render() {
-        let {loadSize,items,addBookmarkVisible,bookmarks,modalMode,tags,selectedTags}=this.state;
+        let {loadSize,items,addBookmarkVisible,bookmarks,modalMode,tags,selectedTags,selectedKeys,expandedKeys,addedId}=this.state;
         let {addTitle,addParentId,addUrl,treeNode}=this.state;
+        let isSearchTab=modalMode=='search';
         return <div className="container" style={{padding:'1em',paddingTop:'0.5em'}}>
             <div style={{textAlign:'right',marginBottom:'0.3em'}}><span onClick={()=>{
                 window.close()
@@ -244,17 +252,35 @@ class Hitory extends React.Component {
             </Row>
             <Row className={style.row}>
                 <div className={style.tree}>
-                    {treeNode.length>0&&<DirectoryTree onSelect={(selectedKeys, {selected, selectedNodes, node, event})=>{
+                    {treeNode.length>0&&(isSearchTab?<DirectoryTree selectedKeys={selectedKeys} expandedKeys={expandedKeys} onExpand={(expandedKeys, {expanded: bool, node})=>{
+                        this.setState({expandedKeys:expandedKeys})
+                    }} onSelect={(selectedKeys, {selected, selectedNodes, node, event})=>{
                         let {dataRef:{id}}=node.props;
-                        this.setState({addParentId:id});
+                        this.setState({addParentId:id,selectedKeys:selectedKeys});
                     }}>
                         {treeNode}
-                    </DirectoryTree>||<div className={style.nodata}>请增加一个书签</div>}
+                    </DirectoryTree>:<DirectoryTree  onSelect={(selectedKeys, {selected, selectedNodes, node, event})=>{
+                        let {dataRef:{id}}=node.props;
+                        this.setState({addParentId:id,selectedKeys:selectedKeys});
+                    }}>
+                        {treeNode}
+                    </DirectoryTree>)||<div className={style.nodata}>请增加一个书签</div>}
                 </div>
 
             </Row>
             <Row className={style.row}>
-                <Col span={24}>   {modalMode=='search'&&<Button type="primary" size="small">
+                <Col span={24}>   {modalMode=='search'&&<Button type="primary" size="small" onClick={async()=>{
+                    if(!addParentId){
+                        message.error('please select a directory');
+                        return;
+                    }
+                    let bk=await bookmark.create(addParentId,"新建文件夹");
+                    let {id,title,url}=bk;
+                    let r=await bookmark.getTree();
+                    let bookmarkRef=r[0].children;
+                    let treeNode=this.renderTreeNodes(bookmarkRef,id);
+                    this.setState({treeNode:treeNode})
+                }}>
                     新建文件夹
                 </Button> }<div style={{float:'right'}}><Button onClick={()=>{
                     this.addBookMark(()=>{window.close()})
