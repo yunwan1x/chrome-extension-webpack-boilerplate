@@ -1,6 +1,8 @@
 import React from "react";
 import {hot} from "react-hot-loader";
 import Tr from "js/popup/history/tr"
+import { Menu, Item, Separator, Submenu, MenuProvider,contextMenu } from 'react-contexify';
+import 'react-contexify/dist/ReactContexify.min.css';
 const dateFormat="YYYY-MM-DD HH:mm:ss";
 import {getBread, getHtml, loadSize, splitTitle} from 'js/popup/util';
 import {bookmark,indexDb,storage,history,tabs} from 'js/service/chrome';
@@ -9,6 +11,13 @@ import { DatePicker ,Tree,Icon,Modal,Row,Col,Radio,Button,Input,AutoComplete,mes
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const TreeNode = Tree.TreeNode;
 const DirectoryTree = Tree.DirectoryTree;
+const MyMenu = () => (
+    <Menu id='menu_id'>
+        <Item onClick={({ event, props })=>{
+
+        }}>Click Me</Item>
+    </Menu>
+);
 class Hitory extends React.Component {
     constructor(props) {
         super(props);
@@ -174,6 +183,16 @@ class Hitory extends React.Component {
     }
 
 
+    onRightClick({event, node}){
+        event.preventDefault();
+        contextMenu.show({
+            id: 'menu_id',
+            event: event,
+            props: {
+                msg: 'hello'
+            }
+        });
+    }
     async changeModal(e){
         let modal=e.target.value;
         let {bookmarks,addedId}=this.state;
@@ -199,7 +218,7 @@ class Hitory extends React.Component {
         let {loadSize,items,addBookmarkVisible,bookmarks,modalMode,tags,selectedTags,selectedKeys,expandedKeys,addedId}=this.state;
         let {addTitle,addParentId,addUrl,treeNode}=this.state;
         let isSearchTab=modalMode=='search';
-        return <div className="container" style={{padding:'1em',paddingTop:'0.5em'}}>
+        return <div className="container" onContextMenu={(e)=>{e.preventDefault()}} style={{padding:'1em',paddingTop:'0.5em'}}>
             <div style={{textAlign:'right',marginBottom:'0.3em'}}><span onClick={()=>{
                 window.close()
             }}  style={{cursor:'pointer'}}><Icon  type="close" /></span></div>
@@ -251,8 +270,8 @@ class Hitory extends React.Component {
                 </Col>
             </Row>
             <Row className={style.row}>
-                <div className={style.tree}>
-                    {treeNode.length>0&&(isSearchTab?<DirectoryTree selectedKeys={selectedKeys} expandedKeys={expandedKeys} onExpand={(expandedKeys, {expanded: bool, node})=>{
+                <div className={style.tree} >
+                    {treeNode.length>0&&(isSearchTab?<DirectoryTree  onRightClick={this.onRightClick.bind(this)} selectedKeys={selectedKeys} expandedKeys={expandedKeys} onExpand={(expandedKeys, {expanded: bool, node})=>{
                         this.setState({expandedKeys:expandedKeys})
                     }} onSelect={(selectedKeys, {selected, selectedNodes, node, event})=>{
                         let {dataRef:{id}}=node.props;
@@ -291,6 +310,7 @@ class Hitory extends React.Component {
                     取消
                 </Button></div></Col>
             </Row>
+            <MyMenu></MyMenu>
         </div>;
     }
 };

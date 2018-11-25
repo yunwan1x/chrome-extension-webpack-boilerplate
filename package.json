@@ -14,6 +14,7 @@
     "less-loader": "^4.1.0",
     "lodash": "^4.17.10",
     "react": "^16.3.2",
+    "react-contexify": "^4.0.0",
     "react-dom": "^16.3.2"
   },
   "devDependencies": {
