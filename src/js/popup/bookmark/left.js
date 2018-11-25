@@ -22,6 +22,9 @@ class Left extends React.Component{
         let {expandedKeys=[]}=await storage.getChanges("leftTree")||{};
         this.setState({expandedKeys:expandedKeys});
     }
+
+
+
     async getUrls(tagName,tagChildren,index){
         let node={title:'tag-'+tagName,children:tagChildren,id:tagName,category:"tag"};
         this.props.parent.nodeSelect(node)
@@ -50,7 +53,9 @@ class Left extends React.Component{
                     selectedKeys={[key]}
                     mode="horizontal"
                     onClick={({item, key, selectedKeys})=>{
-                        this.setState({key:key})
+                        this.setState({key:key},()=>{
+                            this.setState({expandedKeys:expandedKeys})
+                        })
                     }}
                 >
 
