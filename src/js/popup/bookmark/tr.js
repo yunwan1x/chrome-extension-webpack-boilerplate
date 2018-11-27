@@ -120,6 +120,11 @@ class Tr extends React.Component {
                         <a target="_blank" href={`https://www.google.com/search?q=link:` + row.url}><span
                             style={{marginRight: "1em"}}><Icon type="google"/></span>link search</a>
                     </Menu.Item>
+                    <Menu.Item>
+                        <a target="_blank" href={`https://www.google.com/search?num=50&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjf263d6fTeAhXnjFQKHSitDhgQ_AUIDigB&biw=1398&bih=708&q=${row.title}&tbs=isz:ex,iszw:1920,iszh:1080`}><span
+                            style={{marginRight: "1em"}}><Icon type="google"/></span>image search</a>
+                    </Menu.Item>
+
                 </Menu.SubMenu>
             </Menu>
         );
