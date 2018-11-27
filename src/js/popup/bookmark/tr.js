@@ -85,7 +85,6 @@ class Tr extends React.Component {
                         <a onClick={this.noTraceView.bind(this, row.url)}>无痕浏览</a>
                     </Menu.Item>}
                 </Menu.SubMenu>
-                <Divider></Divider>
                 <Menu.SubMenu title="edit bookmark">
                     <Menu.Item>
                         <a size="small"
@@ -99,7 +98,6 @@ class Tr extends React.Component {
                            }))}>edit</a>
                     </Menu.Item>
                 </Menu.SubMenu>
-                <Divider></Divider>
 
                 <Menu.SubMenu title="Google Search">
                     <Menu.Item>
@@ -115,7 +113,7 @@ class Tr extends React.Component {
                             style={{marginRight: "1em"}}><Icon type="google"/></span>inurl search</a>
                     </Menu.Item>
                     <Menu.Item>
-                        <a target="_blank" href={`https://www.google.com/search?q=intext:` + row.url}><span
+                        <a target="_blank" href={`https://www.google.com/search?q=intext:` + row.title}><span
                             style={{marginRight: "1em"}}><Icon type="google"/></span>intext search</a>
                     </Menu.Item>
                     <Menu.Item>
