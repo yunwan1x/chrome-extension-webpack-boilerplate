@@ -2,7 +2,7 @@ import React from "react";
 import ReactDom from 'react-dom';
 import {hot} from "react-hot-loader";
 import moment from 'moment';
-import {getBread, getTag, splitTitle} from '../util'
+import {getBread, getTag, splitTitle,getDomain} from '../util'
 import {bookmark,indexDb,storage,history} from '../../service/chrome';
 import EditableTagGroup from './tag'
 import {Button,Icon,Popconfirm, message,Row,Col,Menu, Dropdown,Input,Divider} from 'antd';
@@ -92,8 +92,25 @@ class Tr extends React.Component {
                         dom.focus();
                     }))}>edit</a>
                 </Menu.Item>
+                <Divider></Divider>
 
-
+                <Menu.SubMenu title="Google Search">
+                    <Menu.Item>
+                        <a target="_blank" href={`https://www.google.com/search?q=site:`+getDomain(row.url)}><span style={{marginRight:"1em"}}><Icon type="google" /></span>site search</a>
+                    </Menu.Item>
+                    <Menu.Item>
+                        <a target="_blank" href={`https://www.google.com/search?q=intitle:`+row.title}><span style={{marginRight:"1em"}}><Icon type="google" /></span>intitle search</a>
+                    </Menu.Item>
+                    <Menu.Item>
+                        <a target="_blank" href={`https://www.google.com/search?q=inurl:`+row.url}><span style={{marginRight:"1em"}}><Icon type="google" /></span>inurl search</a>
+                    </Menu.Item>
+                    <Menu.Item>
+                        <a target="_blank" href={`https://www.google.com/search?q=intext:`+row.url}><span style={{marginRight:"1em"}}><Icon type="google" /></span>intext search</a>
+                    </Menu.Item>
+                    <Menu.Item>
+                        <a target="_blank" href={`https://www.google.com/search?q=link:`+row.url}><span style={{marginRight:"1em"}}><Icon type="google" /></span>link search</a>
+                    </Menu.Item>
+                </Menu.SubMenu>
             </Menu>
         );
         let newTitle=this.props.search&&splitTitle(title).title.replace(new RegExp("("+search+")","ig"),"<span style='color: red'>$1</span>");

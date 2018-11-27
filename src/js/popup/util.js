@@ -14,6 +14,19 @@ async function getBread(node){
     }
     return a.reverse();
 }
+
+function getDomain(url) {
+    if(!url)return;
+    var reg=/https?:\/\/([^\/]*)\/?/;
+    reg.exec(url);
+    let catchDomain=RegExp.$1;
+    var arr=catchDomain.split(".");
+    var length=arr.length;
+    if(length>2){
+        catchDomain=arr[length-2]+"."+arr[length-1]
+    }
+    return catchDomain;
+}
 function getHtml() {
     var a=`aaa`
     return a;
@@ -45,4 +58,4 @@ function colorText(text) {
        return <span style={{color:color[index%4]}}>{index==0&&(v.codePointAt()>96&&v.codePointAt()<123)?v.toUpperCase():v}</span>
     })
 }
-export  {getBread,getHtml,loadSize,ColorTag,Color,splitTitle,colorText}
+export  {getBread,getHtml,loadSize,ColorTag,Color,splitTitle,colorText,getDomain}
