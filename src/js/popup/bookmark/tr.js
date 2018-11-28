@@ -162,7 +162,7 @@ class Tr extends React.Component {
 
                 </td>
                 <td className="wy_cmd">
-                    <Dropdown overlay={menu(row)} trigger={['click']}>
+                    <Dropdown overlay={menu(row)} trigger={['hover']}>
                         <span style={{cursor: 'pointer'}}><span
                             style={{marginRight: "1em"}}>{moment(row.dateAdded).format(dateFormat)}</span> <Icon
                             type="ellipsis" theme="outlined"/></span>
