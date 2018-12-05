@@ -251,7 +251,7 @@ class BookMark extends React.Component{
                 </div>
                 <ContentCard onRef={(contentCard)=>{
                     this.contentCard=contentCard;
-                }} {...this.state} {...this.props}   style={{minHeight:'calc(100vh - 230px)'}}
+                }} {...this.state} {...this.props} parent={this}  style={{minHeight:'calc(100vh - 230px)'}}
                              handleClick={({node,urls, bread}) => _this.reduceState({selectedNode:{id:node.id},urls: urls, bread: bread})}
                              dealTag={_this.dealTag}
                              deleteItem={_this.deleteItem}
