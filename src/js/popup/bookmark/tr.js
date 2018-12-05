@@ -2,7 +2,7 @@ import React from "react";
 import ReactDom from 'react-dom';
 import {hot} from "react-hot-loader";
 import moment from 'moment';
-import {getBread, getTag, splitTitle, getDomain} from '../util'
+import {getBread, getTag, splitTitle, getDomain,getParent} from '../util'
 import {bookmark, indexDb, storage, history} from '../../service/chrome';
 import EditableTagGroup from './tag'
 import {Button, Icon, Popconfirm, message, Row, Col, Menu, Dropdown, Input, Divider} from 'antd';
@@ -161,8 +161,19 @@ class Tr extends React.Component {
                     </div>
 
                 </td>
+                <td width="30">
+                    <span onClick={async ()=>{
+                        let {parent} = this.props;
+                        console.log(parent)
+                        let parents=await getParent(row);
+                        if(parents!=null){
+                            parent.nodeSelect(parents);
+                        }
+                    }} style={{cursor:'pointer'}}><Icon type="up-circle" /></span>
+
+                </td>
                 <td className="wy_cmd">
-                    <Dropdown overlay={menu(row)} trigger={['hover']}>
+                    <Dropdown overlay={menu(row)} trigger={['click']}>
                         <span style={{cursor: 'pointer'}}><span
                             style={{marginRight: "1em"}}>{moment(row.dateAdded).format(dateFormat)}</span> <Icon
                             type="ellipsis" theme="outlined"/></span>
