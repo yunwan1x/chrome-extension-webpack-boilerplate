@@ -15,6 +15,12 @@ async function getBread(node){
     return a.reverse();
 }
 
+async function getParent(node){
+    let parent=  await bookmark.get(node.parentId);
+    if(parent&&parent.length>0)return parent[0];
+    return null;
+}
+
 function getDomain(url) {
     if(!url)return;
     var reg=/https?:\/\/([^\/]*)\/?/;
@@ -58,4 +64,4 @@ function colorText(text) {
        return <span style={{color:color[index%4]}}>{index==0&&(v.codePointAt()>96&&v.codePointAt()<123)?v.toUpperCase():v}</span>
     })
 }
-export  {getBread,getHtml,loadSize,ColorTag,Color,splitTitle,colorText,getDomain}
+export  {getBread,getHtml,loadSize,ColorTag,Color,splitTitle,colorText,getDomain,getParent}
