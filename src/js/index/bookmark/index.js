@@ -127,18 +127,29 @@ class Hitory extends React.Component {
 
     }
 
+    async inputCheck (value,item){
+    await bookmark.update(item.id,value);
+    let r=await bookmark.getTree();
+    let bookmarkRef=r[0].children;
+    let treeNode=this.renderTreeNodes(bookmarkRef,"");
+    this.setState({treeNode:treeNode})
+    }
+
     renderTreeNodes(bookmarks,addedId) {
+        let _this=this;
         return bookmarks.map((item) => {
             let title=splitTitle(item.title).title;
             if (!item.url) {
                 return (
-                    <TreeNode    icon={null} title={addedId==item.id?<Input defaultValue={title} onPressEnter={async (e)=>{
+                    <TreeNode     title={addedId==item.id?<Input ref={dom=>{
+                        dom&&dom.focus();
+                    }} defaultValue={title} onBlur={(e)=>{
                         let value=e.target.value;
-                        await bookmark.update(item.id,value);
-                        let r=await bookmark.getTree();
-                        let bookmarkRef=r[0].children;
-                        let treeNode=this.renderTreeNodes(bookmarkRef,"");
-                        this.setState({treeNode:treeNode})
+                        _this.inputCheck(value,item);
+
+                    }} onPressEnter={(e)=>{
+                        let value=e.target.value;
+                        _this.inputCheck(value,item);
                     }} size="small" />:title}  dataRef={item}>
                         {this.renderTreeNodes(item.children,addedId)}
                     </TreeNode>
