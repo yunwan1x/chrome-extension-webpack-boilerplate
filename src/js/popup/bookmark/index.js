@@ -9,7 +9,7 @@ import {debounce} from "lodash"
 import 'antd/dist/antd.css';
 import {bookmark,indexDb,storage,history} from 'js/service/chrome';
 import {getBread,getHtml,loadSize,splitTitle,colorText} from 'js/popup/util';
-import { Modal,Tree,Icon,Anchor,Breadcrumb,Button,Input, AutoComplete} from 'antd';
+import {Modal, Tree, Icon, Anchor, Breadcrumb, Button, Input, AutoComplete, Pagination} from 'antd';
 const confirm = Modal.confirm;
 const TreeNode = Tree.TreeNode;
 let _this;
@@ -26,7 +26,8 @@ class BookMark extends React.Component{
             selectedNode: '',
             tagMaps:{},
             parent:this,
-            loadSize:loadSize
+            page:1,
+            size:10,
         }
         _this=this;
     }
@@ -66,8 +67,8 @@ class BookMark extends React.Component{
     }
 
 
-    showMore(){
-        this.setState({loadSize: this.state.loadSize + loadSize});
+    showMore(page,size){
+        this.setState({page:page,size:size});
     }
 
     async search(word){
@@ -224,7 +225,7 @@ class BookMark extends React.Component{
     }
 
     render(){
-        let {bread}=this.state;
+        let {bread,urls}=this.state;
         return <div className="flex-container">
             <Left {...this.state}   />
 
@@ -243,9 +244,9 @@ class BookMark extends React.Component{
                             </span>
                     <span style={{float:'right'}}>
 
-
-
-
+<Pagination pageSizeOptions={['10','20','50']} size="small" onChange={(page,size)=>this.showMore(page,size)} showQuickJumper showTotal={(total)=> `Total ${total} items`} showSizeChanger onShowSizeChange={(current, size)=>{
+    this.showMore(1,size);
+}} defaultCurrent={1} total={urls.length} />
                           </span>
 
                 </div>
@@ -256,7 +257,6 @@ class BookMark extends React.Component{
                              dealTag={_this.dealTag}
                              deleteItem={_this.deleteItem}
                              filter={_this.filter}>
-
                 </ContentCard>
 
                 {this.props.footer}
