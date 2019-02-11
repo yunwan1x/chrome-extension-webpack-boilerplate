@@ -27,11 +27,11 @@ class GreetingComponent extends React.Component {
             action:'search',
         }
         _this=this;
-        _this.intersectionObserver = new IntersectionObserver(function (entries) {
-            if (entries[0].intersectionRatio < 0) return;
-            let {bookmark}=_this.refs;
-            _this.setState({action:"showMore"},()=>bookmark.showMore())
-        }, {threshold: [0]});
+        // _this.intersectionObserver = new IntersectionObserver(function (entries) {
+        //     if (entries[0].intersectionRatio < 0) return;
+        //     let {bookmark}=_this.refs;
+        //     _this.setState({action:"showMore"},()=>bookmark.showMore())
+        // }, {threshold: [0]});
     }
 
     searchChange(word) {
@@ -53,7 +53,7 @@ class GreetingComponent extends React.Component {
             <div   style={{textAlign: 'center',padding:'2em 0em'}}>
             Professional Bookmark Manager ©2018 Created By changhui.wy
             <div ref={(dom)=>{
-                dom&&_this.intersectionObserver.observe(dom);
+                // dom&&_this.intersectionObserver.observe(dom);
             }} ><a  href="mailto:512458266@qq.com" target="_blank">send email to changhui.wy</a></div>
             </div>);
         return <React.Fragment>
