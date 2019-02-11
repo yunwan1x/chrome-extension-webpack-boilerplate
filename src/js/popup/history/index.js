@@ -5,7 +5,22 @@ const dateFormat="YYYY-MM-DD HH:mm:ss";
 import {getBread, getHtml, loadSize, splitTitle} from 'js/popup/util';
 import {bookmark,indexDb,storage,history} from 'js/service/chrome';
 import style from "./index.less"
-import { DatePicker ,Tree,Icon,Modal,Row,Col,Radio,Button,Input,Select,AutoComplete,message,Tooltip} from 'antd';
+import {
+    DatePicker,
+    Tree,
+    Icon,
+    Modal,
+    Row,
+    Col,
+    Radio,
+    Button,
+    Input,
+    Select,
+    AutoComplete,
+    message,
+    Tooltip,
+    Pagination
+} from 'antd';
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const TreeNode = Tree.TreeNode;
 const DirectoryTree = Tree.DirectoryTree;
@@ -16,6 +31,8 @@ class Hitory extends React.Component {
             loadSize:loadSize,items:[],addBookmarkVisible:false,bookmarks:[],
             addTitle:"",addParentId:'',addUrl:'',modalMode:'common',
             treeNode:[],flatBookmarks:[],
+            page:1,
+            size:10,
         }
     }
 
@@ -30,9 +47,9 @@ class Hitory extends React.Component {
         let treeNodes=this.searchTreeNodes(dir);
     }
 
-    showMore(){
+    showMore(page,size){
         let self=this;
-        self.setState({loadSize: self.state.loadSize + loadSize});
+        self.setState({page:page,size:size});
     }
     showModal(row){
         let {title,url}=row;
@@ -164,8 +181,9 @@ class Hitory extends React.Component {
     }
 
     render() {
-        let {loadSize,items,addBookmarkVisible,bookmarks,modalMode}=this.state;
+        let {loadSize,items,addBookmarkVisible,bookmarks,modalMode,page,size}=this.state;
         let {addTitle,addParentId,addUrl,treeNode}=this.state;
+        let newItems=items.slice((page-1)*size,page*size);
         return <div className="container" style={{background:"#f0f2f5",padding:'1em'}}>
             <Modal className={style.modal}
                 title="Add bookmark"
@@ -209,8 +227,13 @@ class Hitory extends React.Component {
                 </Row>}
             </Modal>
             <div className={style.header}><span><Icon type="project" theme="outlined" />&nbsp;hitory</span>
+                <span style={{float:'right'}}>
+                    <Pagination pageSizeOptions={['10','20','50']} size="small" onChange={(page,size)=>this.showMore(page,size)} showQuickJumper showTotal={(total)=> `Total ${total} items`} showSizeChanger onShowSizeChange={(current, size)=>{
+                        this.showMore(1,size);
+                    }} defaultCurrent={1} total={items.length} />
+                </span>
         </div><table className="table"  ><tbody>
-        {items.map((row,rowindex)=>rowindex<loadSize&& <Tr key={row.id} showModal={this.showModal.bind(this,row)} row={row}  {...this.props} rowIndex={rowindex} ></Tr>)}
+        {newItems.map((row,rowindex)=> <Tr key={row.id} showModal={this.showModal.bind(this,row)} row={row}  {...this.props} rowIndex={rowindex} ></Tr>)}
         </tbody></table>
             {this.props.footer}
         </div>;
